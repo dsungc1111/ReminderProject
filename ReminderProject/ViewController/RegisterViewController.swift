@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 class RegisterViewController: BaseViewController {
     
@@ -18,6 +19,8 @@ class RegisterViewController: BaseViewController {
     }
     
     let tableView = UITableView()
+    var memoTitleText = ""
+    var memoContentText = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +32,13 @@ class RegisterViewController: BaseViewController {
         navigationController?.dismiss(animated: true)
     }
     @objc func saveButtonTapped() {
-        print(#function)
+        let realm = try! Realm()
+        let newData = RealmTable(memoTitle: memoTitleText, date: Date(), memo: memoContentText)
+        try! realm.write {
+            realm.add(newData)
+            print("realm create succeed")
+        }
+        navigationController?.dismiss(animated: true)
     }
     func tableViewSetting() {
         tableView.delegate = self
@@ -46,6 +55,8 @@ class RegisterViewController: BaseViewController {
         navigationItem.leftBarButtonItem?.tintColor = .black
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "저장", style: .plain, target: self, action: #selector(saveButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .lightGray
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        
     }
     override func configureHierarchy() {
         view.addSubview(tableView)
@@ -55,16 +66,11 @@ class RegisterViewController: BaseViewController {
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
-    
-    
 }
-
-
 extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return 1
@@ -72,16 +78,30 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
             return 4
         }
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TodoTableViewCell.id, for: indexPath) as? TodoTableViewCell else { return TodoTableViewCell() }
+            cell.titleTextField.addTarget(self, action: #selector(titleFieldChange(_:)), for: .editingChanged)
+            cell.memoTextField.addTarget(self, action: #selector(memoFieldChange(_:)), for: .editingChanged)
             return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.id, for: indexPath) as? CategoryTableViewCell else { return CategoryTableViewCell() }
             cell.titleLabel.text = Category.allCases[indexPath.row].rawValue
             return cell
         }
+    }
+    @objc func titleFieldChange(_ textField: UITextField) {
+        guard let text = textField.text, !text.isEmpty else {
+            navigationItem.rightBarButtonItem?.isEnabled = false
+            return
+        }
+        memoTitleText = text
+        navigationItem.rightBarButtonItem?.isEnabled = true
+        navigationItem.rightBarButtonItem?.tintColor = .black
+    }
+    @objc func memoFieldChange(_ textField: UITextField) {
+        guard let text = textField.text, !text.isEmpty else { return }
+        memoContentText = text
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
