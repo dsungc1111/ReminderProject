@@ -11,6 +11,7 @@ import RealmSwift
 
 final class ListViewController: BaseViewController {
     
+    
     private let tableView = UITableView()
     private let dateFormatter = DateFormatter()
     
@@ -19,32 +20,32 @@ final class ListViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        list = realm.objects(RealmTable.self).sorted(byKeyPath: "memoTitle", ascending: true)
+        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
         navigationbarSetting()
     }
     private func navigationbarSetting() {
         navigationItem.title = "전체"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: SortButtonImages.ellipsis.rawValue), style: .plain, target: self, action: nil)
         
-        let memoTitle = UIAction(title: "제목순", image: UIImage(systemName: "lineweight"), handler: { _ in self.sortByTitleButtonTapped() })
-        let memoContent = UIAction(title: "메모순", image: UIImage(systemName: "note"), handler: { _ in self.sortByContentButtonTapped() })
-        let memoDate = UIAction(title: "날짜순", image: UIImage(systemName: "calendar.badge.clock"), handler: { _ in self.sortByDateButtonTapped() })
+        let memoTitle = UIAction(title: SortButtonTitle.sortByTitle.rawValue, image: UIImage(systemName: SortButtonImages.lineweight.rawValue), handler: { _ in self.sortByTitleButtonTapped() })
+        let memoContent = UIAction(title: SortButtonTitle.sortByContent.rawValue, image: UIImage(systemName: SortButtonImages.note.rawValue), handler: { _ in self.sortByContentButtonTapped() })
+        let memoDate = UIAction(title: SortButtonTitle.sortByTime.rawValue, image: UIImage(systemName: SortButtonImages.calender.rawValue), handler: { _ in self.sortByDateButtonTapped() })
 
-        navigationItem.rightBarButtonItem?.menu = UIMenu(title: "정렬", options: .displayInline, children: [memoTitle, memoContent, memoDate])
+        navigationItem.rightBarButtonItem?.menu = UIMenu(title: SortButtonTitle.sortButton.rawValue, options: .displayInline, children: [memoTitle, memoContent, memoDate])
     }
     
     func sortByTitleButtonTapped() {
-        list = realm.objects(RealmTable.self).sorted(byKeyPath: "memoTitle", ascending: true)
+        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue, ascending: true)
         tableView.reloadData()
     }
     func sortByContentButtonTapped() {
-        list = realm.objects(RealmTable.self).sorted(byKeyPath: "memo", ascending: true)
+        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memo.rawValue, ascending: true)
         tableView.reloadData()
     }
     func sortByDateButtonTapped() {
-        list = realm.objects(RealmTable.self).sorted(byKeyPath: "date", ascending: true)
+        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.date.rawValue, ascending: true)
         tableView.reloadData()
     }
     override func tableViewSetting() {
@@ -96,20 +97,11 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
             success(true)
         }
         delete.backgroundColor = .systemRed
-        
-        
         let fix = UIContextualAction(style: .normal, title: "고정") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            print("Share 클릭 됨")
+            print("fix clicked")
             success(true)
         }
         fix.backgroundColor = .systemBlue
-        
-        //actions배열 인덱스 0이 왼쪽에 붙어서 나옴
         return UISwipeActionsConfiguration(actions:[delete, fix])
-        
     }
-    
-   
-    
-    
 }
