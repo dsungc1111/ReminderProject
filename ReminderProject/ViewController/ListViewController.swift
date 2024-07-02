@@ -85,7 +85,31 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
+        let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            try! self.realm.write {
+                self.realm.delete(self.list[indexPath.row])
+            }
+            tableView.reloadData()
+            success(true)
+        }
+        delete.backgroundColor = .systemRed
+        
+        
+        let fix = UIContextualAction(style: .normal, title: "고정") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            print("Share 클릭 됨")
+            success(true)
+        }
+        fix.backgroundColor = .systemBlue
+        
+        //actions배열 인덱스 0이 왼쪽에 붙어서 나옴
+        return UISwipeActionsConfiguration(actions:[delete, fix])
         
     }
+    
+   
+    
+    
 }
