@@ -25,7 +25,6 @@ final class RegisterViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
-        tableViewSetting()
     }
 
     @objc func cancelButtonTapped() {
@@ -40,7 +39,7 @@ final class RegisterViewController: BaseViewController {
         }
         navigationController?.dismiss(animated: true)
     }
-    private func tableViewSetting() {
+    override func tableViewSetting() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: TodoTableViewCell.id)
