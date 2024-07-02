@@ -8,16 +8,23 @@
 import UIKit
 import SnapKit
 
-class MainViewController: BaseViewController {
+final class MainViewController: BaseViewController {
 
-    lazy var addButton = {
+    private lazy var addButton = {
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "plus"), for: .normal)
         btn.tintColor = .black
-        btn.setTitle("새로운 일 추가", for: .normal)
+        btn.setTitle(" 새로운 일 추가", for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.titleLabel?.font = .boldSystemFont(ofSize: 14)
         btn.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        return btn
+    }()
+    private lazy var temporaryButton = {
+        let btn = UIButton()
+        btn.setTitleColor(.black, for: .normal)
+        btn.setTitle("임시버튼 > 리스트", for: .normal)
+        btn.addTarget(self, action: #selector(temporaryButtonTapped), for: .touchUpInside)
         return btn
     }()
     
@@ -25,12 +32,17 @@ class MainViewController: BaseViewController {
         super.viewDidLoad()
         
     }
+    @objc func temporaryButtonTapped() {
+        let vc = ListViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
     @objc func addButtonTapped() {
         let vc = UINavigationController(rootViewController: RegisterViewController())
         navigationController?.present(vc, animated: true)
     }
     override func configureHierarchy() {
         view.addSubview(addButton)
+        view.addSubview(temporaryButton)
     }
     override func configureLayout() {
         addButton.snp.makeConstraints { make in
@@ -39,8 +51,8 @@ class MainViewController: BaseViewController {
             make.height.equalTo(30)
             make.width.equalTo(200)
         }
+        temporaryButton.snp.makeConstraints { make in
+            make.center.equalTo(view.center)
+        }
     }
-    
-
-  
 }

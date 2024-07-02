@@ -9,18 +9,18 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-class RegisterViewController: BaseViewController {
+final class RegisterViewController: BaseViewController {
     
-    enum Category: String, CaseIterable {
+    private enum Category: String, CaseIterable {
         case dueDate = "마감일"
         case tag = "태그"
         case priority = "우선순위"
         case addImage = "이미지 추가"
     }
     
-    let tableView = UITableView()
-    var memoTitleText = ""
-    var memoContentText = ""
+    private let tableView = UITableView()
+    private var memoTitleText = ""
+    private var memoContentText = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +40,7 @@ class RegisterViewController: BaseViewController {
         }
         navigationController?.dismiss(animated: true)
     }
-    func tableViewSetting() {
+    private func tableViewSetting() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: TodoTableViewCell.id)
@@ -49,7 +49,7 @@ class RegisterViewController: BaseViewController {
         tableView.separatorStyle = .none
         
     }
-    func configureNavigationbar() {
+    private func configureNavigationbar() {
         navigationItem.title = "새로운 할 일"
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelButtonTapped))
         navigationItem.leftBarButtonItem?.tintColor = .black
@@ -114,4 +114,5 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }
+
 }
