@@ -15,6 +15,13 @@
 		8B456F2B2C33EBB8003CFBD1 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F2A2C33EBB8003CFBD1 /* BaseViewController.swift */; };
 		8B456F2D2C33EC01003CFBD1 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F2C2C33EC01003CFBD1 /* ListViewController.swift */; };
 		8B456F2F2C33EC4A003CFBD1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F2E2C33EC4A003CFBD1 /* MainViewController.swift */; };
+		8B456F322C33EDB9003CFBD1 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8B456F312C33EDB9003CFBD1 /* RealmSwift */; };
+		8B456F352C33EDC3003CFBD1 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8B456F342C33EDC3003CFBD1 /* SnapKit */; };
+		8B456F382C33EDD7003CFBD1 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8B456F372C33EDD7003CFBD1 /* IQKeyboardManagerSwift */; };
+		8B456F3B2C33F9A2003CFBD1 /* CategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F3A2C33F9A2003CFBD1 /* CategoryTableViewCell.swift */; };
+		8B456F3D2C33F9B7003CFBD1 /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F3C2C33F9B7003CFBD1 /* BaseTableViewCell.swift */; };
+		8B456F402C33FA27003CFBD1 /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F3F2C33FA27003CFBD1 /* Reusable.swift */; };
+		8B456F422C33FACC003CFBD1 /* TodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F412C33FACC003CFBD1 /* TodoTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +35,10 @@
 		8B456F2A2C33EBB8003CFBD1 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		8B456F2C2C33EC01003CFBD1 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		8B456F2E2C33EC4A003CFBD1 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		8B456F3A2C33F9A2003CFBD1 /* CategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewCell.swift; sourceTree = "<group>"; };
+		8B456F3C2C33F9B7003CFBD1 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
+		8B456F3F2C33FA27003CFBD1 /* Reusable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
+		8B456F412C33FACC003CFBD1 /* TodoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +46,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B456F322C33EDB9003CFBD1 /* RealmSwift in Frameworks */,
+				8B456F352C33EDC3003CFBD1 /* SnapKit in Frameworks */,
+				8B456F382C33EDD7003CFBD1 /* IQKeyboardManagerSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,6 +74,8 @@
 		8B456F132C33E8D4003CFBD1 /* ReminderProject */ = {
 			isa = PBXGroup;
 			children = (
+				8B456F3E2C33FA18003CFBD1 /* Protocol */,
+				8B456F392C33F989003CFBD1 /* Cell */,
 				8B456F292C33EBA3003CFBD1 /* Base */,
 				8B456F282C33EB91003CFBD1 /* ViewController */,
 				8B456F142C33E8D4003CFBD1 /* AppDelegate.swift */,
@@ -85,8 +101,34 @@
 			isa = PBXGroup;
 			children = (
 				8B456F2A2C33EBB8003CFBD1 /* BaseViewController.swift */,
+				8B456F3C2C33F9B7003CFBD1 /* BaseTableViewCell.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		8B456F392C33F989003CFBD1 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				8B456F432C33FAD2003CFBD1 /* Register */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		8B456F3E2C33FA18003CFBD1 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				8B456F3F2C33FA27003CFBD1 /* Reusable.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		8B456F432C33FAD2003CFBD1 /* Register */ = {
+			isa = PBXGroup;
+			children = (
+				8B456F412C33FACC003CFBD1 /* TodoTableViewCell.swift */,
+				8B456F3A2C33F9A2003CFBD1 /* CategoryTableViewCell.swift */,
+			);
+			path = Register;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -105,6 +147,11 @@
 			dependencies = (
 			);
 			name = ReminderProject;
+			packageProductDependencies = (
+				8B456F312C33EDB9003CFBD1 /* RealmSwift */,
+				8B456F342C33EDC3003CFBD1 /* SnapKit */,
+				8B456F372C33EDD7003CFBD1 /* IQKeyboardManagerSwift */,
+			);
 			productName = ReminderProject;
 			productReference = 8B456F112C33E8D4003CFBD1 /* ReminderProject.app */;
 			productType = "com.apple.product-type.application";
@@ -133,6 +180,11 @@
 				Base,
 			);
 			mainGroup = 8B456F082C33E8D4003CFBD1;
+			packageReferences = (
+				8B456F302C33EDB9003CFBD1 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				8B456F332C33EDC3003CFBD1 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				8B456F362C33EDD7003CFBD1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+			);
 			productRefGroup = 8B456F122C33E8D4003CFBD1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -159,9 +211,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B456F3D2C33F9B7003CFBD1 /* BaseTableViewCell.swift in Sources */,
 				8B456F192C33E8D4003CFBD1 /* RegisterViewController.swift in Sources */,
 				8B456F2B2C33EBB8003CFBD1 /* BaseViewController.swift in Sources */,
+				8B456F422C33FACC003CFBD1 /* TodoTableViewCell.swift in Sources */,
+				8B456F402C33FA27003CFBD1 /* Reusable.swift in Sources */,
 				8B456F152C33E8D4003CFBD1 /* AppDelegate.swift in Sources */,
+				8B456F3B2C33F9A2003CFBD1 /* CategoryTableViewCell.swift in Sources */,
 				8B456F2F2C33EC4A003CFBD1 /* MainViewController.swift in Sources */,
 				8B456F2D2C33EC01003CFBD1 /* ListViewController.swift in Sources */,
 				8B456F172C33E8D4003CFBD1 /* SceneDelegate.swift in Sources */,
@@ -385,6 +441,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8B456F302C33EDB9003CFBD1 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		8B456F332C33EDC3003CFBD1 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = exactVersion;
+				version = 5.7.1;
+			};
+		};
+		8B456F362C33EDD7003CFBD1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8B456F312C33EDB9003CFBD1 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B456F302C33EDB9003CFBD1 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+		8B456F342C33EDC3003CFBD1 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B456F332C33EDC3003CFBD1 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		8B456F372C33EDD7003CFBD1 /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B456F362C33EDD7003CFBD1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8B456F092C33E8D4003CFBD1 /* Project object */;
 }
