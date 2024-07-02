@@ -7,24 +7,51 @@
 
 import UIKit
 
-class CategoryTableViewCell: UITableViewCell {
+class CategoryTableViewCell: BaseTableViewCell {
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureHierarchy()
-        configureLayout()
-        configureCell()
+    
+    let backView = {
+        let view = UIView()
+        view.layer.cornerRadius = 10
+        view.backgroundColor = .white
+        return view
+    }()
+    let titleLabel = {
+        let label = UILabel()
+        label.textColor = .darkGray
+        label.font = .boldSystemFont(ofSize: 14)
+        return label
+    }()
+    let clickButton = {
+        let btn = UIButton()
+        btn.tintColor = .darkGray
+        btn.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+        return btn
+    }()
+    
+    override func configureHierarchy() {
+        contentView.addSubview(backView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(clickButton)
     }
     
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func configureLayout() {
+        backView.snp.makeConstraints { make in
+            make.edges.equalTo(contentView.safeAreaLayoutGuide).inset(10)
+        }
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(backView.snp.leading).inset(20)
+            make.verticalEdges.equalTo(backView.snp.verticalEdges).inset(5)
+        }
+        clickButton.snp.makeConstraints { make in
+            make.trailing.equalTo(backView.snp.trailing).inset(20)
+            make.verticalEdges.equalTo(backView.snp.verticalEdges).inset(5)
+        }
     }
-    
-    
-    func configureHierarchy() {}
-    func configureLayout() {}
-    func configureCell() {}
+    override func configureCell() {
+        backgroundColor = .clear
+    }
+
     
 
 }

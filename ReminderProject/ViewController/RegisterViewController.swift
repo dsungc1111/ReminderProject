@@ -9,7 +9,14 @@ import UIKit
 import SnapKit
 
 class RegisterViewController: BaseViewController {
-
+    
+    enum Category: String, CaseIterable {
+        case dueDate = "마감일"
+        case tag = "태그"
+        case priority = "우선순위"
+        case addImage = "이미지 추가"
+    }
+    
     let tableView = UITableView()
     
     override func viewDidLoad() {
@@ -29,6 +36,8 @@ class RegisterViewController: BaseViewController {
         tableView.dataSource = self
         tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: TodoTableViewCell.id)
         tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.id)
+        tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
         
     }
     func configureNavigationbar() {
@@ -65,19 +74,17 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         if indexPath.section == 0 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TodoTableViewCell.id, for: indexPath) as? TodoTableViewCell else { return TodoTableViewCell() }
             
             return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.id, for: indexPath) as? CategoryTableViewCell else { return CategoryTableViewCell() }
-            cell.backgroundColor = .green
+            cell.titleLabel.text = Category.allCases[indexPath.row].rawValue
             return cell
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
         if indexPath.section == 0 {
             return 200
         }
@@ -85,5 +92,7 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
             return 80
         }
     }
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
 }

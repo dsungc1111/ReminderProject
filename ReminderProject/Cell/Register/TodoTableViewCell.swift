@@ -10,7 +10,11 @@ import SnapKit
 
 class TodoTableViewCell: BaseTableViewCell {
 
-    let backView = UIView()
+    let backView = {
+        let view = UIView()
+        view.layer.cornerRadius = 10
+        return view
+    }()
     
     
     override func configureHierarchy() {
@@ -19,11 +23,12 @@ class TodoTableViewCell: BaseTableViewCell {
     
     override func configureLayout() {
         backView.snp.makeConstraints { make in
-            make.edges.equalTo(contentView.safeAreaLayoutGuide)
+            make.edges.equalTo(contentView.safeAreaLayoutGuide).inset(10)
         }
     }
     override func configureCell() {
-        backView.backgroundColor = .lightGray
+        backView.backgroundColor = .white
+        backgroundColor = .clear
     }
 
 }
