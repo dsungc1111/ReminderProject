@@ -10,9 +10,24 @@ import SnapKit
 
 final class MainViewController: BaseViewController {
 
+    private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
+    private static func collectionViewLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewFlowLayout()
+        let sectionSpacing: CGFloat = 10
+        let cellSpacing: CGFloat = 10
+        let width = UIScreen.main.bounds.width - (sectionSpacing*2 + cellSpacing*2)
+        layout.itemSize = CGSize(width: width/2, height: width/4)
+        layout.scrollDirection = .vertical
+        layout.minimumInteritemSpacing = cellSpacing
+        layout.minimumLineSpacing = cellSpacing
+        layout.sectionInset = UIEdgeInsets(top: sectionSpacing, left: sectionSpacing, bottom: sectionSpacing, right: sectionSpacing)
+        return layout
+    }
+    
+    
     private lazy var addButton = {
         let btn = UIButton()
-        btn.setImage(UIImage(systemName: "plus"), for: .normal)
+        btn.setImage(UIImage(systemName: "plus.circle"), for: .normal)
         btn.tintColor = .black
         btn.setTitle(" 새로운 일 추가", for: .normal)
         btn.setTitleColor(.black, for: .normal)
@@ -20,17 +35,30 @@ final class MainViewController: BaseViewController {
         btn.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         return btn
     }()
-    private lazy var temporaryButton = {
-        let btn = UIButton()
-        btn.setTitleColor(.black, for: .normal)
-        btn.setTitle("임시버튼 > 리스트", for: .normal)
-        btn.addTarget(self, action: #selector(temporaryButtonTapped), for: .touchUpInside)
-        return btn
-    }()
+//    private lazy var temporaryButton = {
+//        let btn = UIButton()
+//        btn.setTitleColor(.black, for: .normal)
+//        btn.setTitle("임시버튼 > 리스트", for: .normal)
+//        btn.addTarget(self, action: #selector(temporaryButtonTapped), for: .touchUpInside)
+//        return btn
+//    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationbarSetting()
+        collectionViewSetting()
+    }
+    func collectionViewSetting() {
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.id)
+        collectionView.backgroundColor = .clear
+        collectionView.showsVerticalScrollIndicator = false
+    }
+    func navigationbarSetting() {
+        navigationItem.title = "전체"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
     }
     @objc func temporaryButtonTapped() {
         let vc = ListViewController()
@@ -42,7 +70,8 @@ final class MainViewController: BaseViewController {
     }
     override func configureHierarchy() {
         view.addSubview(addButton)
-        view.addSubview(temporaryButton)
+        view.addSubview(collectionView)
+//        view.addSubview(temporaryButton)
     }
     override func configureLayout() {
         addButton.snp.makeConstraints { make in
@@ -51,8 +80,23 @@ final class MainViewController: BaseViewController {
             make.height.equalTo(30)
             make.width.equalTo(200)
         }
-        temporaryButton.snp.makeConstraints { make in
-            make.center.equalTo(view.center)
+        collectionView.snp.makeConstraints { make in
+            make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(300)
         }
+       
     }
+}
+extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.id, for: indexPath) as? MainCollectionViewCell else { return MainCollectionViewCell() }
+        
+        return cell
+    }
+    
+    
 }

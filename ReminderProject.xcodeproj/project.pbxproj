@@ -25,6 +25,7 @@
 		8B456F452C340E55003CFBD1 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F442C340E55003CFBD1 /* Database.swift */; };
 		8B456F482C341956003CFBD1 /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F472C341956003CFBD1 /* ListTableViewCell.swift */; };
 		8B456F4A2C34BD52003CFBD1 /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F492C34BD52003CFBD1 /* Enum.swift */; };
+		8B456F4D2C34C56C003CFBD1 /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F4C2C34C56C003CFBD1 /* MainCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		8B456F442C340E55003CFBD1 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		8B456F472C341956003CFBD1 /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
 		8B456F492C34BD52003CFBD1 /* Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enum.swift; sourceTree = "<group>"; };
+		8B456F4C2C34C56C003CFBD1 /* MainCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 		8B456F392C33F989003CFBD1 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				8B456F4B2C34C542003CFBD1 /* Main */,
 				8B456F462C34193D003CFBD1 /* AddedMemo */,
 				8B456F432C33FAD2003CFBD1 /* Register */,
 			);
@@ -146,6 +149,14 @@
 				8B456F472C341956003CFBD1 /* ListTableViewCell.swift */,
 			);
 			path = AddedMemo;
+			sourceTree = "<group>";
+		};
+		8B456F4B2C34C542003CFBD1 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				8B456F4C2C34C56C003CFBD1 /* MainCollectionViewCell.swift */,
+			);
+			path = Main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -235,6 +246,7 @@
 				8B456F422C33FACC003CFBD1 /* TodoTableViewCell.swift in Sources */,
 				8B456F402C33FA27003CFBD1 /* Reusable.swift in Sources */,
 				8B456F152C33E8D4003CFBD1 /* AppDelegate.swift in Sources */,
+				8B456F4D2C34C56C003CFBD1 /* MainCollectionViewCell.swift in Sources */,
 				8B456F4A2C34BD52003CFBD1 /* Enum.swift in Sources */,
 				8B456F3B2C33F9A2003CFBD1 /* CategoryTableViewCell.swift in Sources */,
 				8B456F482C341956003CFBD1 /* ListTableViewCell.swift in Sources */,
