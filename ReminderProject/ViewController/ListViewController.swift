@@ -75,7 +75,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         let data = list[indexPath.row]
         cell.titleLabel.text = data.memoTitle
         cell.contentLabel.text = data.memo
-        cell.dueDateLabel.text = dateToString(date: data.date!)
+        cell.dueDateLabel.text =  data.date
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -10,12 +10,28 @@ import UIKit
 class DateViewController: BaseViewController {
 
     let datePicker = UIDatePicker()
+    let dateFormatter = DateFormatter()
     
+    var passDate: PassDateDelegate?
+    var getDateFromDatePicker = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .wheels
+        datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
     }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        passDate?.passDateValue(getDateFromDatePicker)
+    }
+    @objc func dateChange(_ sender: UIDatePicker) {
+        getDateFromDatePicker = dateFormat(date: sender.date)
+    }
+    private func dateFormat(date: Date) -> String {
+        dateFormatter.dateFormat = "yyyy/MM/dd"
+        return dateFormatter.string(from: date)
+    }
+    
     override func configureHierarchy() {
         view.addSubview(datePicker)
     }
@@ -25,4 +41,6 @@ class DateViewController: BaseViewController {
             make.centerY.equalTo(view.safeAreaLayoutGuide)
         }
     }
+    
+    
 }

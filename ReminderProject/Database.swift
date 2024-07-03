@@ -13,10 +13,10 @@ class RealmTable: Object {
     @Persisted(primaryKey: true) var key: ObjectId
     @Persisted(indexed: true) var memoTitle: String
     @Persisted var memo: String?
-    @Persisted var date: Date?
+    @Persisted var date: String?
     
 
-    convenience init(memoTitle: String, date: Date, memo: String? = nil) {
+    convenience init(memoTitle: String, date: String, memo: String? = nil) {
         self.init()
         self.memoTitle = memoTitle
         self.date = date

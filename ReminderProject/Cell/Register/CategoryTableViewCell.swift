@@ -9,7 +9,6 @@ import UIKit
 
 class CategoryTableViewCell: BaseTableViewCell {
 
-    
     let backView = {
         let view = UIView()
         view.layer.cornerRadius = 10

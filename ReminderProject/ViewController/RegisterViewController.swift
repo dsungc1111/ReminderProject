@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-final class RegisterViewController: BaseViewController {
+final class RegisterViewController: BaseViewController, PassDateDelegate {
     
     private enum Category: String, CaseIterable {
         case dueDate = "마감일"
@@ -21,10 +21,15 @@ final class RegisterViewController: BaseViewController {
     private let tableView = UITableView()
     private var memoTitleText = ""
     private var memoContentText = ""
-    let vcList = [DateViewController(), TagViewController(), PriorityViewController(), ImageAddViewController()]
+    private var getDueDate = ""
+    
+    private let realm = try! Realm()
+    private var list: Results<RealmTable>!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
+        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
     }
 
     @objc func cancelButtonTapped() {
@@ -32,7 +37,7 @@ final class RegisterViewController: BaseViewController {
     }
     @objc func saveButtonTapped() {
         let realm = try! Realm()
-        let newData = RealmTable(memoTitle: memoTitleText, date: Date(), memo: memoContentText)
+        let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText)
         try! realm.write {
             realm.add(newData)
             print("realm create succeed")
@@ -65,6 +70,10 @@ final class RegisterViewController: BaseViewController {
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
+    func passDateValue(_ text: String) {
+        getDueDate = text
+        tableView.reloadData()
+    }
 }
 extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -85,10 +94,20 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.id, for: indexPath) as? CategoryTableViewCell else { return CategoryTableViewCell() }
+            
+            switch indexPath.row {
+            case 0:
+                cell.resultLabel.text = getDueDate
+            default:
+                break
+            }
+            
+            
             cell.titleLabel.text = Category.allCases[indexPath.row].rawValue
             return cell
         }
     }
+   
     @objc func titleFieldChange(_ textField: UITextField) {
         guard let text = textField.text, !text.isEmpty else {
             navigationItem.rightBarButtonItem?.isEnabled = false
@@ -115,10 +134,34 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         
         if indexPath.section != 0 {
-            let vc = vcList[indexPath.item]
-            vc.navigationItem.title = Category.allCases[indexPath.item].rawValue
-            navigationController?.pushViewController(vc, animated: true)
+            switch indexPath.row {
+            case 0:
+                let vc = DateViewController()
+                vc.navigationItem.title = Category.allCases[0].rawValue
+                vc.passDate = self
+                navigationController?.pushViewController(vc, animated: true)
+            case 1:
+                let vc = TagViewController()
+                vc.navigationItem.title = Category.allCases[1].rawValue
+                navigationController?.pushViewController(vc, animated: true)
+            case 2:
+                let vc = PriorityViewController()
+                vc.navigationItem.title = Category.allCases[2].rawValue
+                navigationController?.pushViewController(vc, animated: true)
+            case 3:
+                let vc = ImageAddViewController()
+                vc.navigationItem.title = Category.allCases[3].rawValue
+                navigationController?.pushViewController(vc, animated: true)
+            default:
+                break
+            }
+            
+            
+           
+            
+           
         }
     }
-
 }
+
+
