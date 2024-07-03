@@ -23,26 +23,24 @@ final class MainViewController: BaseViewController {
         layout.sectionInset = UIEdgeInsets(top: sectionSpacing, left: sectionSpacing, bottom: sectionSpacing, right: sectionSpacing)
         return layout
     }
-    
-    
     private lazy var addButton = {
         let btn = UIButton()
-        btn.setImage(UIImage(systemName: "plus.circle"), for: .normal)
-        btn.tintColor = .black
+        btn.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
+        btn.contentMode = .scaleAspectFill
         btn.setTitle(" 새로운 일 추가", for: .normal)
-        btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = .boldSystemFont(ofSize: 14)
+        btn.setTitleColor(.systemBlue, for: .normal)
+        btn.titleLabel?.font = .boldSystemFont(ofSize: 18)
         btn.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         return btn
     }()
-//    private lazy var temporaryButton = {
-//        let btn = UIButton()
-//        btn.setTitleColor(.black, for: .normal)
-//        btn.setTitle("임시버튼 > 리스트", for: .normal)
-//        btn.addTarget(self, action: #selector(temporaryButtonTapped), for: .touchUpInside)
-//        return btn
-//    }()
-    
+    private lazy var listAddButton = {
+        let btn = UIButton()
+        btn.setTitle("목록추가", for: .normal)
+        btn.setTitleColor(.systemBlue, for: .normal)
+        btn.titleLabel?.font = .systemFont(ofSize: 16)
+        btn.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        return btn
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
@@ -70,33 +68,42 @@ final class MainViewController: BaseViewController {
     }
     override func configureHierarchy() {
         view.addSubview(addButton)
+        view.addSubview(listAddButton)
         view.addSubview(collectionView)
-//        view.addSubview(temporaryButton)
     }
     override func configureLayout() {
         addButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
-            make.leading.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.leading.equalTo(view.safeAreaLayoutGuide).inset(5)
             make.height.equalTo(30)
-            make.width.equalTo(200)
+            make.width.equalTo(150)
+        }
+        listAddButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(30)
+            make.width.equalTo(100)
         }
         collectionView.snp.makeConstraints { make in
             make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(300)
+            make.height.equalTo(320)
         }
-       
     }
 }
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 5
     }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.id, for: indexPath) as? MainCollectionViewCell else { return MainCollectionViewCell() }
-        
+        cell.contentLogo.image = UIImage(systemName: "calendar")
+        cell.configureCell(data: indexPath)
         return cell
     }
-    
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row == 2 {
+            let vc = ListViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
 }
