@@ -37,15 +37,15 @@ final class ListViewController: BaseViewController {
         navigationItem.rightBarButtonItem?.menu = UIMenu(title: SortButtonTitle.sortButton.rawValue, options: .displayInline, children: [memoTitle, memoContent, memoDate])
     }
     
-    func sortByTitleButtonTapped() {
+    private func sortByTitleButtonTapped() {
         list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue, ascending: true)
         tableView.reloadData()
     }
-    func sortByContentButtonTapped() {
+    private func sortByContentButtonTapped() {
         list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memo.rawValue, ascending: true)
         tableView.reloadData()
     }
-    func sortByDateButtonTapped() {
+    private func sortByDateButtonTapped() {
         list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.date.rawValue, ascending: true)
         tableView.reloadData()
     }

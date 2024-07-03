@@ -53,7 +53,7 @@ final class MainViewController: BaseViewController {
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
     }
-    func navigationbarSetting() {
+    private func navigationbarSetting() {
         navigationItem.title = "전체"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always

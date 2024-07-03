@@ -28,11 +28,17 @@ class CategoryTableViewCell: BaseTableViewCell {
         btn.setImage(UIImage(systemName: "chevron.right"), for: .normal)
         return btn
     }()
-    
+    let resultLabel = {
+        let label = UILabel()
+        label.textColor = .darkGray
+        label.text = "df"
+        return label
+    }()
     override func configureHierarchy() {
         contentView.addSubview(backView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(clickButton)
+        contentView.addSubview(resultLabel)
     }
     
     override func configureLayout() {
@@ -45,6 +51,10 @@ class CategoryTableViewCell: BaseTableViewCell {
         }
         clickButton.snp.makeConstraints { make in
             make.trailing.equalTo(backView.snp.trailing).inset(20)
+            make.verticalEdges.equalTo(backView.snp.verticalEdges).inset(5)
+        }
+        resultLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(clickButton.snp.leading).offset(-40)
             make.verticalEdges.equalTo(backView.snp.verticalEdges).inset(5)
         }
     }

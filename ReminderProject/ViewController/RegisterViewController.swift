@@ -21,7 +21,7 @@ final class RegisterViewController: BaseViewController {
     private let tableView = UITableView()
     private var memoTitleText = ""
     private var memoContentText = ""
-    
+    let vcList = [DateViewController(), TagViewController(), PriorityViewController(), ImageAddViewController()]
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
@@ -49,7 +49,7 @@ final class RegisterViewController: BaseViewController {
         
     }
     private func configureNavigationbar() {
-        navigationItem.title = "새로운 할 일"
+        navigationItem.title = "새로운 미리 알림"
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelButtonTapped))
         navigationItem.leftBarButtonItem?.tintColor = .black
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "저장", style: .plain, target: self, action: #selector(saveButtonTapped))
@@ -111,7 +111,14 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         tableView.reloadRows(at: [indexPath], with: .automatic)
+        
+        if indexPath.section != 0 {
+            let vc = vcList[indexPath.item]
+            vc.navigationItem.title = Category.allCases[indexPath.item].rawValue
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 
 }
