@@ -22,12 +22,13 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     private let tableView = UITableView()
     private var memoTitleText = ""
     private var memoContentText = ""
-    private var getDueDate = ""
+    private var getDueDate: Date?
     private var getTagText = ""
     private var getPriority = ""
     
     private let realm = try! Realm()
     private var list: Results<RealmTable>!
+    let dateFormatter = DateFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +41,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     }
     @objc func saveButtonTapped() {
         let realm = try! Realm()
-        let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText, tag: getTagText, priority: getPriority )
+        let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate!, memo: memoContentText, tag: getTagText, priority: getPriority )
         try! realm.write {
             realm.add(newData)
             print("realm create succeed")
@@ -72,21 +73,18 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
-    func passDateValue(_ text: String) {
-        getDueDate = text
-        print(getDueDate)
+    func passDateValue(_ date: Date) {
+        getDueDate = date
         tableView.reloadData()
     }
     func passTagValue(_ text: String) {
         getTagText = "# \(text)"
         tableView.reloadData()
     }
-    
     func passPriorityValue(_ text: String) {
         getPriority = text
         tableView.reloadData()
     }
-    
 }
 extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -109,7 +107,7 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.id, for: indexPath) as? CategoryTableViewCell else { return CategoryTableViewCell() }
             switch indexPath.row {
             case 0:
-                cell.resultLabel.text = getDueDate
+                cell.resultLabel.text = dateFormat(date: getDueDate ?? Date())
             case 1:
                 cell.resultLabel.text = getTagText
             case 2:
@@ -119,6 +117,11 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
             }
             cell.titleLabel.text = Category.allCases[indexPath.row].rawValue
             return cell
+        }
+        func dateFormat(date: Date) -> String {
+            dateFormatter.locale = Locale(identifier: "ko")
+            dateFormatter.dateFormat = "yyyy.MM.dd E요일"
+            return dateFormatter.string(from: date)
         }
     }
     @objc func titleFieldChange(_ textField: UITextField) {

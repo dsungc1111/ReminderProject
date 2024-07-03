@@ -8,7 +8,7 @@
 import Foundation
 
 protocol PassDateDelegate {
-    func passDateValue(_ text: String)
+    func passDateValue(_ date: Date)
     func passTagValue(_ text: String)
     func passPriorityValue(_ text: String)
 }

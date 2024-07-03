@@ -13,7 +13,7 @@
 		8B456F1E2C33E8D6003CFBD1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B456F1D2C33E8D6003CFBD1 /* Assets.xcassets */; };
 		8B456F212C33E8D6003CFBD1 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 8B456F202C33E8D6003CFBD1 /* Base */; };
 		8B456F2B2C33EBB8003CFBD1 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F2A2C33EBB8003CFBD1 /* BaseViewController.swift */; };
-		8B456F2D2C33EC01003CFBD1 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F2C2C33EC01003CFBD1 /* ListViewController.swift */; };
+		8B456F2D2C33EC01003CFBD1 /* WholeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F2C2C33EC01003CFBD1 /* WholeListViewController.swift */; };
 		8B456F2F2C33EC4A003CFBD1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F2E2C33EC4A003CFBD1 /* MainViewController.swift */; };
 		8B456F322C33EDB9003CFBD1 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8B456F312C33EDB9003CFBD1 /* RealmSwift */; };
 		8B456F352C33EDC3003CFBD1 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8B456F342C33EDC3003CFBD1 /* SnapKit */; };
@@ -42,7 +42,7 @@
 		8B456F202C33E8D6003CFBD1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8B456F222C33E8D6003CFBD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8B456F2A2C33EBB8003CFBD1 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
-		8B456F2C2C33EC01003CFBD1 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		8B456F2C2C33EC01003CFBD1 /* WholeListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WholeListViewController.swift; sourceTree = "<group>"; };
 		8B456F2E2C33EC4A003CFBD1 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		8B456F3A2C33F9A2003CFBD1 /* CategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewCell.swift; sourceTree = "<group>"; };
 		8B456F3C2C33F9B7003CFBD1 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
@@ -111,9 +111,9 @@
 			isa = PBXGroup;
 			children = (
 				8B456F2E2C33EC4A003CFBD1 /* MainViewController.swift */,
+				8B456F2C2C33EC01003CFBD1 /* WholeListViewController.swift */,
 				8B456F182C33E8D4003CFBD1 /* RegisterViewController.swift */,
 				8B456F512C3529C4003CFBD1 /* Register */,
-				8B456F2C2C33EC01003CFBD1 /* ListViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -279,7 +279,7 @@
 				8B456F482C341956003CFBD1 /* ListTableViewCell.swift in Sources */,
 				8B456F2F2C33EC4A003CFBD1 /* MainViewController.swift in Sources */,
 				8B456F552C3529EA003CFBD1 /* TagViewController.swift in Sources */,
-				8B456F2D2C33EC01003CFBD1 /* ListViewController.swift in Sources */,
+				8B456F2D2C33EC01003CFBD1 /* WholeListViewController.swift in Sources */,
 				8B456F172C33E8D4003CFBD1 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

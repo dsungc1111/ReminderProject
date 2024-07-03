@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 final class MainViewController: BaseViewController {
 
@@ -41,6 +42,8 @@ final class MainViewController: BaseViewController {
         btn.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         return btn
     }()
+    private let realm = try! Realm()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
@@ -62,7 +65,7 @@ final class MainViewController: BaseViewController {
         navigationItem.largeTitleDisplayMode = .always
     }
     @objc func temporaryButtonTapped() {
-        let vc = ListViewController()
+        let vc = WholeListViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
     @objc func addButtonTapped() {
@@ -103,9 +106,29 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.row == 2 {
-            let vc = ListViewController()
-            navigationController?.pushViewController(vc, animated: true)
+        switch indexPath.row {
+        case 0:
+            let date = Date()
+            WholeListViewController.list = realm.objects(RealmTable.self).filter("date == %@", date)
+        case 1:
+            let date = Date()
+            WholeListViewController.list = realm.objects(RealmTable.self).filter("date >= %@", date)
+
+        case 2:
+            
+            WholeListViewController.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+        default:
+            break
         }
+        let vc = WholeListViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    func getDateString() -> String{
+        let currentDate = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko")
+        dateFormatter.dateFormat = "yyyy.MM.dd E요일"
+        let currentDateString = dateFormatter.string(from: currentDate)
+        return currentDateString
     }
 }

@@ -41,7 +41,6 @@ class PriorityViewController: BaseViewController {
         default:
             break
         }
-        
         navigationController?.popViewController(animated: true)
     }
     override func configureHierarchy() {
@@ -54,5 +53,4 @@ class PriorityViewController: BaseViewController {
             make.height.equalTo(50)
         }
     }
-
 }

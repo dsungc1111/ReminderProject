@@ -9,18 +9,18 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-final class ListViewController: BaseViewController {
+final class WholeListViewController: BaseViewController {
     
     
     private let tableView = UITableView()
     private let dateFormatter = DateFormatter()
     
     private let realm = try! Realm()
-    private var list: Results<RealmTable>!
+    static var list: Results<RealmTable>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+//        Self.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
         navigationbarSetting()
     }
     private func navigationbarSetting() {
@@ -38,15 +38,15 @@ final class ListViewController: BaseViewController {
     }
     
     private func sortByTitleButtonTapped() {
-        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue, ascending: true)
+        Self.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue, ascending: true)
         tableView.reloadData()
     }
     private func sortByContentButtonTapped() {
-        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memo.rawValue, ascending: true)
+        Self.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memo.rawValue, ascending: true)
         tableView.reloadData()
     }
     private func sortByDateButtonTapped() {
-        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.date.rawValue, ascending: true)
+        Self.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.date.rawValue, ascending: true)
         tableView.reloadData()
     }
     override func tableViewSetting() {
@@ -65,17 +65,17 @@ final class ListViewController: BaseViewController {
     }
 }
 
-extension ListViewController: UITableViewDelegate, UITableViewDataSource {
+extension WholeListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count
+        return Self.list.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
-        let data = list[indexPath.row]
+        let data = Self.list[indexPath.row]
         cell.titleLabel.text = data.memoTitle
         cell.contentLabel.text = data.memo
-        cell.dueDateLabel.text =  data.date
+        cell.dueDateLabel.text =  getDateString(date: data.date ?? Date())
         if let tag = data.tag { cell.tagLabel.text = tag }
         return cell
     }
@@ -93,7 +93,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             try! self.realm.write {
-                self.realm.delete(self.list[indexPath.row])
+                self.realm.delete(Self.list[indexPath.row])
             }
             tableView.reloadData()
             success(true)
@@ -105,5 +105,14 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         }
         fix.backgroundColor = .systemBlue
         return UISwipeActionsConfiguration(actions:[delete, fix])
+    }
+    
+    func getDateString(date: Date) -> String{
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko")
+        dateFormatter.dateFormat = "yyyy.MM.dd E요일"
+        let currentDateString = dateFormatter.string(from: date)
+        return currentDateString
     }
 }

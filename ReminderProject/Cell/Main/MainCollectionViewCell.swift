@@ -77,14 +77,6 @@ class MainCollectionViewCell: UICollectionViewCell {
             make.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(20)
         }
     }
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//        contentLogo.layoutIfNeeded()
-//        
-////        contentLogo.frame.size.width = 30
-////        contentLogo.frame.size.height = 30
-////        contentLogo.layer.cornerRadius = 15
-//    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
