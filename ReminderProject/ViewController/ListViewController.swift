@@ -76,10 +76,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.titleLabel.text = data.memoTitle
         cell.contentLabel.text = data.memo
         cell.dueDateLabel.text =  data.date
-        
-        if let tag = data.tag { cell.tagLabel.text = "# \(tag)" }
-        
-        
+        if let tag = data.tag { cell.tagLabel.text = tag }
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -30,7 +30,6 @@ class CategoryTableViewCell: BaseTableViewCell {
     let resultLabel = {
         let label = UILabel()
         label.textColor = .darkGray
-        label.text = "df"
         return label
     }()
     override func configureHierarchy() {

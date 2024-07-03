@@ -24,6 +24,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     private var memoContentText = ""
     private var getDueDate = ""
     private var getTagText = ""
+    private var getPriority = ""
     
     private let realm = try! Realm()
     private var list: Results<RealmTable>!
@@ -39,7 +40,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     }
     @objc func saveButtonTapped() {
         let realm = try! Realm()
-        let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText, tag: getTagText )
+        let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText, tag: getTagText, priority: getPriority )
         try! realm.write {
             realm.add(newData)
             print("realm create succeed")
@@ -82,7 +83,8 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     }
     
     func passPriorityValue(_ text: String) {
-        print(#function)
+        getPriority = text
+        tableView.reloadData()
     }
     
 }
@@ -110,6 +112,8 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.resultLabel.text = getDueDate
             case 1:
                 cell.resultLabel.text = getTagText
+            case 2:
+                cell.resultLabel.text = getPriority
             default:
                 break
             }
@@ -154,6 +158,7 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
                 navigationController?.pushViewController(vc, animated: true)
             case 2:
                 let vc = PriorityViewController()
+                vc.passPriority = self
                 vc.navigationItem.title = Category.allCases[2].rawValue
                 navigationController?.pushViewController(vc, animated: true)
             case 3:

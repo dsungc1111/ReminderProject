@@ -46,6 +46,9 @@ final class MainViewController: BaseViewController {
         navigationbarSetting()
         collectionViewSetting()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        collectionView.reloadData()
+    }
     func collectionViewSetting() {
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -96,7 +99,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.id, for: indexPath) as? MainCollectionViewCell else { return MainCollectionViewCell() }
-        cell.contentLogo.image = UIImage(systemName: "calendar")
         cell.configureCell(data: indexPath)
         return cell
     }
