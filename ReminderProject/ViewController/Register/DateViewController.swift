@@ -28,7 +28,8 @@ class DateViewController: BaseViewController {
         getDateFromDatePicker = dateFormat(date: sender.date)
     }
     private func dateFormat(date: Date) -> String {
-        dateFormatter.dateFormat = "yyyy/MM/dd"
+        dateFormatter.locale = Locale(identifier: "ko")
+        dateFormatter.dateFormat = "yyyy.MM.dd E요일"
         return dateFormatter.string(from: date)
     }
     
