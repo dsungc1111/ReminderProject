@@ -11,7 +11,6 @@ import RealmSwift
 
 class MainCollectionViewCell: UICollectionViewCell {
     
-    static var totalCount = 0
     let contentLogo = {
         let logo = UIImageView()
         logo.backgroundColor = .black
@@ -26,7 +25,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         name.text = "df"
         return name
     }()
-    let contentCountLabel = {
+    var contentCountLabel = {
         let label = UILabel()
         label.text = "0"
         label.font = .boldSystemFont(ofSize: 30)
@@ -70,7 +69,24 @@ class MainCollectionViewCell: UICollectionViewCell {
         contentName.text = ContentNameEnum.allCases[data.row].rawValue
         contentLogo.backgroundColor =  ContentLogoColorEnum.allCases[data.row].value
         contentLogo.image = UIImage(systemName: ContentLogoImageEnum.allCases[data.row].rawValue)
-        
+        let date = Date()
+        switch data.row {
+        case 0:
+            ListViewController.list = realm.objects(RealmTable.self).filter("date == %@", date)
+            contentCountLabel.text = "\( ListViewController.list.count)"
+        case 1:
+            ListViewController.list = realm.objects(RealmTable.self).filter("date > %@", date)
+            contentCountLabel.text = "\( ListViewController.list.count)"
+        case 2:
+            ListViewController.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+            contentCountLabel.text = "\( ListViewController.list.count)"
+        case 3:
+            contentCountLabel.text = "\( ListViewController.list.count)"
+        case 4:
+            contentCountLabel.text = ""
+        default:
+            break
+        }
         
     }
 }
