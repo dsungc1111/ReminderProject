@@ -9,22 +9,19 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-final class WholeListViewController: BaseViewController {
-    
+final class ListViewController: BaseViewController {
     
     private let tableView = UITableView()
     private let dateFormatter = DateFormatter()
-    
     private let realm = try! Realm()
     static var list: Results<RealmTable>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        Self.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
         navigationbarSetting()
     }
     private func navigationbarSetting() {
-        navigationItem.title = "전체"
+        
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         
@@ -65,7 +62,7 @@ final class WholeListViewController: BaseViewController {
     }
 }
 
-extension WholeListViewController: UITableViewDelegate, UITableViewDataSource {
+extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return Self.list.count
     }
@@ -82,12 +79,14 @@ extension WholeListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
-    private func dateToString(date: Date) -> String {
-        dateFormatter.dateFormat = "yy년 MM월 dd일 HH시 mm분"
-        return dateFormatter.string(from: date)
-    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
+        let vc = DetailViewController()
+        vc.memoTitleLabel.text = ListViewController.list[indexPath.row].memoTitle
+        vc.memoLabel.text = ListViewController.list[indexPath.row].memo
+        vc.dateLabel.text = getDateString(date: ListViewController.list[indexPath.row].date ?? Date())
+        vc.tagLabel.text = "#\(ListViewController.list[indexPath.row].tag ?? "")"
+        navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
@@ -106,10 +105,7 @@ extension WholeListViewController: UITableViewDelegate, UITableViewDataSource {
         fix.backgroundColor = .systemBlue
         return UISwipeActionsConfiguration(actions:[delete, fix])
     }
-    
     func getDateString(date: Date) -> String{
-        
-        let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ko")
         dateFormatter.dateFormat = "yyyy.MM.dd E요일"
         let currentDateString = dateFormatter.string(from: date)

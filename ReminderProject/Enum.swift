@@ -7,6 +7,22 @@
 
 import UIKit
 
+enum ContentNameEnum: String, CaseIterable {
+    case today = "오늘"
+    case plan = "예정"
+    case all = "전체"
+    case flag = "깃발 표시"
+    case complete = "완료됨"
+}
+enum ContentLogoImageEnum: String, CaseIterable {
+    case today = "arrowshape.right.circle"
+    case plan = "calendar.circle"
+    case all = "tray.circle"
+    case flag = "flag.circle"
+    case complete = "checkmark.circle.fill"
+}
+
+
 enum SortButtonImages: String {
     case ellipsis = "ellipsis.circle"
     case lineweight

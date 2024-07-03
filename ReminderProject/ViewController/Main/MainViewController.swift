@@ -43,6 +43,7 @@ final class MainViewController: BaseViewController {
         return btn
     }()
     private let realm = try! Realm()
+    private let dateFormatter = DateFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,10 +64,6 @@ final class MainViewController: BaseViewController {
         navigationItem.title = "전체"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-    }
-    @objc func temporaryButtonTapped() {
-        let vc = WholeListViewController()
-        navigationController?.pushViewController(vc, animated: true)
     }
     @objc func addButtonTapped() {
         let vc = UINavigationController(rootViewController: RegisterViewController())
@@ -106,29 +103,25 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = ListViewController()
+        let date = Date()
         switch indexPath.row {
         case 0:
-            let date = Date()
-            WholeListViewController.list = realm.objects(RealmTable.self).filter("date == %@", date)
+            ListViewController.list = realm.objects(RealmTable.self).filter("date == %@", date)
+            vc.navigationItem.title = ContentNameEnum.today.rawValue
         case 1:
-            let date = Date()
-            WholeListViewController.list = realm.objects(RealmTable.self).filter("date >= %@", date)
-
+            ListViewController.list = realm.objects(RealmTable.self).filter("date > %@", date)
+            vc.navigationItem.title = ContentNameEnum.plan.rawValue
         case 2:
-            
-            WholeListViewController.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+            ListViewController.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+            vc.navigationItem.title = ContentNameEnum.all.rawValue
+        case 3:
+            vc.navigationItem.title = ContentNameEnum.flag.rawValue
+        case 4:
+            vc.navigationItem.title = ContentNameEnum.complete.rawValue
         default:
             break
         }
-        let vc = WholeListViewController()
         navigationController?.pushViewController(vc, animated: true)
-    }
-    func getDateString() -> String{
-        let currentDate = Date()
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ko")
-        dateFormatter.dateFormat = "yyyy.MM.dd E요일"
-        let currentDateString = dateFormatter.string(from: currentDate)
-        return currentDateString
     }
 }
