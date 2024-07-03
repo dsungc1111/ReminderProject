@@ -14,14 +14,15 @@ class RealmTable: Object {
     @Persisted(indexed: true) var memoTitle: String
     @Persisted var memo: String?
     @Persisted var date: String?
+    @Persisted var tag: String?
     
 
-    convenience init(memoTitle: String, date: String, memo: String? = nil) {
+    convenience init(memoTitle: String, date: String, memo: String? = nil, tag : String? ) {
         self.init()
         self.memoTitle = memoTitle
         self.date = date
         self.memo = memo
-        
+        self.tag = tag
         
     }
     

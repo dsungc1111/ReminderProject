@@ -11,6 +11,7 @@ import RealmSwift
 
 final class RegisterViewController: BaseViewController, PassDateDelegate {
     
+    
     private enum Category: String, CaseIterable {
         case dueDate = "마감일"
         case tag = "태그"
@@ -22,6 +23,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     private var memoTitleText = ""
     private var memoContentText = ""
     private var getDueDate = ""
+    private var getTagText = ""
     
     private let realm = try! Realm()
     private var list: Results<RealmTable>!
@@ -37,7 +39,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     }
     @objc func saveButtonTapped() {
         let realm = try! Realm()
-        let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText)
+        let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText, tag: getTagText )
         try! realm.write {
             realm.add(newData)
             print("realm create succeed")
@@ -51,7 +53,6 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.id)
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
-        
     }
     private func configureNavigationbar() {
         navigationItem.title = "새로운 미리 알림"
@@ -60,7 +61,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "저장", style: .plain, target: self, action: #selector(saveButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .lightGray
         navigationItem.rightBarButtonItem?.isEnabled = false
-        
+        navigationItem.backButtonTitle = "취소"
     }
     override func configureHierarchy() {
         view.addSubview(tableView)
@@ -72,8 +73,18 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     }
     func passDateValue(_ text: String) {
         getDueDate = text
+        print(getDueDate)
         tableView.reloadData()
     }
+    func passTagValue(_ text: String) {
+        getTagText = "# \(text)"
+        tableView.reloadData()
+    }
+    
+    func passPriorityValue(_ text: String) {
+        print(#function)
+    }
+    
 }
 extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -94,20 +105,18 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.id, for: indexPath) as? CategoryTableViewCell else { return CategoryTableViewCell() }
-            
             switch indexPath.row {
             case 0:
                 cell.resultLabel.text = getDueDate
+            case 1:
+                cell.resultLabel.text = getTagText
             default:
                 break
             }
-            
-            
             cell.titleLabel.text = Category.allCases[indexPath.row].rawValue
             return cell
         }
     }
-   
     @objc func titleFieldChange(_ textField: UITextField) {
         guard let text = textField.text, !text.isEmpty else {
             navigationItem.rightBarButtonItem?.isEnabled = false
@@ -130,9 +139,7 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         tableView.reloadRows(at: [indexPath], with: .automatic)
-        
         if indexPath.section != 0 {
             switch indexPath.row {
             case 0:
@@ -143,6 +150,7 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
             case 1:
                 let vc = TagViewController()
                 vc.navigationItem.title = Category.allCases[1].rawValue
+                vc.passTag = self
                 navigationController?.pushViewController(vc, animated: true)
             case 2:
                 let vc = PriorityViewController()
@@ -155,11 +163,6 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
             default:
                 break
             }
-            
-            
-           
-            
-           
         }
     }
 }

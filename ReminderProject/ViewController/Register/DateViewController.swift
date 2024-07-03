@@ -19,10 +19,11 @@ class DateViewController: BaseViewController {
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
     }
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+    @objc func completebuttonTapped() {
         passDate?.passDateValue(getDateFromDatePicker)
+        navigationController?.popViewController(animated: true)
     }
     @objc func dateChange(_ sender: UIDatePicker) {
         getDateFromDatePicker = dateFormat(date: sender.date)
@@ -32,7 +33,6 @@ class DateViewController: BaseViewController {
         dateFormatter.dateFormat = "yyyy.MM.dd E요일"
         return dateFormatter.string(from: date)
     }
-    
     override func configureHierarchy() {
         view.addSubview(datePicker)
     }

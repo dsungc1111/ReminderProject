@@ -31,12 +31,19 @@ final class ListTableViewCell: BaseTableViewCell {
         label.font = .systemFont(ofSize: 13)
         return label
     }()
+    let tagLabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 13)
+        label.textColor = .systemBlue
+        return label
+    }()
     
     override func configureHierarchy() {
         contentView.addSubview(circleButton)
         contentView.addSubview(titleLabel)
         contentView.addSubview(contentLabel)
         contentView.addSubview(dueDateLabel)
+        contentView.addSubview(tagLabel)
     }
     override func configureLayout() {
         circleButton.snp.makeConstraints { make in
@@ -55,6 +62,10 @@ final class ListTableViewCell: BaseTableViewCell {
         dueDateLabel.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(5)
             make.leading.equalTo(circleButton.snp.trailing).offset(10)
+        }
+        tagLabel.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+            make.leading.equalTo(dueDateLabel.snp.trailing).offset(5)
         }
     }
 

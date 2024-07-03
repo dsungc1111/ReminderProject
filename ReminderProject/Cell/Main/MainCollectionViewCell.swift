@@ -19,10 +19,10 @@ class MainCollectionViewCell: UICollectionViewCell {
         case complete = "완료됨"
     }
     enum ContentLogoImageEnum: String, CaseIterable {
-        case today = "balloon"
-        case plan = "calendar"
-        case all = "tray.fill"
-        case flag = "flag.fill"
+        case today = "arrowshape.right.circle"
+        case plan = "calendar.circle"
+        case all = "tray.circle"
+        case flag = "flag.circle"
         case complete = "checkmark.circle.fill"
     }
     let contentLogo = {
@@ -51,6 +51,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         layer.cornerRadius = 10
         configureHierarchy()
         configureLayout()
+        contentLogo.layer.cornerRadius = 15
     }
     func configureHierarchy() {
         contentView.addSubview(contentLogo)
@@ -72,13 +73,14 @@ class MainCollectionViewCell: UICollectionViewCell {
             make.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(20)
         }
     }
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        contentLogo.layoutIfNeeded()
-        contentLogo.frame.size.width = 30
-        contentLogo.frame.size.height = 30
-        contentLogo.layer.cornerRadius = contentLogo.frame.size.height / 2
-    }
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//        contentLogo.layoutIfNeeded()
+//        
+////        contentLogo.frame.size.width = 30
+////        contentLogo.frame.size.height = 30
+////        contentLogo.layer.cornerRadius = 15
+//    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
