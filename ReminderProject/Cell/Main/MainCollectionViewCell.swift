@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-
+import RealmSwift
 
 class MainCollectionViewCell: UICollectionViewCell {
     
@@ -25,6 +25,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         case flag = "flag.circle"
         case complete = "checkmark.circle.fill"
     }
+    static var totalCount = 0
     let contentLogo = {
         let logo = UIImageView()
         logo.backgroundColor = .black
@@ -45,6 +46,8 @@ class MainCollectionViewCell: UICollectionViewCell {
         label.font = .boldSystemFont(ofSize: 30)
         return label
     }()
+    private let realm = try! Realm()
+    private var list: Results<RealmTable>!
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
@@ -52,6 +55,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         configureHierarchy()
         configureLayout()
         contentLogo.layer.cornerRadius = 15
+        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
     }
     func configureHierarchy() {
         contentView.addSubview(contentLogo)
@@ -88,6 +92,9 @@ class MainCollectionViewCell: UICollectionViewCell {
         contentName.text = ContentNameEnum.allCases[data.row].rawValue
         contentLogo.backgroundColor =  ContentLogoColorEnum.allCases[data.row].value
         contentLogo.image = UIImage(systemName: ContentLogoImageEnum.allCases[data.row].rawValue)
+        if data.row == 2 {
+            contentCountLabel.text = "\(list.count)"
+        }
         if data.row == 4{
             contentCountLabel.text = ""
         }
