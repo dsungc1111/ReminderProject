@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 import RealmSwift
 
 
@@ -37,6 +38,13 @@ final class ListTableViewCell: BaseTableViewCell {
         label.textColor = .systemBlue
         return label
     }()
+    let flagLogoView = {
+        let view = UIImageView()
+        view.contentMode = .scaleAspectFill
+        view.image = UIImage(systemName: ContentLogoImageEnum.flag.rawValue)
+        view.tintColor = .systemYellow
+        return view
+    }()
     
     override func configureHierarchy() {
         contentView.addSubview(circleButton)
@@ -44,6 +52,7 @@ final class ListTableViewCell: BaseTableViewCell {
         contentView.addSubview(contentLabel)
         contentView.addSubview(dueDateLabel)
         contentView.addSubview(tagLabel)
+        contentView.addSubview(flagLogoView)
     }
     override func configureLayout() {
         circleButton.snp.makeConstraints { make in
@@ -66,6 +75,11 @@ final class ListTableViewCell: BaseTableViewCell {
         tagLabel.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(5)
             make.leading.equalTo(dueDateLabel.snp.trailing).offset(5)
+        }
+        flagLogoView.snp.makeConstraints { make in
+            make.centerY.equalTo(contentView.safeAreaLayoutGuide)
+            make.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(30)
+            make.size.equalTo(30)
         }
     }
 

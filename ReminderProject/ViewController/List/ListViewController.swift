@@ -34,18 +34,14 @@ final class ListViewController: BaseViewController {
     }
     
     private func sortByTitleButtonTapped() {
-        
         Self.list = Self.list.sorted(byKeyPath: MemoContents.memoTitle.rawValue)
-        
         tableView.reloadData()
     }
     private func sortByContentButtonTapped() {
-        
         Self.list = Self.list.sorted(byKeyPath: MemoContents.memo.rawValue)
         tableView.reloadData()
     }
     private func sortByDateButtonTapped() {
-        
         Self.list = Self.list.sorted(byKeyPath: MemoContents.date.rawValue)
         tableView.reloadData()
     }
@@ -77,6 +73,11 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.contentLabel.text = data.memo
         cell.dueDateLabel.text =  Date.getDateString(date: data.date ?? Date())
         if let tag = data.tag { cell.tagLabel.text = tag }
+        if data.isFlag == false {
+            cell.flagLogoView.isHidden = true
+        } else {
+            cell.flagLogoView.isHidden = false
+        }
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -101,11 +102,15 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
             success(true)
         }
         delete.backgroundColor = .systemRed
-        let fix = UIContextualAction(style: .normal, title: "고정") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            print("fix clicked")
+        let flag = UIContextualAction(style: .normal, title: "깃발") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            try! self.realm.write {
+                Self.list[indexPath.row].isFlag.toggle()
+                self.realm.create(RealmTable.self, value: ["key" : Self.list[indexPath.row].key, "isFlag" : Self.list[indexPath.row].isFlag], update: .modified)
+            }
+            tableView.reloadData()
             success(true)
         }
-        fix.backgroundColor = .systemBlue
-        return UISwipeActionsConfiguration(actions:[delete, fix])
+        flag.backgroundColor = .systemYellow
+        return UISwipeActionsConfiguration(actions:[delete, flag])
     }
 }

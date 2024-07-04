@@ -117,6 +117,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             ListViewController.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
             vc.navigationItem.title = ContentNameEnum.all.rawValue
         case 3:
+            ListViewController.list = realm.objects(RealmTable.self).filter("isFlag == true")
             vc.navigationItem.title = ContentNameEnum.flag.rawValue
         case 4:
             vc.navigationItem.title = ContentNameEnum.complete.rawValue

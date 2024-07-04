@@ -80,6 +80,7 @@ class MainCollectionViewCell: UICollectionViewCell {
             ListViewController.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
             contentCountLabel.text = "\( ListViewController.list.count)"
         case 3:
+            ListViewController.list = realm.objects(RealmTable.self).filter("isFlag == true")
             contentCountLabel.text = "\( ListViewController.list.count)"
         case 4:
             contentCountLabel.text = ""
