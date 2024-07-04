@@ -48,6 +48,7 @@ final class MainViewController: BaseViewController {
         super.viewDidLoad()
         navigationbarSetting()
         collectionViewSetting()
+        print(realm.configuration.fileURL)
     }
     override func viewWillAppear(_ animated: Bool) {
         collectionView.reloadData()
@@ -104,12 +105,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = ListViewController()
         let date = Date()
+        
         switch indexPath.row {
         case 0:
-            ListViewController.list = realm.objects(RealmTable.self).filter("date == %@", date)
+            ListViewController.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@}", Calendar.current.startOfDay(for: Date()), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: Date())))
             vc.navigationItem.title = ContentNameEnum.today.rawValue
         case 1:
-            ListViewController.list = realm.objects(RealmTable.self).filter("date > %@", date)
+            ListViewController.list = realm.objects(RealmTable.self).filter("date > %@", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: Date())))
             vc.navigationItem.title = ContentNameEnum.plan.rawValue
         case 2:
             ListViewController.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)

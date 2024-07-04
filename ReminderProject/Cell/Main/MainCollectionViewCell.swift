@@ -71,10 +71,10 @@ class MainCollectionViewCell: UICollectionViewCell {
         let date = Date()
         switch data.row {
         case 0:
-            ListViewController.list = realm.objects(RealmTable.self).filter("date == %@", date)
+            ListViewController.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@}", Calendar.current.startOfDay(for: Date()), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: Date())))
             contentCountLabel.text = "\( ListViewController.list.count)"
         case 1:
-            ListViewController.list = realm.objects(RealmTable.self).filter("date > %@", date)
+            ListViewController.list = realm.objects(RealmTable.self).filter("date > %@", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: Date())))
             contentCountLabel.text = "\( ListViewController.list.count)"
         case 2:
             ListViewController.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
