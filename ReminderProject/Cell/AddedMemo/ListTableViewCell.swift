@@ -11,8 +11,8 @@ import RealmSwift
 
 
 final class ListTableViewCell: BaseTableViewCell {
-
-    private let circleButton = {
+    private let realm = try! Realm()
+     var completeButton = {
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "circle"), for: .normal)
         return btn
@@ -47,7 +47,7 @@ final class ListTableViewCell: BaseTableViewCell {
     }()
     
     override func configureHierarchy() {
-        contentView.addSubview(circleButton)
+        contentView.addSubview(completeButton)
         contentView.addSubview(titleLabel)
         contentView.addSubview(contentLabel)
         contentView.addSubview(dueDateLabel)
@@ -55,22 +55,22 @@ final class ListTableViewCell: BaseTableViewCell {
         contentView.addSubview(flagLogoView)
     }
     override func configureLayout() {
-        circleButton.snp.makeConstraints { make in
+        completeButton.snp.makeConstraints { make in
             make.verticalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(5)
             make.leading.equalTo(contentView.safeAreaLayoutGuide).inset(10)
             make.width.equalTo(80)
         }
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(contentView.safeAreaLayoutGuide).inset(10)
-            make.leading.equalTo(circleButton.snp.trailing).offset(10)
+            make.leading.equalTo(completeButton.snp.trailing).offset(10)
         }
         contentLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(5)
-            make.leading.equalTo(circleButton.snp.trailing).offset(10)
+            make.leading.equalTo(completeButton.snp.trailing).offset(10)
         }
         dueDateLabel.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(5)
-            make.leading.equalTo(circleButton.snp.trailing).offset(10)
+            make.leading.equalTo(completeButton.snp.trailing).offset(10)
         }
         tagLabel.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(5)

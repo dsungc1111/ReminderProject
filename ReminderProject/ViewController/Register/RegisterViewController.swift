@@ -40,7 +40,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     }
     @objc func saveButtonTapped() {
         let realm = try! Realm()
-        let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText, tag: getTagText, priority: getPriority, isFlag: false )
+        let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText, tag: getTagText, priority: getPriority, isFlag: false, complete: false )
         try! realm.write {
             realm.add(newData)
             print("realm create succeed")

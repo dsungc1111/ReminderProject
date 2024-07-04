@@ -13,8 +13,7 @@ final class ListViewController: BaseViewController {
     
     private let tableView = UITableView()
     private let realm = try! Realm()
-    static var list: Results<RealmTable>!
-    
+  
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
@@ -34,15 +33,15 @@ final class ListViewController: BaseViewController {
     }
     
     private func sortByTitleButtonTapped() {
-        Self.list = Self.list.sorted(byKeyPath: MemoContents.memoTitle.rawValue)
+        DataList.list = DataList.list.sorted(byKeyPath: MemoContents.memoTitle.rawValue)
         tableView.reloadData()
     }
     private func sortByContentButtonTapped() {
-        Self.list = Self.list.sorted(byKeyPath: MemoContents.memo.rawValue)
+        DataList.list = DataList.list.sorted(byKeyPath: MemoContents.memo.rawValue)
         tableView.reloadData()
     }
     private func sortByDateButtonTapped() {
-        Self.list = Self.list.sorted(byKeyPath: MemoContents.date.rawValue)
+        DataList.list = DataList.list.sorted(byKeyPath: MemoContents.date.rawValue)
         tableView.reloadData()
     }
     override func tableViewSetting() {
@@ -59,16 +58,23 @@ final class ListViewController: BaseViewController {
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
+    override func viewDidDisappear(_ animated: Bool) {
+        tableView.reloadData()
+    }
 }
 
 extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Self.list.count
+        return DataList.list.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
-        let data = Self.list[indexPath.row]
+        let data = DataList.list[indexPath.row]
+        cell.completeButton.tag = indexPath.row
+        let image = data.isComplete ? "circle.fill" : "circle"
+        cell.completeButton.setImage(UIImage(systemName: image), for: .normal)
+        cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
         cell.titleLabel.text = data.memoTitle
         cell.contentLabel.text = data.memo
         cell.dueDateLabel.text =  Date.getDateString(date: data.date ?? Date())
@@ -80,23 +86,43 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return cell
     }
+    @objc func completeButtonTapped(sender: UIButton) {
+        let complete = DataList.list[sender.tag]
+        let aaa = DataList.completeList
+        try! self.realm.write {
+            complete.isComplete.toggle()
+            self.realm.create(RealmTable.self, value: ["key" : complete.key, "isComplete" : complete.isComplete], update: .modified)
+            let image = complete.isComplete ? "circle.fill" : "circle"
+            sender.setImage(UIImage(systemName: image), for: .normal)
+        }
+        try! self.realm.write {
+            aaa?.setValue(true, forKey: "isComplete")
+//            aaa?.setValue(<#T##value: Any?##Any?#>, forKey: <#T##String#>)
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
+        try! self.realm.write {
+                self.realm.delete(complete)
+            }
+            self.tableView.reloadData()
+        }
+    }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         let vc = DetailViewController()
-        vc.memoTitleLabel.text = ListViewController.list[indexPath.row].memoTitle
-        vc.memoLabel.text = ListViewController.list[indexPath.row].memo
-        vc.dateLabel.text = Date.getDateString(date: ListViewController.list[indexPath.row].date ?? Date())
-        vc.tagLabel.text = "#\(ListViewController.list[indexPath.row].tag ?? "")"
+        vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
+        vc.memoLabel.text = DataList.list[indexPath.row].memo
+        vc.dateLabel.text = Date.getDateString(date: DataList.list[indexPath.row].date ?? Date())
+        vc.tagLabel.text = "#\(DataList.list[indexPath.row].tag ?? "")"
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             try! self.realm.write {
-                self.realm.delete(Self.list[indexPath.row])
+                self.realm.delete(DataList.list[indexPath.row])
             }
             tableView.reloadData()
             success(true)
@@ -104,8 +130,8 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         delete.backgroundColor = .systemRed
         let flag = UIContextualAction(style: .normal, title: "깃발") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             try! self.realm.write {
-                Self.list[indexPath.row].isFlag.toggle()
-                self.realm.create(RealmTable.self, value: ["key" : Self.list[indexPath.row].key, "isFlag" : Self.list[indexPath.row].isFlag], update: .modified)
+                DataList.list[indexPath.row].isFlag.toggle()
+                self.realm.create(RealmTable.self, value: ["key" : DataList.list[indexPath.row].key, "isFlag" : DataList.list[indexPath.row].isFlag], update: .modified)
             }
             tableView.reloadData()
             success(true)

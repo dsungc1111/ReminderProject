@@ -33,6 +33,7 @@
 		8B456F5B2C3542EF003CFBD1 /* PassData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F5A2C3542EF003CFBD1 /* PassData.swift */; };
 		8B456F602C3617E9003CFBD1 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F5F2C3617E9003CFBD1 /* DetailViewController.swift */; };
 		8BA3BF912C36232400229026 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA3BF902C36232400229026 /* Date+Extension.swift */; };
+		8BA3BF9B2C36E02700229026 /* DataList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA3BF9A2C36E02700229026 /* DataList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,7 @@
 		8B456F5A2C3542EF003CFBD1 /* PassData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassData.swift; sourceTree = "<group>"; };
 		8B456F5F2C3617E9003CFBD1 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		8BA3BF902C36232400229026 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		8BA3BF9A2C36E02700229026 /* DataList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 		8B456F132C33E8D4003CFBD1 /* ReminderProject */ = {
 			isa = PBXGroup;
 			children = (
+				8BA3BF992C36DFD500229026 /* Resource */,
 				8BA3BF8F2C3622F400229026 /* Extension */,
 				8B456F3E2C33FA18003CFBD1 /* Protocol */,
 				8B456F392C33F989003CFBD1 /* Cell */,
@@ -106,8 +109,6 @@
 				8B456F1D2C33E8D6003CFBD1 /* Assets.xcassets */,
 				8B456F1F2C33E8D6003CFBD1 /* LaunchScreen.storyboard */,
 				8B456F222C33E8D6003CFBD1 /* Info.plist */,
-				8B456F442C340E55003CFBD1 /* Database.swift */,
-				8B456F492C34BD52003CFBD1 /* Enum.swift */,
 			);
 			path = ReminderProject;
 			sourceTree = "<group>";
@@ -212,6 +213,16 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		8BA3BF992C36DFD500229026 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				8B456F442C340E55003CFBD1 /* Database.swift */,
+				8B456F492C34BD52003CFBD1 /* Enum.swift */,
+				8BA3BF9A2C36E02700229026 /* DataList.swift */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -309,6 +320,7 @@
 				8B456F3B2C33F9A2003CFBD1 /* CategoryTableViewCell.swift in Sources */,
 				8B456F532C3529DF003CFBD1 /* DateViewController.swift in Sources */,
 				8B456F482C341956003CFBD1 /* ListTableViewCell.swift in Sources */,
+				8BA3BF9B2C36E02700229026 /* DataList.swift in Sources */,
 				8B456F2F2C33EC4A003CFBD1 /* MainViewController.swift in Sources */,
 				8B456F552C3529EA003CFBD1 /* TagViewController.swift in Sources */,
 				8B456F2D2C33EC01003CFBD1 /* ListViewController.swift in Sources */,

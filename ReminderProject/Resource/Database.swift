@@ -17,9 +17,10 @@ class RealmTable: Object {
     @Persisted var tag: String?
     @Persisted var priority: String?
     @Persisted var isFlag: Bool
+    @Persisted var isComplete: Bool
     
 
-    convenience init(memoTitle: String, date: Date? = nil, memo: String? = nil, tag : String? , priority: String? = nil, isFlag: Bool) {
+    convenience init(memoTitle: String, date: Date? = nil, memo: String? = nil, tag : String? , priority: String? = nil, isFlag: Bool, complete: Bool) {
         self.init()
         self.memoTitle = memoTitle
         self.date = date
@@ -27,7 +28,7 @@ class RealmTable: Object {
         self.tag = tag
         self.priority = priority
         self.isFlag = false
-        
+        self.isComplete = false
     }
     
 }

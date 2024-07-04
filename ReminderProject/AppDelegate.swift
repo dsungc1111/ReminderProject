@@ -18,10 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.resignOnTouchOutside = true
         
-        let config = Realm.Configuration(schemaVersion: 5) { migration, oldSchemaVersion in
-            if oldSchemaVersion < 5 {
-                            
-            }
+        let config = Realm.Configuration(schemaVersion: 0) { migration, oldSchemaVersion in
+            
         }
         
         Realm.Configuration.defaultConfiguration = config

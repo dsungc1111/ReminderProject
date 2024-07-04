@@ -71,18 +71,21 @@ class MainCollectionViewCell: UICollectionViewCell {
         let date = Date()
         switch data.row {
         case 0:
-            ListViewController.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@}", Calendar.current.startOfDay(for: Date()), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: Date())))
-            contentCountLabel.text = "\( ListViewController.list.count)"
+            DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+            contentCountLabel.text = "\( DataList.list.count)"
         case 1:
-            ListViewController.list = realm.objects(RealmTable.self).filter("date > %@", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: Date())))
-            contentCountLabel.text = "\( ListViewController.list.count)"
+            DataList.list = realm.objects(RealmTable.self).filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+            contentCountLabel.text = "\( DataList.list.count)"
         case 2:
-            ListViewController.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
-            contentCountLabel.text = "\( ListViewController.list.count)"
+            DataList.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+            DataList.list = realm.objects(RealmTable.self).filter("isComplete == false")
+            contentCountLabel.text = "\( DataList.list.count)"
         case 3:
-            ListViewController.list = realm.objects(RealmTable.self).filter("isFlag == true")
-            contentCountLabel.text = "\( ListViewController.list.count)"
+            DataList.list = realm.objects(RealmTable.self).filter("isFlag == true")
+            contentCountLabel.text = "\( DataList.list.count)"
         case 4:
+            DataList.completeList = realm.objects(RealmTable.self).filter("isComplete == true")
+            DataList.list = DataList.completeList
             contentCountLabel.text = ""
         default:
             break
