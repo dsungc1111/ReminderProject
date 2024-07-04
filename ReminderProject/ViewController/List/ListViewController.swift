@@ -34,15 +34,19 @@ final class ListViewController: BaseViewController {
     }
     
     private func sortByTitleButtonTapped() {
-        Self.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue, ascending: true)
+        
+        Self.list = Self.list.sorted(byKeyPath: MemoContents.memoTitle.rawValue)
+        
         tableView.reloadData()
     }
     private func sortByContentButtonTapped() {
-        Self.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memo.rawValue, ascending: true)
+        
+        Self.list = Self.list.sorted(byKeyPath: MemoContents.memo.rawValue)
         tableView.reloadData()
     }
     private func sortByDateButtonTapped() {
-        Self.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.date.rawValue, ascending: true)
+        
+        Self.list = Self.list.sorted(byKeyPath: MemoContents.date.rawValue)
         tableView.reloadData()
     }
     override func tableViewSetting() {
