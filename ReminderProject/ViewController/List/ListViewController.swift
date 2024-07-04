@@ -12,7 +12,6 @@ import RealmSwift
 final class ListViewController: BaseViewController {
     
     private let tableView = UITableView()
-    private let dateFormatter = DateFormatter()
     private let realm = try! Realm()
     static var list: Results<RealmTable>!
     
@@ -72,7 +71,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         let data = Self.list[indexPath.row]
         cell.titleLabel.text = data.memoTitle
         cell.contentLabel.text = data.memo
-        cell.dueDateLabel.text =  getDateString(date: data.date ?? Date())
+        cell.dueDateLabel.text =  Date.getDateString(date: data.date ?? Date())
         if let tag = data.tag { cell.tagLabel.text = tag }
         return cell
     }
@@ -84,7 +83,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         let vc = DetailViewController()
         vc.memoTitleLabel.text = ListViewController.list[indexPath.row].memoTitle
         vc.memoLabel.text = ListViewController.list[indexPath.row].memo
-        vc.dateLabel.text = getDateString(date: ListViewController.list[indexPath.row].date ?? Date())
+        vc.dateLabel.text = Date.getDateString(date: ListViewController.list[indexPath.row].date ?? Date())
         vc.tagLabel.text = "#\(ListViewController.list[indexPath.row].tag ?? "")"
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -104,11 +103,5 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         }
         fix.backgroundColor = .systemBlue
         return UISwipeActionsConfiguration(actions:[delete, fix])
-    }
-    func getDateString(date: Date) -> String{
-        dateFormatter.locale = Locale(identifier: "ko")
-        dateFormatter.dateFormat = "yyyy.MM.dd E요일"
-        let currentDateString = dateFormatter.string(from: date)
-        return currentDateString
     }
 }

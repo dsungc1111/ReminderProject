@@ -27,7 +27,6 @@ class MainCollectionViewCell: UICollectionViewCell {
     }()
     var contentCountLabel = {
         let label = UILabel()
-        label.text = "0"
         label.font = .boldSystemFont(ofSize: 30)
         return label
     }()

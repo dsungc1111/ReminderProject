@@ -10,7 +10,6 @@ import SnapKit
 
 class DetailViewController: BaseViewController {
 
-    
     let memoTitleLabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 40)
@@ -32,13 +31,11 @@ class DetailViewController: BaseViewController {
         label.textColor = .systemBlue
         return label
     }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
-    
     override func configureHierarchy() {
         view.addSubview(memoTitleLabel)
         view.addSubview(memoLabel)
@@ -63,5 +60,4 @@ class DetailViewController: BaseViewController {
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
         }
     }
-
 }

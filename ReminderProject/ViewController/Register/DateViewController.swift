@@ -10,7 +10,6 @@ import UIKit
 class DateViewController: BaseViewController {
 
     let datePicker = UIDatePicker()
-    let dateFormatter = DateFormatter()
     
     var passDate: PassDateDelegate?
     var getDateFromDatePicker: Date?

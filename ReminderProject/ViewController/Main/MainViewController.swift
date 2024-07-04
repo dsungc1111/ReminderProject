@@ -43,7 +43,6 @@ final class MainViewController: BaseViewController {
         return btn
     }()
     private let realm = try! Realm()
-    private let dateFormatter = DateFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()

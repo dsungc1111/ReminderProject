@@ -22,7 +22,6 @@ enum ContentLogoImageEnum: String, CaseIterable {
     case complete = "checkmark.circle.fill"
 }
 
-
 enum SortButtonImages: String {
     case ellipsis = "ellipsis.circle"
     case lineweight

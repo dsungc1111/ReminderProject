@@ -32,6 +32,7 @@
 		8B456F592C352A26003CFBD1 /* ImageAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F582C352A26003CFBD1 /* ImageAddViewController.swift */; };
 		8B456F5B2C3542EF003CFBD1 /* PassData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F5A2C3542EF003CFBD1 /* PassData.swift */; };
 		8B456F602C3617E9003CFBD1 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F5F2C3617E9003CFBD1 /* DetailViewController.swift */; };
+		8BA3BF912C36232400229026 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA3BF902C36232400229026 /* Date+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
 		8B456F582C352A26003CFBD1 /* ImageAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAddViewController.swift; sourceTree = "<group>"; };
 		8B456F5A2C3542EF003CFBD1 /* PassData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassData.swift; sourceTree = "<group>"; };
 		8B456F5F2C3617E9003CFBD1 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		8BA3BF902C36232400229026 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 		8B456F132C33E8D4003CFBD1 /* ReminderProject */ = {
 			isa = PBXGroup;
 			children = (
+				8BA3BF8F2C3622F400229026 /* Extension */,
 				8B456F3E2C33FA18003CFBD1 /* Protocol */,
 				8B456F392C33F989003CFBD1 /* Cell */,
 				8B456F292C33EBA3003CFBD1 /* Base */,
@@ -201,6 +204,14 @@
 			path = List;
 			sourceTree = "<group>";
 		};
+		8BA3BF8F2C3622F400229026 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				8BA3BF902C36232400229026 /* Date+Extension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -292,6 +303,7 @@
 				8B456F402C33FA27003CFBD1 /* Reusable.swift in Sources */,
 				8B456F152C33E8D4003CFBD1 /* AppDelegate.swift in Sources */,
 				8B456F592C352A26003CFBD1 /* ImageAddViewController.swift in Sources */,
+				8BA3BF912C36232400229026 /* Date+Extension.swift in Sources */,
 				8B456F4D2C34C56C003CFBD1 /* MainCollectionViewCell.swift in Sources */,
 				8B456F4A2C34BD52003CFBD1 /* Enum.swift in Sources */,
 				8B456F3B2C33F9A2003CFBD1 /* CategoryTableViewCell.swift in Sources */,

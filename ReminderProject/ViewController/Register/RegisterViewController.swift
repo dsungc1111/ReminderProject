@@ -28,7 +28,6 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     
     private let realm = try! Realm()
     private var list: Results<RealmTable>!
-    let dateFormatter = DateFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,7 +106,7 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.id, for: indexPath) as? CategoryTableViewCell else { return CategoryTableViewCell() }
             switch indexPath.row {
             case 0:
-                cell.resultLabel.text = dateFormat(date: getDueDate ?? Date())
+                cell.resultLabel.text = Date.getDateString(date: getDueDate ?? Date())
             case 1:
                 cell.resultLabel.text = getTagText
             case 2:
@@ -118,11 +117,7 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = Category.allCases[indexPath.row].rawValue
             return cell
         }
-        func dateFormat(date: Date) -> String {
-            dateFormatter.locale = Locale(identifier: "ko")
-            dateFormatter.dateFormat = "yyyy.MM.dd E요일"
-            return dateFormatter.string(from: date)
-        }
+     
     }
     @objc func titleFieldChange(_ textField: UITextField) {
         guard let text = textField.text, !text.isEmpty else {
