@@ -75,15 +75,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         let image = data.isComplete ? "circle.fill" : "circle"
         cell.completeButton.setImage(UIImage(systemName: image), for: .normal)
         cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
-        cell.titleLabel.text = data.memoTitle
-        cell.contentLabel.text = data.memo
-        cell.dueDateLabel.text =  Date.getDateString(date: data.date ?? Date())
-        if let tag = data.tag { cell.tagLabel.text = tag }
-        if data.isFlag == false {
-            cell.flagLogoView.isHidden = true
-        } else {
-            cell.flagLogoView.isHidden = false
-        }
+        cell.configureCell(data: data)
         return cell
     }
     @objc func completeButtonTapped(sender: UIButton) {
@@ -107,7 +99,13 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         let vc = DetailViewController()
+        
+        
         vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
+        if DataList.list[indexPath.row].priority == "높음" {
+            vc.memoTitleLabel.text = "!!!" + DataList.list[indexPath.row].memoTitle
+        }
+        
         vc.memoLabel.text = DataList.list[indexPath.row].memo
         vc.dateLabel.text = Date.getDateString(date: DataList.list[indexPath.row].date ?? Date())
         vc.tagLabel.text = "#\(DataList.list[indexPath.row].tag ?? "")"

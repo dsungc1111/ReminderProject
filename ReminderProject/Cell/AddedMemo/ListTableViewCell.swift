@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-
 final class ListTableViewCell: BaseTableViewCell {
     
      var completeButton = {
@@ -45,7 +44,6 @@ final class ListTableViewCell: BaseTableViewCell {
         view.tintColor = .systemYellow
         return view
     }()
-    
     override func configureHierarchy() {
         contentView.addSubview(completeButton)
         contentView.addSubview(titleLabel)
@@ -82,5 +80,15 @@ final class ListTableViewCell: BaseTableViewCell {
             make.size.equalTo(30)
         }
     }
-
+    func configureCell(data: RealmTable) {
+        titleLabel.text = data.memoTitle
+        contentLabel.text = data.memo
+        dueDateLabel.text =  Date.getDateString(date: data.date ?? Date())
+        if let tag = data.tag { tagLabel.text = tag }
+        if data.isFlag == false {
+            flagLogoView.isHidden = true
+        } else {
+            flagLogoView.isHidden = false
+        }
+    }
 }
