@@ -59,6 +59,7 @@ final class MainViewController: BaseViewController {
         calendar.isHidden = true
         calendar.appearance.headerMinimumDissolvedAlpha = 0.0
         calendar.appearance.headerDateFormat = "YYYY년 MM월"
+        calendar.swipeToChooseGesture.isEnabled = true
         return calendar
     }()
     private lazy var searchTableView = {
@@ -67,6 +68,7 @@ final class MainViewController: BaseViewController {
         tableView.dataSource = self
         tableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
         tableView.isHidden = true
+        tableView.backgroundColor = .clear
         return tableView
     }()
     private let realm = try! Realm()
@@ -99,6 +101,9 @@ final class MainViewController: BaseViewController {
         backView.isHidden = isCalendar ? false : true
         calendarView.isHidden = isCalendar ? false : true
         searchTableView.isHidden = isCalendar ? false : true
+        let date = Date()
+        calendarView.select(date)
+        calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
     }
     @objc func addButtonTapped() {
         let vc = UINavigationController(rootViewController: RegisterViewController())
@@ -182,13 +187,17 @@ extension MainViewController: FSCalendarDelegate, FSCalendarDataSource {
         DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
         searchTableView.reloadData()
     }
+    func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == true", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+            
+        
+        searchTableView.reloadData()
+    }
 }
-
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return DataList.list.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
         let data = DataList.list[indexPath.row]
@@ -221,6 +230,9 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             }
             self.searchTableView.reloadData()
         }
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
     
 }

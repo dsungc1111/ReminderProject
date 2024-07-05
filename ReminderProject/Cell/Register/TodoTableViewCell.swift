@@ -55,7 +55,6 @@ class TodoTableViewCell: BaseTableViewCell {
     }
     override func configureCell() {
         backView.backgroundColor = .white
-        backgroundColor = .clear
     }
 
 }

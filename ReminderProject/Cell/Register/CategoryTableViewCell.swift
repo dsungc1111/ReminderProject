@@ -56,10 +56,7 @@ class CategoryTableViewCell: BaseTableViewCell {
             make.verticalEdges.equalTo(backView.snp.verticalEdges).inset(5)
         }
     }
-    override func configureCell() {
-        backgroundColor = .clear
-    }
-
+ 
     
 
 }

@@ -34,7 +34,6 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         configureNavigationbar()
         list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
     }
-
     @objc func cancelButtonTapped() {
         navigationController?.dismiss(animated: true)
     }
