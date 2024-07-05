@@ -51,6 +51,7 @@ final class MainViewController: BaseViewController {
         view.isHidden = true
         return view
     }()
+    var isMonth = true
     private lazy var calendarView = {
         let calendar = FSCalendar()
         calendar.delegate = self
@@ -60,8 +61,14 @@ final class MainViewController: BaseViewController {
         calendar.appearance.headerMinimumDissolvedAlpha = 0.0
         calendar.appearance.headerDateFormat = "YYYY년 MM월"
         calendar.swipeToChooseGesture.isEnabled = true
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureHandler))
+        calendar.addGestureRecognizer(panGestureRecognizer)
         return calendar
     }()
+    @objc func panGestureHandler() {
+        isMonth.toggle()
+        calendarView.scope = isMonth ? .month : .week
+    }
     private lazy var searchTableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -78,7 +85,7 @@ final class MainViewController: BaseViewController {
         navigationbarSetting()
         collectionViewSetting()
         DataList.list = realm.objects(RealmTable.self).filter("isComplete == false")
-            navigationbarSetting()
+        navigationbarSetting()
     }
     override func viewWillAppear(_ animated: Bool) {
         collectionView.reloadData()
@@ -189,10 +196,9 @@ extension MainViewController: FSCalendarDelegate, FSCalendarDataSource {
     }
     func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
         DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == true", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-            
-        
         searchTableView.reloadData()
     }
+    
 }
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
