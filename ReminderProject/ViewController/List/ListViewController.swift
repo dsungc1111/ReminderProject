@@ -98,9 +98,8 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
+        
         let vc = DetailViewController()
-        
-        
         vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
         if DataList.list[indexPath.row].priority == "높음" {
             vc.memoTitleLabel.text = "!!!" + DataList.list[indexPath.row].memoTitle

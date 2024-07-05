@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import PhotosUI
 import RealmSwift
 
 final class RegisterViewController: BaseViewController, PassDateDelegate {
@@ -20,6 +21,12 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     }
     
     private let tableView = UITableView()
+    private let loadedImageView = {
+        let view = UIImageView()
+        view.contentMode = .scaleAspectFill
+        view.clipsToBounds = true
+        return view
+    }()
     private var memoTitleText = ""
     private var memoContentText = ""
     private var getDueDate: Date?
@@ -44,6 +51,9 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
             realm.add(newData)
             print("realm create succeed")
         }
+        if let image = loadedImageView.image {
+            saveImageToDocument(image: image, filename: "\(newData.key)")
+        }
         navigationController?.dismiss(animated: true)
     }
     override func tableViewSetting() {
@@ -51,7 +61,6 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         tableView.dataSource = self
         tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: TodoTableViewCell.id)
         tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.id)
-        tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
     }
     private func configureNavigationbar() {
@@ -65,11 +74,19 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     }
     override func configureHierarchy() {
         view.addSubview(tableView)
+        view.addSubview(loadedImageView)
     }
     override func configureLayout() {
         tableView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(180)
         }
+        loadedImageView.snp.makeConstraints { make in
+            make.top.equalTo(tableView.snp.bottom)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(80)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        loadedImageView.backgroundColor = .black
     }
     func passDateValue(_ date: Date) {
         getDueDate = date
@@ -141,6 +158,7 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
+        print(indexPath.row)
         if indexPath.section != 0 {
             switch indexPath.row {
             case 0:
@@ -159,14 +177,33 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
                 vc.navigationItem.title = Category.allCases[2].rawValue
                 navigationController?.pushViewController(vc, animated: true)
             case 3:
-                let vc = ImageAddViewController()
-                vc.navigationItem.title = Category.allCases[3].rawValue
-                navigationController?.pushViewController(vc, animated: true)
+                var config = PHPickerConfiguration()
+                config.filter = .any(of: [.images, .livePhotos, .screenshots])
+                let picker = PHPickerViewController(configuration: config)
+                picker.delegate = self
+                present(picker, animated: true)
+                
             default:
                 break
             }
         }
     }
 }
-
-
+extension RegisterViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        print(#function)
+        if let itemProvider = results.first?.itemProvider,
+           itemProvider.canLoadObject(ofClass: UIImage.self) {
+            
+            itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+               
+                DispatchQueue.main.async {
+                    self.loadedImageView.image = image as? UIImage
+                }
+            }
+            dismiss(animated: true)
+        }
+    }
+    
+    
+}
