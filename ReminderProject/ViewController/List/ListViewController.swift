@@ -88,18 +88,12 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     @objc func completeButtonTapped(sender: UIButton) {
         let complete = DataList.list[sender.tag]
-        let aaa = DataList.completeList
         try! self.realm.write {
             complete.isComplete.toggle()
             self.realm.create(RealmTable.self, value: ["key" : complete.key, "isComplete" : complete.isComplete], update: .modified)
             let image = complete.isComplete ? "circle.fill" : "circle"
             sender.setImage(UIImage(systemName: image), for: .normal)
         }
-        try! self.realm.write {
-            aaa?.setValue(true, forKey: "isComplete")
-//            aaa?.setValue(<#T##value: Any?##Any?#>, forKey: <#T##String#>)
-        }
-
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
         try! self.realm.write {
                 self.realm.delete(complete)

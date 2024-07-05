@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import RealmSwift
 import IQKeyboardManagerSwift
+import FSCalendar
 
 final class MainViewController: BaseViewController {
 
@@ -43,13 +44,39 @@ final class MainViewController: BaseViewController {
         btn.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         return btn
     }()
+    private var isCalendar = false
+    private lazy var backView = {
+       let view = UIView()
+        view.backgroundColor = .systemGray6
+        view.isHidden = true
+        return view
+    }()
+    private lazy var calendarView = {
+        let calendar = FSCalendar()
+        calendar.delegate = self
+        calendar.dataSource = self
+        calendar.scope = .month
+        calendar.isHidden = true
+        calendar.appearance.headerMinimumDissolvedAlpha = 0.0
+        calendar.appearance.headerDateFormat = "YYYY년 MM월"
+        return calendar
+    }()
+    private lazy var searchTableView = {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
+        tableView.isHidden = true
+        return tableView
+    }()
     private let realm = try! Realm()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
         collectionViewSetting()
-//        print(realm.configuration.fileURL)
+        DataList.list = realm.objects(RealmTable.self).filter("isComplete == false")
+            navigationbarSetting()
     }
     override func viewWillAppear(_ animated: Bool) {
         collectionView.reloadData()
@@ -65,6 +92,13 @@ final class MainViewController: BaseViewController {
         navigationItem.title = "전체"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(calendarButtonTapped))
+    }
+    @objc func calendarButtonTapped() {
+        isCalendar.toggle()
+        backView.isHidden = isCalendar ? false : true
+        calendarView.isHidden = isCalendar ? false : true
+        searchTableView.isHidden = isCalendar ? false : true
     }
     @objc func addButtonTapped() {
         let vc = UINavigationController(rootViewController: RegisterViewController())
@@ -74,6 +108,9 @@ final class MainViewController: BaseViewController {
         view.addSubview(addButton)
         view.addSubview(listAddButton)
         view.addSubview(collectionView)
+        view.addSubview(backView)
+        view.addSubview(calendarView)
+        view.addSubview(searchTableView)
     }
     override func configureLayout() {
         addButton.snp.makeConstraints { make in
@@ -91,6 +128,17 @@ final class MainViewController: BaseViewController {
         collectionView.snp.makeConstraints { make in
             make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(320)
+        }
+        backView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        calendarView.snp.makeConstraints { make in
+            make.horizontalEdges.top.equalTo(backView)
+            make.height.equalTo(320)
+        }
+        searchTableView.snp.makeConstraints { make in
+            make.top.equalTo(calendarView.snp.bottom)
+            make.horizontalEdges.bottom.equalTo(backView)
         }
     }
 }
@@ -126,4 +174,53 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         navigationController?.pushViewController(vc, animated: true)
     }
+}
+
+
+extension MainViewController: FSCalendarDelegate, FSCalendarDataSource {
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+        searchTableView.reloadData()
+    }
+}
+
+extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return DataList.list.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
+        let data = DataList.list[indexPath.row]
+        cell.completeButton.tag = indexPath.row
+        let image = data.isComplete ? "circle.fill" : "circle"
+        cell.completeButton.setImage(UIImage(systemName: image), for: .normal)
+        cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
+        cell.titleLabel.text = data.memoTitle
+        cell.contentLabel.text = data.memo
+        cell.dueDateLabel.text =  Date.getDateString(date: data.date ?? Date())
+        if let tag = data.tag { cell.tagLabel.text = tag }
+        if data.isFlag == false {
+            cell.flagLogoView.isHidden = true
+        } else {
+            cell.flagLogoView.isHidden = false
+        }
+        return cell
+    }
+    @objc func completeButtonTapped(sender: UIButton) {
+        let complete = DataList.list[sender.tag]
+        try! self.realm.write {
+            complete.isComplete.toggle()
+            self.realm.create(RealmTable.self, value: ["key" : complete.key, "isComplete" : complete.isComplete], update: .modified)
+            let image = complete.isComplete ? "circle.fill" : "circle"
+            sender.setImage(UIImage(systemName: image), for: .normal)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
+        try! self.realm.write {
+                self.realm.delete(complete)
+            }
+            self.searchTableView.reloadData()
+        }
+    }
+    
 }
