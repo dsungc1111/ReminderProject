@@ -50,6 +50,9 @@ final class ListViewController: BaseViewController {
         tableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
         tableView.backgroundColor = .clear
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
     override func configureHierarchy() {
         view.addSubview(tableView)
     }

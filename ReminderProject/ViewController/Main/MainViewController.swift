@@ -10,9 +10,20 @@ import SnapKit
 import RealmSwift
 import IQKeyboardManagerSwift
 import FSCalendar
+import Toast
 
 final class MainViewController: BaseViewController {
-
+    
+    
+    private lazy var searchBar = {
+        let search = UISearchBar()
+        search.delegate = self
+        search.placeholder = "검색"
+        search.backgroundColor = .clear
+        search.barTintColor = .systemGray6
+        search.searchTextField.backgroundColor = .white
+        return search
+    }()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
     private static func collectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewFlowLayout()
@@ -98,9 +109,7 @@ final class MainViewController: BaseViewController {
         collectionView.showsVerticalScrollIndicator = false
     }
     private func navigationbarSetting() {
-        navigationItem.title = "전체"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.title = "대성's 미리알림"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(calendarButtonTapped))
     }
     @objc func calendarButtonTapped() {
@@ -113,18 +122,27 @@ final class MainViewController: BaseViewController {
         calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
     }
     @objc func addButtonTapped() {
-        let vc = UINavigationController(rootViewController: RegisterViewController())
-        navigationController?.present(vc, animated: true)
+        let vc = RegisterViewController()
+        vc.showToast = {
+            vc.view.makeToast("저장완료!")
+        }
+        let nav = UINavigationController(rootViewController: RegisterViewController())
+        navigationController?.present(nav, animated: true)
     }
     override func configureHierarchy() {
         view.addSubview(addButton)
         view.addSubview(listAddButton)
+        view.addSubview(searchBar)
         view.addSubview(collectionView)
         view.addSubview(backView)
         view.addSubview(calendarView)
         view.addSubview(searchTableView)
     }
     override func configureLayout() {
+        searchBar.snp.makeConstraints { make in
+            make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(60)
+        }
         addButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(5)
@@ -138,7 +156,8 @@ final class MainViewController: BaseViewController {
             make.width.equalTo(100)
         }
         collectionView.snp.makeConstraints { make in
-            make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(searchBar.snp.bottom).offset(10)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(320)
         }
         backView.snp.makeConstraints { make in
@@ -230,4 +249,17 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
+}
+extension MainViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        let filter = realm.objects(RealmTable.self).where {
+            $0.memoTitle.contains(searchText, options: .caseInsensitive)
+        }
+        let result = searchText.isEmpty ? realm.objects(RealmTable.self) : filter
+        DataList.list = result
+//        print(DataList.list)
+//        tableView.reloadData()
+    }
+    
 }

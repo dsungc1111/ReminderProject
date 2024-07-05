@@ -9,17 +9,15 @@ import UIKit
 import SnapKit
 import PhotosUI
 import RealmSwift
+import Toast
 
 final class RegisterViewController: BaseViewController, PassDateDelegate {
-    
-    
     private enum Category: String, CaseIterable {
         case dueDate = "마감일"
         case tag = "태그"
         case priority = "우선순위"
         case addImage = "이미지 추가"
     }
-    
     private let tableView = UITableView()
     private let loadedImageView = {
         let view = UIImageView()
@@ -32,7 +30,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     private var getDueDate: Date?
     private var getTagText = ""
     private var getPriority = ""
-    
+    var showToast: (() -> Void)?
     private let realm = try! Realm()
     private var list: Results<RealmTable>!
     
@@ -54,6 +52,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         if let image = loadedImageView.image {
             saveImageToDocument(image: image, filename: "\(newData.key)")
         }
+        showToast?()
         navigationController?.dismiss(animated: true)
     }
     override func tableViewSetting() {
@@ -82,11 +81,11 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(180)
         }
         loadedImageView.snp.makeConstraints { make in
-            make.top.equalTo(tableView.snp.bottom)
-            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(80)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.width.equalTo(80)
+            make.height.equalTo(70)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(180)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).inset(60)
         }
-        loadedImageView.backgroundColor = .black
     }
     func passDateValue(_ date: Date) {
         getDueDate = date
@@ -122,18 +121,23 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.id, for: indexPath) as? CategoryTableViewCell else { return CategoryTableViewCell() }
             switch indexPath.row {
             case 0:
-                cell.resultLabel.text = Date.getDateString(date: getDueDate ?? Date())
+                if let date = getDueDate {
+                    cell.resultLabel.text = Date.getDateString(date: date)
+                } else {
+                    cell.resultLabel.text = ""
+                }
             case 1:
                 cell.resultLabel.text = getTagText
             case 2:
                 cell.resultLabel.text = getPriority
+            case 3:
+                cell.resultLabel.text = ""
             default:
                 break
             }
             cell.titleLabel.text = Category.allCases[indexPath.row].rawValue
             return cell
         }
-     
     }
     @objc func titleFieldChange(_ textField: UITextField) {
         guard let text = textField.text, !text.isEmpty else {
@@ -158,7 +162,6 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
-        print(indexPath.row)
         if indexPath.section != 0 {
             switch indexPath.row {
             case 0:

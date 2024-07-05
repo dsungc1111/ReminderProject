@@ -1,5 +1,5 @@
 {
-  "originHash" : "13906b6ddb83197f67b876787766a8af1d45e0e1fbddbc51a02bf25e6972cbd1",
+  "originHash" : "6ea1862ba01d8c7065ffaa9160300719fbe788c1d97e0495a76342c7c372d6b2",
   "pins" : [
     {
       "identity" : "fscalendar",
@@ -44,6 +44,15 @@
       "state" : {
         "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
         "version" : "5.7.1"
+      }
+    },
+    {
+      "identity" : "toast-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scalessec/Toast-Swift.git",
+      "state" : {
+        "revision" : "ddccd20d6fb718448d9b179c454c561653fda7d5",
+        "version" : "5.1.1"
       }
     }
   ],

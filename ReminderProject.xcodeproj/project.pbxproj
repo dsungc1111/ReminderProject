@@ -35,6 +35,7 @@
 		8BA3BF912C36232400229026 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA3BF902C36232400229026 /* Date+Extension.swift */; };
 		8BA3BF9B2C36E02700229026 /* DataList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA3BF9A2C36E02700229026 /* DataList.swift */; };
 		8BA3BF9E2C36F78100229026 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 8BA3BF9D2C36F78100229026 /* FSCalendar */; };
+		8BFB5C3E2C37EBF100CE14C5 /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 8BFB5C3D2C37EBF100CE14C5 /* Toast */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 				8B456F322C33EDB9003CFBD1 /* RealmSwift in Frameworks */,
 				8BA3BF9E2C36F78100229026 /* FSCalendar in Frameworks */,
 				8B456F352C33EDC3003CFBD1 /* SnapKit in Frameworks */,
+				8BFB5C3E2C37EBF100CE14C5 /* Toast in Frameworks */,
 				8B456F382C33EDD7003CFBD1 /* IQKeyboardManagerSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -246,6 +248,7 @@
 				8B456F342C33EDC3003CFBD1 /* SnapKit */,
 				8B456F372C33EDD7003CFBD1 /* IQKeyboardManagerSwift */,
 				8BA3BF9D2C36F78100229026 /* FSCalendar */,
+				8BFB5C3D2C37EBF100CE14C5 /* Toast */,
 			);
 			productName = ReminderProject;
 			productReference = 8B456F112C33E8D4003CFBD1 /* ReminderProject.app */;
@@ -280,6 +283,7 @@
 				8B456F332C33EDC3003CFBD1 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				8B456F362C33EDD7003CFBD1 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				8BA3BF9C2C36F78100229026 /* XCRemoteSwiftPackageReference "FSCalendar" */,
+				8BFB5C3C2C37EBF100CE14C5 /* XCRemoteSwiftPackageReference "Toast-Swift" */,
 			);
 			productRefGroup = 8B456F122C33E8D4003CFBD1 /* Products */;
 			projectDirPath = "";
@@ -583,6 +587,14 @@
 				minimumVersion = 2.8.4;
 			};
 		};
+		8BFB5C3C2C37EBF100CE14C5 /* XCRemoteSwiftPackageReference "Toast-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scalessec/Toast-Swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -605,6 +617,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8BA3BF9C2C36F78100229026 /* XCRemoteSwiftPackageReference "FSCalendar" */;
 			productName = FSCalendar;
+		};
+		8BFB5C3D2C37EBF100CE14C5 /* Toast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8BFB5C3C2C37EBF100CE14C5 /* XCRemoteSwiftPackageReference "Toast-Swift" */;
+			productName = Toast;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
