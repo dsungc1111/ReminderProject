@@ -127,9 +127,9 @@ final class MainViewController: BaseViewController, PassDataDelegate {
     }
     @objc func addButtonTapped() {
         let vc = RegisterViewController()
-//        vc.showToast = {
-//            vc.view.makeToast("저장완료!")
-//        }
+        vc.showToast = {
+            self.view.makeToast("저장완료!")
+        }
         vc.passData = self
         let nav = UINavigationController(rootViewController: vc)
         navigationController?.present(nav, animated: true)
