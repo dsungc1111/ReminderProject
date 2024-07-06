@@ -55,7 +55,19 @@ class DetailViewController: BaseViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "수정", style: .plain, target: self, action: #selector(editButtonTapped))
     }
     @objc func editButtonTapped() {
-        print(#function)
+        guard let memoTitle = editMemoTitleTextField.text,
+              let memo = editMemoTextField.text else { return }
+        
+        if memoTitle.isEmpty && memo.isEmpty {
+            showAlert(title: "공백", message: "")
+        } else if memoTitle.isEmpty && !memo.isEmpty {
+            memoLabel.text = memo
+        } else if !memoTitle.isEmpty && memo.isEmpty {
+            memoTitleLabel.text = memoTitle
+        } else {
+            memoTitleLabel.text = memoTitle
+            memoLabel.text = memo
+        }
     }
     override func viewDidLayoutSubviews() {
         editMemoTitleTextField.layer.addBorder([.bottom], color: .darkGray, width: 1)

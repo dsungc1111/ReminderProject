@@ -98,8 +98,17 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         let vc = DetailViewController()
         vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
-        if DataList.list[indexPath.row].priority == "높음" {
+        let selectedPriority = DataList.list[indexPath.row].priority
+        
+        switch selectedPriority {
+        case "높음":
             vc.memoTitleLabel.text = "!!!" + DataList.list[indexPath.row].memoTitle
+        case "중간":
+            vc.memoTitleLabel.text = "!!" + DataList.list[indexPath.row].memoTitle
+        case "낮음":
+            vc.memoTitleLabel.text = "!" + DataList.list[indexPath.row].memoTitle
+        default:
+            vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
         }
         vc.memoLabel.text = DataList.list[indexPath.row].memo
         vc.dateLabel.text = Date.getDateString(date: DataList.list[indexPath.row].date ?? Date())
