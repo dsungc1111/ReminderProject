@@ -84,11 +84,13 @@ final class MainViewController: BaseViewController {
         super.viewDidLoad()
         navigationbarSetting()
         collectionViewSetting()
-        DataList.list = realm.objects(RealmTable.self).filter("isComplete == false")
+        DataList.list = realm.objects(RealmTable.self)
         navigationbarSetting()
 //        print(realm.configuration.fileURL)
     }
     override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.largeTitleDisplayMode = .always
         collectionView.reloadData()
     }
     override func viewDidLayoutSubviews() {

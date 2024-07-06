@@ -13,7 +13,30 @@ final class ListViewController: BaseViewController {
     
     private let tableView = UITableView()
     private let realm = try! Realm()
-  
+    private lazy var removeAllButton = {
+       let btn = UIButton()
+        btn.setTitle("전체 삭제", for: .normal)
+        btn.setTitleColor(.systemBlue, for: .normal)
+        btn.addTarget(self, action: #selector(removeAllButtonTapped), for: .touchUpInside)
+        return btn
+    }()
+    @objc func removeAllButtonTapped() {
+        print(#function)
+//        let filter = realm.objects(RealmTable.self).where {
+//            $0.memoTitle.contains("", options: .caseInsensitive)
+//        }
+//        DataList.list.realm?.deleteAll()
+//        let result = filter
+//        DataList.list = result
+        try! self.realm.write {
+            DataList.list.realm?.deleteAll()
+            }
+            
+        
+        tableView.reloadData()
+        
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
@@ -50,15 +73,18 @@ final class ListViewController: BaseViewController {
         tableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
         tableView.backgroundColor = .clear
     }
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.navigationBar.prefersLargeTitles = false
-    }
     override func configureHierarchy() {
+        view.addSubview(removeAllButton)
         view.addSubview(tableView)
     }
     override func configureLayout() {
+        removeAllButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
+        }
         tableView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(removeAllButton.snp.bottom).offset(10)
+            make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
         }
     }
     override func viewDidDisappear(_ animated: Bool) {
@@ -107,7 +133,6 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         if DataList.list[indexPath.row].priority == "높음" {
             vc.memoTitleLabel.text = "!!!" + DataList.list[indexPath.row].memoTitle
         }
-        
         vc.memoLabel.text = DataList.list[indexPath.row].memo
         vc.dateLabel.text = Date.getDateString(date: DataList.list[indexPath.row].date ?? Date())
         vc.tagLabel.text = "#\(DataList.list[indexPath.row].tag ?? "")"
