@@ -14,16 +14,6 @@ import Toast
 
 final class MainViewController: BaseViewController {
     
-    
-    private lazy var searchBar = {
-        let search = UISearchBar()
-        search.delegate = self
-        search.placeholder = "검색"
-        search.backgroundColor = .clear
-        search.barTintColor = .systemGray6
-        search.searchTextField.backgroundColor = .white
-        return search
-    }()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
     private static func collectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewFlowLayout()
@@ -101,6 +91,9 @@ final class MainViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         collectionView.reloadData()
     }
+    override func viewDidLayoutSubviews() {
+        navigationController?.navigationBar.layer.addBorder([.bottom], color: .systemGray4, width: 1)
+    }
     func collectionViewSetting() {
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -111,6 +104,11 @@ final class MainViewController: BaseViewController {
     private func navigationbarSetting() {
         navigationItem.title = "대성's 미리알림"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(calendarButtonTapped))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(searchButtonTapped))
+    }
+    @objc func searchButtonTapped() {
+        let vc = SearchViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     @objc func calendarButtonTapped() {
         isCalendar.toggle()
@@ -132,17 +130,12 @@ final class MainViewController: BaseViewController {
     override func configureHierarchy() {
         view.addSubview(addButton)
         view.addSubview(listAddButton)
-        view.addSubview(searchBar)
         view.addSubview(collectionView)
         view.addSubview(backView)
         view.addSubview(calendarView)
         view.addSubview(searchTableView)
     }
     override func configureLayout() {
-        searchBar.snp.makeConstraints { make in
-            make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(60)
-        }
         addButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(5)
@@ -156,7 +149,7 @@ final class MainViewController: BaseViewController {
             make.width.equalTo(100)
         }
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom).offset(10)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(320)
         }
@@ -215,7 +208,6 @@ extension MainViewController: FSCalendarDelegate, FSCalendarDataSource {
         DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == true", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
         searchTableView.reloadData()
     }
-    
 }
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -249,17 +241,4 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
-}
-extension MainViewController: UISearchBarDelegate {
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        let filter = realm.objects(RealmTable.self).where {
-            $0.memoTitle.contains(searchText, options: .caseInsensitive)
-        }
-        let result = searchText.isEmpty ? realm.objects(RealmTable.self) : filter
-        DataList.list = result
-//        print(DataList.list)
-//        tableView.reloadData()
-    }
-    
 }
