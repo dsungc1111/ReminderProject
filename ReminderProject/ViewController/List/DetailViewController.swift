@@ -7,9 +7,10 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 class DetailViewController: BaseViewController {
-
+    let realm = try! Realm()
     let memoTitleLabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 40)
@@ -46,7 +47,6 @@ class DetailViewController: BaseViewController {
        
         navigationButtonSetting()
     }
-    
     func navigationButtonSetting() {
         navigationItem.title = "상세화면"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -55,19 +55,33 @@ class DetailViewController: BaseViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "수정", style: .plain, target: self, action: #selector(editButtonTapped))
     }
     @objc func editButtonTapped() {
+        let result = realm.objects(RealmTable.self)
         guard let memoTitle = editMemoTitleTextField.text,
               let memo = editMemoTextField.text else { return }
         
         if memoTitle.isEmpty && memo.isEmpty {
             showAlert(title: "공백", message: "")
         } else if memoTitle.isEmpty && !memo.isEmpty {
+            try! realm.write {
+                result.setValue(memo, forKey: "\(MemoContents.memo.rawValue)")
+            }
             memoLabel.text = memo
         } else if !memoTitle.isEmpty && memo.isEmpty {
+            try! realm.write {
+                result.setValue(memoTitle, forKey: "\(MemoContents.memoTitle.rawValue)")
+            }
             memoTitleLabel.text = memoTitle
         } else {
+          
+            try! realm.write {
+                result.setValue(memoTitle, forKey: "\(MemoContents.memoTitle.rawValue)")
+                result.setValue(memo, forKey: "\(MemoContents.memo.rawValue)")
+                
+            }
             memoTitleLabel.text = memoTitle
             memoLabel.text = memo
         }
+        
     }
     override func viewDidLayoutSubviews() {
         editMemoTitleTextField.layer.addBorder([.bottom], color: .darkGray, width: 1)
