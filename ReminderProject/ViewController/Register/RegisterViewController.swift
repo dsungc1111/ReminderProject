@@ -11,7 +11,9 @@ import PhotosUI
 import RealmSwift
 import Toast
 
-final class RegisterViewController: BaseViewController, PassDateDelegate {
+class RegisterViewController: BaseViewController, PassDateDelegate {
+    
+    var passData: PassDataDelegate?
     private enum Category: String, CaseIterable {
         case dueDate = "마감일"
         case tag = "태그"
@@ -39,6 +41,11 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         configureNavigationbar()
         list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
     }
+//    override func viewDidDisappear(_ animated: Bool) {
+//        DataList.list = realm.objects(RealmTable.self)
+//        
+//        print(#function)
+//    }
     @objc func cancelButtonTapped() {
         navigationController?.dismiss(animated: true)
     }
@@ -54,6 +61,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
             saveImageToDocument(image: image, filename: "\(newData.key)")
         }
         showToast?()
+        passData?.passDataList(DataList.list)
         navigationController?.dismiss(animated: true)
     }
     override func tableViewSetting() {
@@ -91,6 +99,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     }
     func passDateValue(_ date: Date) {
         getDueDate = date
+        print(#function)
         tableView.reloadData()
     }
     func passTagValue(_ text: String) {

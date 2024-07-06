@@ -12,9 +12,14 @@ import IQKeyboardManagerSwift
 import FSCalendar
 import Toast
 
-final class MainViewController: BaseViewController {
-    
-    private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
+final class MainViewController: BaseViewController, PassDataDelegate {
+ 
+    func passDataList(_ dataList: RealmSwift.Results<RealmTable>) {
+        DataList.list = dataList
+        print(#function)
+        collectionView.reloadData()
+    }
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
     private static func collectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewFlowLayout()
         let sectionSpacing: CGFloat = 10
@@ -86,7 +91,6 @@ final class MainViewController: BaseViewController {
         collectionViewSetting()
         DataList.list = realm.objects(RealmTable.self)
         navigationbarSetting()
-//        print(realm.configuration.fileURL)
     }
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -123,12 +127,14 @@ final class MainViewController: BaseViewController {
     }
     @objc func addButtonTapped() {
         let vc = RegisterViewController()
-        vc.showToast = {
-            vc.view.makeToast("저장완료!")
-        }
-        let nav = UINavigationController(rootViewController: RegisterViewController())
+//        vc.showToast = {
+//            vc.view.makeToast("저장완료!")
+//        }
+        vc.passData = self
+        let nav = UINavigationController(rootViewController: vc)
         navigationController?.present(nav, animated: true)
     }
+   
     override func configureHierarchy() {
         view.addSubview(addButton)
         view.addSubview(listAddButton)
