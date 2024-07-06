@@ -43,6 +43,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         navigationController?.dismiss(animated: true)
     }
     @objc func saveButtonTapped() {
+        view.makeToast("저장완료!", duration: 2.0, position: .center)
         let realm = try! Realm()
         let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText, tag: getTagText, priority: getPriority, isFlag: false, complete: false )
         try! realm.write {
@@ -61,6 +62,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: TodoTableViewCell.id)
         tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.id)
         tableView.separatorStyle = .none
+        tableView.backgroundColor = .clear
     }
     private func configureNavigationbar() {
         navigationItem.title = "새로운 미리 알림"

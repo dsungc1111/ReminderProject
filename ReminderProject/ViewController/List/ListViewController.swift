@@ -21,21 +21,10 @@ final class ListViewController: BaseViewController {
         return btn
     }()
     @objc func removeAllButtonTapped() {
-        print(#function)
-//        let filter = realm.objects(RealmTable.self).where {
-//            $0.memoTitle.contains("", options: .caseInsensitive)
-//        }
-//        DataList.list.realm?.deleteAll()
-//        let result = filter
-//        DataList.list = result
         try! self.realm.write {
             DataList.list.realm?.deleteAll()
             }
-            
-        
         tableView.reloadData()
-        
-        
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -130,12 +119,23 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         
         let vc = DetailViewController()
         vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
-        if DataList.list[indexPath.row].priority == "높음" {
+        
+        let selectedPriority = DataList.list[indexPath.row].priority
+        
+        switch selectedPriority {
+        case "높음":
             vc.memoTitleLabel.text = "!!!" + DataList.list[indexPath.row].memoTitle
+        case "중간":
+            vc.memoTitleLabel.text = "!!" + DataList.list[indexPath.row].memoTitle
+        case "낮음":
+            vc.memoTitleLabel.text = "!" + DataList.list[indexPath.row].memoTitle
+        default:
+            vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
         }
-        vc.memoLabel.text = DataList.list[indexPath.row].memo
+       
+        vc.memoLabel.text = (DataList.list[indexPath.row].memo ?? "")
         vc.dateLabel.text = Date.getDateString(date: DataList.list[indexPath.row].date ?? Date())
-        vc.tagLabel.text = "#\(DataList.list[indexPath.row].tag ?? "")"
+        vc.tagLabel.text = "\(DataList.list[indexPath.row].tag ?? "")"
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
