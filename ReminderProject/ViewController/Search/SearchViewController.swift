@@ -54,18 +54,15 @@ extension SearchViewController: UISearchBarDelegate {
         let filter = realm.objects(RealmTable.self).where {
             $0.memoTitle.contains(searchText, options: .caseInsensitive)
         }
-        let result = searchText.isEmpty ? realm.objects(RealmTable.self) : filter
+        let result = filter
         DataList.list = result
-        print(DataList.list)
         tableView.reloadData()
     }
 }
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "검색결과"
+        return "검색결과 \(DataList.list.count)개"
     }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return DataList.list.count
     }
