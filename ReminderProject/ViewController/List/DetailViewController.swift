@@ -10,6 +10,8 @@ import SnapKit
 import RealmSwift
 
 class DetailViewController: BaseViewController {
+    
+    var getId = ObjectId()
     let realm = try! Realm()
     let memoTitleLabel = {
         let label = UILabel()
@@ -44,7 +46,6 @@ class DetailViewController: BaseViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-       
         navigationButtonSetting()
     }
     func navigationButtonSetting() {
@@ -55,10 +56,9 @@ class DetailViewController: BaseViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "수정", style: .plain, target: self, action: #selector(editButtonTapped))
     }
     @objc func editButtonTapped() {
-        let result = realm.objects(RealmTable.self)
+        let result = realm.objects(RealmTable.self).filter("key == %@", getId)
         guard let memoTitle = editMemoTitleTextField.text,
               let memo = editMemoTextField.text else { return }
-        
         if memoTitle.isEmpty && memo.isEmpty {
             showAlert(title: "공백", message: "")
         } else if memoTitle.isEmpty && !memo.isEmpty {

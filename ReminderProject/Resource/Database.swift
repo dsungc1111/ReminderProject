@@ -22,6 +22,7 @@ class RealmTable: Object {
 
     convenience init(memoTitle: String, date: Date? = nil, memo: String? = nil, tag : String? , priority: String? = nil, isFlag: Bool, complete: Bool) {
         self.init()
+        
         self.memoTitle = memoTitle
         self.date = date
         self.memo = memo

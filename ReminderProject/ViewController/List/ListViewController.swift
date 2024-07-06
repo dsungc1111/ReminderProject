@@ -119,9 +119,8 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         
         let vc = DetailViewController()
         vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
-        
         let selectedPriority = DataList.list[indexPath.row].priority
-        
+        vc.getId = DataList.list[indexPath.row].key
         switch selectedPriority {
         case "높음":
             vc.memoTitleLabel.text = "!!!" + DataList.list[indexPath.row].memoTitle
