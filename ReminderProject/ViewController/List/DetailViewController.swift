@@ -9,37 +9,37 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-class DetailViewController: BaseViewController {
+final class DetailViewController: BaseViewController {
     
     var getId = ObjectId()
-    let realm = try! Realm()
-    let memoTitleLabel = {
+    private let realm = try! Realm()
+    private let memoTitleLabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 40)
         return label
     }()
-    let memoLabel = {
+    private let memoLabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 35)
         return label
     }()
-    let dateLabel = {
+    private let dateLabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20)
         return label
     }()
-    let tagLabel = {
+    private let tagLabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20)
         label.textColor = .systemBlue
         return label
     }()
-    let editMemoTitleTextField = {
+    private let editMemoTitleTextField = {
         let text = UITextField()
         text.placeholder = "제목"
         return text
     }()
-    let editMemoTextField = {
+    private let editMemoTextField = {
         let text = UITextField()
         text.placeholder = "메모"
         return text
@@ -48,7 +48,7 @@ class DetailViewController: BaseViewController {
         super.viewDidLoad()
         navigationButtonSetting()
     }
-    func navigationButtonSetting() {
+    private func navigationButtonSetting() {
         navigationItem.title = "상세화면"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
@@ -72,11 +72,9 @@ class DetailViewController: BaseViewController {
             }
             memoTitleLabel.text = memoTitle
         } else {
-          
             try! realm.write {
                 result.setValue(memoTitle, forKey: "\(MemoContents.memoTitle.rawValue)")
                 result.setValue(memo, forKey: "\(MemoContents.memo.rawValue)")
-                
             }
             memoTitleLabel.text = memoTitle
             memoLabel.text = memo

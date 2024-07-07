@@ -11,7 +11,7 @@ import PhotosUI
 import RealmSwift
 import Toast
 
-class RegisterViewController: BaseViewController, PassDateDelegate {
+final class RegisterViewController: BaseViewController, PassDateDelegate {
     
     var passData: PassDataDelegate?
     private enum Category: String, CaseIterable {
@@ -41,11 +41,6 @@ class RegisterViewController: BaseViewController, PassDateDelegate {
         configureNavigationbar()
         list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
     }
-//    override func viewDidDisappear(_ animated: Bool) {
-//        DataList.list = realm.objects(RealmTable.self)
-//        
-//        print(#function)
-//    }
     @objc func cancelButtonTapped() {
         navigationController?.dismiss(animated: true)
     }

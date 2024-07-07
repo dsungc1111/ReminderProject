@@ -19,7 +19,7 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         print(#function)
         collectionView.reloadData()
     }
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
+    private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
     private static func collectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewFlowLayout()
         let sectionSpacing: CGFloat = 10
@@ -57,7 +57,7 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         view.isHidden = true
         return view
     }()
-    var isMonth = true
+    private var isMonth = true
     private lazy var calendarView = {
         let calendar = FSCalendar()
         calendar.delegate = self
@@ -100,7 +100,7 @@ final class MainViewController: BaseViewController, PassDataDelegate {
     override func viewDidLayoutSubviews() {
         navigationController?.navigationBar.layer.addBorder([.bottom], color: .systemGray4, width: 1)
     }
-    func collectionViewSetting() {
+    private func collectionViewSetting() {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.id)

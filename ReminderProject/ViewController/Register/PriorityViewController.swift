@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 
-class PriorityViewController: BaseViewController {
+final class PriorityViewController: BaseViewController {
 
     private let segmentControl: UISegmentedControl = {
         let segment = UISegmentedControl()

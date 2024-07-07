@@ -8,10 +8,10 @@
 import UIKit
 import SnapKit
 
-class TagViewController: BaseViewController {
+final class TagViewController: BaseViewController {
 
     
-    let tagTextField = {
+    private let tagTextField = {
         let tag = UITextField()
         tag.backgroundColor = .white
         tag.placeholder = "새로운 태그 추가..."
@@ -34,7 +34,6 @@ class TagViewController: BaseViewController {
         passTag?.passTagValue(tagText)
         navigationController?.popViewController(animated: true)
     }
-    
     override func configureHierarchy() {
         view.addSubview(tagTextField)
     }

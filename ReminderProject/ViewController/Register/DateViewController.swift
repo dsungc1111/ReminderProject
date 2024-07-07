@@ -7,12 +7,12 @@
 
 import UIKit
 
-class DateViewController: BaseViewController {
+final class DateViewController: BaseViewController {
 
-    let datePicker = UIDatePicker()
-    
+    private let datePicker = UIDatePicker()
     var passDate: PassDateDelegate?
     var getDateFromDatePicker: Date?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         datePicker.datePickerMode = .date
