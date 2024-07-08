@@ -12,13 +12,14 @@ import RealmSwift
 import Toast
 
 final class RegisterViewController: BaseViewController, PassDateDelegate {
-    
+ 
     var passData: PassDataDelegate?
     private enum Category: String, CaseIterable {
         case dueDate = "마감일"
         case tag = "태그"
         case priority = "우선순위"
         case addImage = "이미지 추가"
+        case list = "목록"
     }
     private enum NavigationBarTitle: String {
         case title = "새로운 미리 알림"
@@ -32,11 +33,13 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         view.clipsToBounds = true
         return view
     }()
+    var listTitle: Results<Folder>!
     private var memoTitleText = ""
     private var memoContentText = ""
     private var getDueDate: Date?
     private var getTagText = ""
     private var getPriority = ""
+    private var getList = ""
     var showToast: (() -> Void)?
     private let realm = try! Realm()
     private var list: Results<RealmTable>!
@@ -88,7 +91,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     override func configureLayout() {
         tableView.snp.makeConstraints { make in
             make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(180)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(100)
         }
         loadedImageView.snp.makeConstraints { make in
             make.width.equalTo(80)
@@ -109,6 +112,12 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         getPriority = text
         tableView.reloadData()
     }
+    func passList(_ text: String) {
+        getList = text
+        tableView.reloadData()
+    }
+    
+   
 }
 extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -118,7 +127,7 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
         if section == 0 {
             return 1
         } else {
-            return 4
+            return Category.allCases.count
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -142,6 +151,8 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.resultLabel.text = getPriority
             case 3:
                 cell.resultLabel.text = ""
+            case 4:
+                cell.resultLabel.text = getList
             default:
                 break
             }
@@ -195,6 +206,11 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
                 let picker = PHPickerViewController(configuration: config)
                 picker.delegate = self
                 present(picker, animated: true)
+            case 4:
+                let vc = ListSelectViewController()
+                vc.passFolder = self
+                vc.navigationItem.title = Category.allCases[4].rawValue
+                navigationController?.pushViewController(vc, animated: true)
             default:
                 break
             }

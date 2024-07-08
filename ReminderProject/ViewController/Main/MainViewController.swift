@@ -72,13 +72,14 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
     private let date = Date()
     private let repository = RealmTableRepository()
     var listTitle: Results<Folder>!
+    private let containerView = UIView()
     private lazy var tableView = {
         let view = UITableView()
         view.delegate = self
         view.dataSource = self
         view.register(AddListTableViewCell.self, forCellReuseIdentifier: AddListTableViewCell.id)
         view.layer.cornerRadius = 10
-        view.estimatedRowHeight = 50
+        view.showsVerticalScrollIndicator = false
         return view
     }()
     override func viewDidLoad() {
@@ -95,9 +96,6 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
         collectionView.reloadData()
     }
     override func viewDidLayoutSubviews() {
-        tableView.snp.updateConstraints { make in
-            make.height.equalTo(tableView.contentSize.height).priority(.low)
-        }
         navigationController?.navigationBar.layer.addBorder([.bottom], color: .systemGray4, width: 1)
     }
     private func collectionViewSetting() {
@@ -134,6 +132,7 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
         view.addSubview(listAddButton)
         view.addSubview(collectionView)
         view.addSubview(myList)
+        view.addSubview(containerView)
         view.addSubview(tableView)
     }
     override func configureLayout() {
@@ -158,10 +157,14 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
             make.top.equalTo(collectionView.snp.bottom)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
         }
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(myList.snp.bottom).offset(10)
+        containerView.snp.makeConstraints { make in
+            make.top.equalTo(myList.snp.bottom)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(10)
-            make.height.equalTo(tableView.contentSize.height).priority(.low)
+            make.bottom.equalTo(listAddButton.snp.top)
+        }
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(containerView.snp.top).inset(10)
+            make.horizontalEdges.bottom.equalTo(containerView.safeAreaLayoutGuide).inset(5)
         }
     }
 }
@@ -171,6 +174,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.id, for: indexPath) as? MainCollectionViewCell else { return MainCollectionViewCell() }
+        cell.listTitle = listTitle
         cell.configureCell(data: indexPath)
         return cell
     }
@@ -212,7 +216,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        return tableView.rowHeight
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)

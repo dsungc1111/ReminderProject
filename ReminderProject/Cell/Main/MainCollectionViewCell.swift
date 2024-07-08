@@ -30,6 +30,7 @@ final class MainCollectionViewCell: UICollectionViewCell {
         label.font = .boldSystemFont(ofSize: 30)
         return label
     }()
+    var listTitle: Results<Folder>!
     private let realm = try! Realm()
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -69,6 +70,9 @@ final class MainCollectionViewCell: UICollectionViewCell {
         contentLogo.image = UIImage(systemName: ContentLogoImageEnum.allCases[data.row].rawValue)
         filterData(data: data.row)
         contentCountLabel.text = data.row <= 3 ? "\( DataList.list.count)" : ""
+        if data.row == 2 {
+            contentCountLabel.text = "\(DataList.list.count + listTitle.count)"
+        }
     }
     func filterData(data: Int) {
         let date = Date()
