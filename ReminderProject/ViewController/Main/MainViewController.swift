@@ -11,8 +11,12 @@ import RealmSwift
 import IQKeyboardManagerSwift
 import Toast
 
-final class MainViewController: BaseViewController, PassDataDelegate {
-
+final class MainViewController: BaseViewController, PassDataDelegate, PassFolderDelegate {
+    func passFolderList(_ dataList: RealmSwift.Results<Folder>) {
+        listTitle = dataList
+        tableView.reloadData()
+    }
+    
     func passDataList(_ dataList: RealmSwift.Results<RealmTable>) {
         DataList.list = dataList
         collectionView.reloadData()
@@ -53,12 +57,10 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         vc.showToast = {
             self.view.makeToast("저장완료!")
         }
+        vc.passFolder = self
         let nav = UINavigationController(rootViewController: vc)
         navigationController?.present(nav, animated: true)
     }
-    private let realm = try! Realm()
-    private let date = Date()
-    let repository = RealmTableRepository()
     let myList = {
         let label = UILabel()
         label.text = "나의 목록"
@@ -66,12 +68,26 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         label.isHidden = true
         return label
     }()
+    private let realm = try! Realm()
+    private let date = Date()
+    private let repository = RealmTableRepository()
+    var listTitle: Results<Folder>!
+    private lazy var tableView = {
+        let view = UITableView()
+        view.delegate = self
+        view.dataSource = self
+        view.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
+        view.layer.cornerRadius = 10
+        view.estimatedRowHeight = 50
+        return view
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
         collectionViewSetting()
         DataList.list = realm.objects(RealmTable.self)
-        navigationbarSetting()
+        listTitle = realm.objects(Folder.self)
+        myList.isHidden = listTitle.count != 0 ? false : true
     }
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -79,6 +95,9 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         collectionView.reloadData()
     }
     override func viewDidLayoutSubviews() {
+        tableView.snp.updateConstraints { make in
+            make.height.equalTo(tableView.contentSize.height).priority(.low)
+        }
         navigationController?.navigationBar.layer.addBorder([.bottom], color: .systemGray4, width: 1)
     }
     private func collectionViewSetting() {
@@ -115,6 +134,7 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         view.addSubview(listAddButton)
         view.addSubview(collectionView)
         view.addSubview(myList)
+        view.addSubview(tableView)
     }
     override func configureLayout() {
         addButton.snp.makeConstraints { make in
@@ -137,6 +157,11 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         myList.snp.makeConstraints { make in
             make.top.equalTo(collectionView.snp.bottom)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
+        }
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(myList.snp.bottom)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.height.equalTo(tableView.contentSize.height).priority(.low)
         }
     }
 }
@@ -172,4 +197,22 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         navigationController?.pushViewController(vc, animated: true)
     }
+}
+
+extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return listTitle.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
+        let data = listTitle[indexPath.row]
+        cell.titleLabel.text = data.category
+        
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
+    }
+    
 }

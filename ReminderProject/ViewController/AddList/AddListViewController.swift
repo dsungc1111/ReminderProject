@@ -11,8 +11,11 @@ import RealmSwift
 import Toast
 
 class AddListViewController: BaseViewController {
+   
+    var passFolder: PassFolderDelegate?
     
     var showToast: (() -> Void)?
+    var listTitle: Results<Folder>!
     private enum NavigationBarTitle: String {
         case title = "새로운 목록"
         case cancel = "취소"
@@ -55,8 +58,7 @@ class AddListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
-        DataList.list = realm.objects(RealmTable.self)
-        print(DataList.list)
+        listTitle = realm.objects(Folder.self)
     }
     private func configureNavigationbar() {
         navigationItem.title = NavigationBarTitle.title.rawValue
@@ -72,18 +74,17 @@ class AddListViewController: BaseViewController {
     }
     @objc func saveButtonTapped() {
         view.makeToast("저장완료!", duration: 2.0, position: .center)
+        let vc = MainViewController()
         guard let listNameText = listName.text else { return }
-        let list = List<RealmTable>()
-        for item in DataList.list {
-            list.append(item)
-        }
+        let newFolder = Folder(category: listNameText, content: List<RealmTable>())
+            
        let realm = try! Realm()
-        let newFolder = Folder(category: listNameText, content: list)
+        
         try! realm.write {
             realm.add(newFolder)
         }
         showToast?()
-//        passData?.passDataList(DataList.list)
+        passFolder?.passFolderList(listTitle)
         navigationController?.dismiss(animated: true)
     }
     

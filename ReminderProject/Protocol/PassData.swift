@@ -16,3 +16,7 @@ protocol PassDateDelegate {
 protocol PassDataDelegate {
     func passDataList(_ dataList: Results<RealmTable>)
 }
+
+protocol PassFolderDelegate {
+    func passFolderList(_ dataList: Results<Folder>)
+}

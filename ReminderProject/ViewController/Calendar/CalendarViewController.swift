@@ -45,9 +45,7 @@ final class CalendarViewController: BaseViewController {
         let date = Date()
         calendarView.select(date)
         calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
-        
     }
-    
     override func configureHierarchy() {
         view.addSubview(calendarView)
         view.addSubview(searchTableView)
@@ -62,8 +60,6 @@ final class CalendarViewController: BaseViewController {
             make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
         }
     }
-   
-
 }
 extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
