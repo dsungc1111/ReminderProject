@@ -43,7 +43,8 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     var showToast: (() -> Void)?
     private let realm = try! Realm()
     private var list: Results<RealmTable>!
-    
+    private var folder: Folder?
+    let repository = RealmTableRepository()
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
@@ -56,8 +57,18 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         view.makeToast("저장완료!", duration: 2.0, position: .center)
         let realm = try! Realm()
         let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText, tag: getTagText, priority: getPriority, isFlag: false, complete: false )
-        try! realm.write {
-            realm.add(newData)
+        
+        if let folder = realm.objects(Folder.self).filter("category == %@", getList).first {
+            try! realm.write {
+                folder.content.append(newData)
+            }
+        } else {
+            let newFolder = Folder()
+            newFolder.category = getList
+            newFolder.content.append(newData)
+            try! realm.write {
+                realm.add(newFolder)
+            }
         }
         if let image = loadedImageView.image {
             saveImageToDocument(image: image, filename: "\(newData.key)")

@@ -71,7 +71,7 @@ final class MainCollectionViewCell: UICollectionViewCell {
         filterData(data: data.row)
         contentCountLabel.text = data.row <= 3 ? "\( DataList.list.count)" : ""
         if data.row == 2 {
-            contentCountLabel.text = "\(DataList.list.count + listTitle.count)"
+            contentCountLabel.text = "\(DataList.list.count)"
         }
     }
     func filterData(data: Int) {

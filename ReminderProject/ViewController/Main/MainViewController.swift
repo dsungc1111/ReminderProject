@@ -20,6 +20,7 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
     func passDataList(_ dataList: RealmSwift.Results<RealmTable>) {
         DataList.list = dataList
         collectionView.reloadData()
+        tableView.reloadData()
     }
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
     private static func collectionViewLayout() -> UICollectionViewLayout {

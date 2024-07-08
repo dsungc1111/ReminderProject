@@ -39,7 +39,6 @@ final class ListSelectViewController: BaseViewController {
     }
 
 }
-
 extension ListSelectViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listTitle.count
@@ -54,6 +53,4 @@ extension ListSelectViewController: UITableViewDelegate, UITableViewDataSource {
         passFolder?.passList(listTitle[indexPath.row].category)
         navigationController?.popViewController(animated: true)
     }
-    
-    
 }
