@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-class MainCollectionViewCell: UICollectionViewCell {
+final class MainCollectionViewCell: UICollectionViewCell {
     
     let contentLogo = {
         let logo = UIImageView()
@@ -31,7 +31,6 @@ class MainCollectionViewCell: UICollectionViewCell {
         return label
     }()
     private let realm = try! Realm()
-    private var list: Results<RealmTable>!
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
@@ -39,7 +38,7 @@ class MainCollectionViewCell: UICollectionViewCell {
         configureHierarchy()
         configureLayout()
         contentLogo.layer.cornerRadius = 15
-        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+        DataList.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
     }
     func configureHierarchy() {
         contentView.addSubview(contentLogo)
@@ -68,28 +67,26 @@ class MainCollectionViewCell: UICollectionViewCell {
         contentName.text = ContentNameEnum.allCases[data.row].rawValue
         contentLogo.backgroundColor =  ContentLogoColorEnum.allCases[data.row].value
         contentLogo.image = UIImage(systemName: ContentLogoImageEnum.allCases[data.row].rawValue)
+        filterData(data: data.row)
+        contentCountLabel.text = data.row <= 3 ? "\( DataList.list.count)" : ""
+    }
+    func filterData(data: Int) {
         let date = Date()
-        switch data.row {
+        switch data {
         case 0:
             DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-            contentCountLabel.text = "\( DataList.list.count)"
         case 1:
             DataList.list = realm.objects(RealmTable.self).filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-            contentCountLabel.text = "\( DataList.list.count)"
         case 2:
             DataList.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
             DataList.list = realm.objects(RealmTable.self).filter("isComplete == false")
-            contentCountLabel.text = "\( DataList.list.count)"
         case 3:
             DataList.list = realm.objects(RealmTable.self).filter("isFlag == true")
-            contentCountLabel.text = "\( DataList.list.count)"
         case 4:
             DataList.completeList = realm.objects(RealmTable.self).filter("isComplete == true")
             DataList.list = DataList.completeList
-            contentCountLabel.text = ""
         default:
             break
         }
-        
     }
 }

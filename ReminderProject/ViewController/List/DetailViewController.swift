@@ -13,22 +13,22 @@ final class DetailViewController: BaseViewController {
     
     var getId = ObjectId()
     private let realm = try! Realm()
-    private let memoTitleLabel = {
+    let memoTitleLabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 40)
         return label
     }()
-    private let memoLabel = {
+    let memoLabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 35)
         return label
     }()
-    private let dateLabel = {
+    let dateLabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20)
         return label
     }()
-    private let tagLabel = {
+    let tagLabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20)
         label.textColor = .systemBlue

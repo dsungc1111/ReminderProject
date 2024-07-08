@@ -20,6 +20,11 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         case priority = "우선순위"
         case addImage = "이미지 추가"
     }
+    private enum NavigationBarTitle: String {
+        case title = "새로운 미리 알림"
+        case cancel = "취소"
+        case save = "저장"
+    }
     private let tableView = UITableView()
     private let loadedImageView = {
         let view = UIImageView()
@@ -50,7 +55,6 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText, tag: getTagText, priority: getPriority, isFlag: false, complete: false )
         try! realm.write {
             realm.add(newData)
-            print("realm create succeed")
         }
         if let image = loadedImageView.image {
             saveImageToDocument(image: image, filename: "\(newData.key)")
@@ -66,15 +70,16 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
         tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.id)
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
+        tableView.showsVerticalScrollIndicator = false
     }
     private func configureNavigationbar() {
-        navigationItem.title = "새로운 미리 알림"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelButtonTapped))
+        navigationItem.title = NavigationBarTitle.title.rawValue
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: NavigationBarTitle.cancel.rawValue, style: .plain, target: self, action: #selector(cancelButtonTapped))
         navigationItem.leftBarButtonItem?.tintColor = .black
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "저장", style: .plain, target: self, action: #selector(saveButtonTapped))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: NavigationBarTitle.save.rawValue, style: .plain, target: self, action: #selector(saveButtonTapped))
         navigationItem.rightBarButtonItem?.tintColor = .lightGray
         navigationItem.rightBarButtonItem?.isEnabled = false
-        navigationItem.backButtonTitle = "취소"
+        navigationItem.backButtonTitle = NavigationBarTitle.cancel.rawValue
     }
     override func configureHierarchy() {
         view.addSubview(tableView)
@@ -94,7 +99,6 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     }
     func passDateValue(_ date: Date) {
         getDueDate = date
-        print(#function)
         tableView.reloadData()
     }
     func passTagValue(_ text: String) {
@@ -191,7 +195,6 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
                 let picker = PHPickerViewController(configuration: config)
                 picker.delegate = self
                 present(picker, animated: true)
-                
             default:
                 break
             }

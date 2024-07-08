@@ -37,7 +37,6 @@
 		8BFB5C3E2C37EBF100CE14C5 /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 8BFB5C3D2C37EBF100CE14C5 /* Toast */; };
 		8BFB5C402C38EC9400CE14C5 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB5C3F2C38EC9400CE14C5 /* SearchViewController.swift */; };
 		8BFB5C422C38F08E00CE14C5 /* CALayer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB5C412C38F08E00CE14C5 /* CALayer+.swift */; };
-		8BFB5C462C38F2DB00CE14C5 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB5C452C38F2DB00CE14C5 /* SearchTableViewCell.swift */; };
 		8BFB5C482C3933C000CE14C5 /* UIViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB5C472C3933C000CE14C5 /* UIViewController+.swift */; };
 /* End PBXBuildFile section */
 
@@ -69,7 +68,6 @@
 		8BA3BF9A2C36E02700229026 /* DataList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataList.swift; sourceTree = "<group>"; };
 		8BFB5C3F2C38EC9400CE14C5 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		8BFB5C412C38F08E00CE14C5 /* CALayer+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+.swift"; sourceTree = "<group>"; };
-		8BFB5C452C38F2DB00CE14C5 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		8BFB5C472C3933C000CE14C5 /* UIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -147,7 +145,6 @@
 			isa = PBXGroup;
 			children = (
 				8B456F4B2C34C542003CFBD1 /* Main */,
-				8BFB5C442C38F2CB00CE14C5 /* Search */,
 				8B456F462C34193D003CFBD1 /* AddedMemo */,
 				8B456F432C33FAD2003CFBD1 /* Register */,
 			);
@@ -240,14 +237,6 @@
 			isa = PBXGroup;
 			children = (
 				8BFB5C3F2C38EC9400CE14C5 /* SearchViewController.swift */,
-			);
-			path = Search;
-			sourceTree = "<group>";
-		};
-		8BFB5C442C38F2CB00CE14C5 /* Search */ = {
-			isa = PBXGroup;
-			children = (
-				8BFB5C452C38F2DB00CE14C5 /* SearchTableViewCell.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -354,7 +343,6 @@
 				8B456F3B2C33F9A2003CFBD1 /* CategoryTableViewCell.swift in Sources */,
 				8B456F532C3529DF003CFBD1 /* DateViewController.swift in Sources */,
 				8B456F482C341956003CFBD1 /* ListTableViewCell.swift in Sources */,
-				8BFB5C462C38F2DB00CE14C5 /* SearchTableViewCell.swift in Sources */,
 				8BA3BF9B2C36E02700229026 /* DataList.swift in Sources */,
 				8B456F2F2C33EC4A003CFBD1 /* MainViewController.swift in Sources */,
 				8BFB5C482C3933C000CE14C5 /* UIViewController+.swift in Sources */,

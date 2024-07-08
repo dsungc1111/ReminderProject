@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CategoryTableViewCell: BaseTableViewCell {
+final class CategoryTableViewCell: BaseTableViewCell {
 
     let backView = {
         let view = UIView()

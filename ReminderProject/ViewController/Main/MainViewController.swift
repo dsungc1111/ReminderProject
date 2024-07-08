@@ -16,7 +16,6 @@ final class MainViewController: BaseViewController, PassDataDelegate {
  
     func passDataList(_ dataList: RealmSwift.Results<RealmTable>) {
         DataList.list = dataList
-        print(#function)
         collectionView.reloadData()
     }
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
@@ -50,14 +49,14 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         btn.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         return btn
     }()
-    private var isCalendar = false
+    private var calendarOnOff = false
     private lazy var backView = {
        let view = UIView()
         view.backgroundColor = .systemGray6
         view.isHidden = true
         return view
     }()
-    private var isMonth = true
+    private var chooseMonthOrWeek = true
     private lazy var calendarView = {
         let calendar = FSCalendar()
         calendar.delegate = self
@@ -72,8 +71,8 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         return calendar
     }()
     @objc func panGestureHandler() {
-        isMonth.toggle()
-        calendarView.scope = isMonth ? .month : .week
+        chooseMonthOrWeek.toggle()
+        calendarView.scope = chooseMonthOrWeek ? .month : .week
     }
     private lazy var searchTableView = {
         let tableView = UITableView()
@@ -85,6 +84,7 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         return tableView
     }()
     private let realm = try! Realm()
+    private let date = Date()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
@@ -117,11 +117,10 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
     @objc func calendarButtonTapped() {
-        isCalendar.toggle()
-        backView.isHidden = isCalendar ? false : true
-        calendarView.isHidden = isCalendar ? false : true
-        searchTableView.isHidden = isCalendar ? false : true
-        let date = Date()
+        calendarOnOff.toggle()
+        backView.isHidden = calendarOnOff ? false : true
+        calendarView.isHidden = calendarOnOff ? false : true
+        searchTableView.isHidden = calendarOnOff ? false : true
         calendarView.select(date)
         calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
     }
@@ -134,7 +133,6 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         let nav = UINavigationController(rootViewController: vc)
         navigationController?.present(nav, animated: true)
     }
-   
     override func configureHierarchy() {
         view.addSubview(addButton)
         view.addSubview(listAddButton)
@@ -187,10 +185,10 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let vc = ListViewController()
         switch indexPath.row {
         case 0:
-            DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: Date()), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: Date())))
+            DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
             vc.navigationItem.title = ContentNameEnum.today.rawValue
         case 1:
-            DataList.list = realm.objects(RealmTable.self).filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: Date())))
+            DataList.list = realm.objects(RealmTable.self).filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
             vc.navigationItem.title = ContentNameEnum.plan.rawValue
         case 2:
             DataList.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
