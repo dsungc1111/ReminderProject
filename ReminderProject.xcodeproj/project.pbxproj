@@ -41,6 +41,7 @@
 		8BFB5C552C3BBADC00CE14C5 /* RealmRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB5C542C3BBADC00CE14C5 /* RealmRepository.swift */; };
 		8BFB5C582C3BD95600CE14C5 /* AddListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB5C572C3BD95600CE14C5 /* AddListViewController.swift */; };
 		8BFB5C5B2C3BEE3000CE14C5 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB5C5A2C3BEE3000CE14C5 /* CalendarViewController.swift */; };
+		8BFB5C5E2C3C0E0300CE14C5 /* AddListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB5C5D2C3C0E0300CE14C5 /* AddListTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +76,7 @@
 		8BFB5C542C3BBADC00CE14C5 /* RealmRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmRepository.swift; sourceTree = "<group>"; };
 		8BFB5C572C3BD95600CE14C5 /* AddListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddListViewController.swift; sourceTree = "<group>"; };
 		8BFB5C5A2C3BEE3000CE14C5 /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
+		8BFB5C5D2C3C0E0300CE14C5 /* AddListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddListTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +154,7 @@
 		8B456F392C33F989003CFBD1 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				8BFB5C5C2C3C0DF100CE14C5 /* AddList */,
 				8B456F4B2C34C542003CFBD1 /* Main */,
 				8B456F462C34193D003CFBD1 /* AddedMemo */,
 				8B456F432C33FAD2003CFBD1 /* Register */,
@@ -266,6 +269,14 @@
 			path = Calendar;
 			sourceTree = "<group>";
 		};
+		8BFB5C5C2C3C0DF100CE14C5 /* AddList */ = {
+			isa = PBXGroup;
+			children = (
+				8BFB5C5D2C3C0E0300CE14C5 /* AddListTableViewCell.swift */,
+			);
+			path = AddList;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -367,6 +378,7 @@
 				8BFB5C402C38EC9400CE14C5 /* SearchViewController.swift in Sources */,
 				8B456F4A2C34BD52003CFBD1 /* Enum.swift in Sources */,
 				8B456F3B2C33F9A2003CFBD1 /* CategoryTableViewCell.swift in Sources */,
+				8BFB5C5E2C3C0E0300CE14C5 /* AddListTableViewCell.swift in Sources */,
 				8B456F532C3529DF003CFBD1 /* DateViewController.swift in Sources */,
 				8B456F482C341956003CFBD1 /* ListTableViewCell.swift in Sources */,
 				8BA3BF9B2C36E02700229026 /* DataList.swift in Sources */,

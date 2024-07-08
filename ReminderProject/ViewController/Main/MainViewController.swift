@@ -76,7 +76,7 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
         let view = UITableView()
         view.delegate = self
         view.dataSource = self
-        view.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
+        view.register(AddListTableViewCell.self, forCellReuseIdentifier: AddListTableViewCell.id)
         view.layer.cornerRadius = 10
         view.estimatedRowHeight = 50
         return view
@@ -159,7 +159,7 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
         }
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(myList.snp.bottom)
+            make.top.equalTo(myList.snp.bottom).offset(10)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(10)
             make.height.equalTo(tableView.contentSize.height).priority(.low)
         }
@@ -205,14 +205,17 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: AddListTableViewCell.id, for: indexPath) as? AddListTableViewCell else { return AddListTableViewCell() }
         let data = listTitle[indexPath.row]
-        cell.titleLabel.text = data.category
-        
+        cell.contentName.text = data.category
+        cell.numberOfContentsLabel.text = "\(data.content.count)" + "개"
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50
     }
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+        
+    }
 }

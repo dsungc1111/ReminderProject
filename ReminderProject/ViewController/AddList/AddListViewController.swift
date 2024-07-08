@@ -74,7 +74,6 @@ class AddListViewController: BaseViewController {
     }
     @objc func saveButtonTapped() {
         view.makeToast("저장완료!", duration: 2.0, position: .center)
-        let vc = MainViewController()
         guard let listNameText = listName.text else { return }
         let newFolder = Folder(category: listNameText, content: List<RealmTable>())
             
