@@ -9,11 +9,10 @@ import UIKit
 import SnapKit
 import RealmSwift
 import IQKeyboardManagerSwift
-import FSCalendar
 import Toast
 
 final class MainViewController: BaseViewController, PassDataDelegate {
- 
+
     func passDataList(_ dataList: RealmSwift.Results<RealmTable>) {
         DataList.list = dataList
         collectionView.reloadData()
@@ -46,45 +45,27 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         btn.setTitle("목록추가", for: .normal)
         btn.setTitleColor(.systemBlue, for: .normal)
         btn.titleLabel?.font = .systemFont(ofSize: 16)
-        btn.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(listAddButtonTapped), for: .touchUpInside)
         return btn
     }()
-    private var calendarOnOff = false
-    private lazy var backView = {
-       let view = UIView()
-        view.backgroundColor = .systemGray6
-        view.isHidden = true
-        return view
-    }()
-    private var chooseMonthOrWeek = true
-    private lazy var calendarView = {
-        let calendar = FSCalendar()
-        calendar.delegate = self
-        calendar.dataSource = self
-        calendar.scope = .month
-        calendar.isHidden = true
-        calendar.appearance.headerMinimumDissolvedAlpha = 0.0
-        calendar.appearance.headerDateFormat = "YYYY년 MM월"
-        calendar.swipeToChooseGesture.isEnabled = true
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureHandler))
-        calendar.addGestureRecognizer(panGestureRecognizer)
-        return calendar
-    }()
-    @objc func panGestureHandler() {
-        chooseMonthOrWeek.toggle()
-        calendarView.scope = chooseMonthOrWeek ? .month : .week
+    @objc func listAddButtonTapped() {
+        let vc = AddListViewController()
+        vc.showToast = {
+            self.view.makeToast("저장완료!")
+        }
+        let nav = UINavigationController(rootViewController: vc)
+        navigationController?.present(nav, animated: true)
     }
-    private lazy var searchTableView = {
-        let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
-        tableView.isHidden = true
-        tableView.backgroundColor = .clear
-        return tableView
-    }()
     private let realm = try! Realm()
     private let date = Date()
+    let repository = RealmTableRepository()
+    let myList = {
+        let label = UILabel()
+        label.text = "나의 목록"
+        label.font = .boldSystemFont(ofSize: 20)
+        label.isHidden = true
+        return label
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
@@ -117,12 +98,8 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
     @objc func calendarButtonTapped() {
-        calendarOnOff.toggle()
-        backView.isHidden = calendarOnOff ? false : true
-        calendarView.isHidden = calendarOnOff ? false : true
-        searchTableView.isHidden = calendarOnOff ? false : true
-        calendarView.select(date)
-        calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
+        let vc = CalendarViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     @objc func addButtonTapped() {
         let vc = RegisterViewController()
@@ -137,9 +114,7 @@ final class MainViewController: BaseViewController, PassDataDelegate {
         view.addSubview(addButton)
         view.addSubview(listAddButton)
         view.addSubview(collectionView)
-        view.addSubview(backView)
-        view.addSubview(calendarView)
-        view.addSubview(searchTableView)
+        view.addSubview(myList)
     }
     override func configureLayout() {
         addButton.snp.makeConstraints { make in
@@ -159,16 +134,9 @@ final class MainViewController: BaseViewController, PassDataDelegate {
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(320)
         }
-        backView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
-        }
-        calendarView.snp.makeConstraints { make in
-            make.horizontalEdges.top.equalTo(backView)
-            make.height.equalTo(320)
-        }
-        searchTableView.snp.makeConstraints { make in
-            make.top.equalTo(calendarView.snp.bottom)
-            make.horizontalEdges.bottom.equalTo(backView)
+        myList.snp.makeConstraints { make in
+            make.top.equalTo(collectionView.snp.bottom)
+            make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
         }
     }
 }
@@ -203,48 +171,5 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
             break
         }
         navigationController?.pushViewController(vc, animated: true)
-    }
-}
-extension MainViewController: FSCalendarDelegate, FSCalendarDataSource {
-    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-        searchTableView.reloadData()
-    }
-    func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == true", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-        searchTableView.reloadData()
-    }
-}
-extension MainViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return DataList.list.count
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
-        let data = DataList.list[indexPath.row]
-        cell.completeButton.tag = indexPath.row
-        let image = data.isComplete ? "circle.fill" : "circle"
-        cell.completeButton.setImage(UIImage(systemName: image), for: .normal)
-        cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
-        cell.configureCell(data: data)
-        return cell
-    }
-    @objc func completeButtonTapped(sender: UIButton) {
-        let complete = DataList.list[sender.tag]
-        try! self.realm.write {
-            complete.isComplete.toggle()
-            self.realm.create(RealmTable.self, value: ["key" : complete.key, "isComplete" : complete.isComplete], update: .modified)
-            let image = complete.isComplete ? "circle.fill" : "circle"
-            sender.setImage(UIImage(systemName: image), for: .normal)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
-        try! self.realm.write {
-                self.realm.delete(complete)
-            }
-            self.searchTableView.reloadData()
-        }
-    }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
     }
 }
