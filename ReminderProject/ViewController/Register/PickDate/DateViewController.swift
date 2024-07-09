@@ -5,33 +5,51 @@
 //  Created by 최대성 on 7/3/24.
 //
 
+
 import UIKit
 
 final class DateViewController: BaseViewController {
-
+    
     private let datePicker = UIDatePicker()
     var passDate: PassDateDelegate?
     var getDateFromDatePicker: Date?
     private let showDateLabel = {
         let label = UILabel()
         label.backgroundColor = .systemGray
+        label.textAlignment = .center
         return label
     }()
+    let viewModel = DateViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .inline
+        addActions()
+        bindData()
+    }
+    // pick이 바뀔 때
+    func bindData() {
+        viewModel.pickDate.bind { _ in
+            if let getDate = self.viewModel.pickDate.value {
+                self.showDateLabel.text = Date.getDateString(date: getDate)
+            }
+        }
+    }
+    func addActions() {
         datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
     }
+    
     @objc func completebuttonTapped() {
         passDate?.passDateValue(getDateFromDatePicker ?? Date())
         navigationController?.popViewController(animated: true)
     }
     @objc func dateChange(_ sender: UIDatePicker) {
+        viewModel.pickDate.value = sender.date
         getDateFromDatePicker = sender.date
     }
-  
+    
     override func configureHierarchy() {
         view.addSubview(datePicker)
         view.addSubview(showDateLabel)
@@ -42,10 +60,9 @@ final class DateViewController: BaseViewController {
             make.centerY.equalTo(view.safeAreaLayoutGuide)
         }
         showDateLabel.snp.makeConstraints { make in
-            make.top.equalTo(datePicker.snp.bottom).offset(20)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(70)
         }
     }
-    
-    
 }

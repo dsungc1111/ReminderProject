@@ -18,37 +18,57 @@ final class PriorityViewController: BaseViewController {
         segment.insertSegment(withTitle: "낮음", at: 2, animated: true)
         return segment
     }()
+    let showPriority = {
+        let label = UILabel()
+        label.backgroundColor = .lightGray
+        label.textAlignment = .center
+        label.font = .boldSystemFont(ofSize: 20)
+        return label
+    }()
     var passPriority: PassDateDelegate?
+    let viewModel = PriorityViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
+        addActions()
+        bindData()
     }
-    @objc func completebuttonTapped() {
-        switch segmentControl.selectedSegmentIndex {
-        case 0:
-            if let text = segmentControl.titleForSegment(at: 0) {
-                passPriority?.passPriorityValue(text)
-            }
-        case 1:
-            if let text = segmentControl.titleForSegment(at: 1) {
-                passPriority?.passPriorityValue(text)
-            }
-        case 2:
-            if let text = segmentControl.titleForSegment(at: 2) {
-                passPriority?.passPriorityValue(text)
-            }
-        default:
-            break
+    
+    // segmentcontrol이 바뀔 때
+    func bindData() {
+        viewModel.selectedSegment.bind { _ in
+                self.showPriority.text = self.viewModel.selectedSegment.value
         }
+    }
+    func addActions() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
+        segmentControl.addTarget(self, action: #selector(segmentValueChanged), for: .valueChanged)
+    }
+    
+    @objc func segmentValueChanged(_ sender:UISegmentedControl) {
+        viewModel.outputPriority(index: sender.selectedSegmentIndex)
+    }
+    
+    @objc func completebuttonTapped() {
+        if let priority = viewModel.selectedSegment.value {
+                  passPriority?.passPriorityValue(priority)
+              }
         navigationController?.popViewController(animated: true)
     }
+    
+    
     override func configureHierarchy() {
         view.addSubview(segmentControl)
+        view.addSubview(showPriority)
     }
     override func configureLayout() {
         segmentControl.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.height.equalTo(50)
+        }
+        showPriority.snp.makeConstraints { make in
+            make.top.equalTo(segmentControl.snp.bottom).offset(50)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(50)
         }
