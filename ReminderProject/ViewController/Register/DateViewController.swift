@@ -12,7 +12,11 @@ final class DateViewController: BaseViewController {
     private let datePicker = UIDatePicker()
     var passDate: PassDateDelegate?
     var getDateFromDatePicker: Date?
-    
+    private let showDateLabel = {
+        let label = UILabel()
+        label.backgroundColor = .systemGray
+        return label
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         datePicker.datePickerMode = .date
@@ -30,11 +34,16 @@ final class DateViewController: BaseViewController {
   
     override func configureHierarchy() {
         view.addSubview(datePicker)
+        view.addSubview(showDateLabel)
     }
     override func configureLayout() {
         datePicker.snp.makeConstraints { make in
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.centerY.equalTo(view.safeAreaLayoutGuide)
+        }
+        showDateLabel.snp.makeConstraints { make in
+            make.top.equalTo(datePicker.snp.bottom).offset(20)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
         }
     }
     

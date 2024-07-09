@@ -24,7 +24,7 @@ final class ListViewController: BaseViewController {
     }()
     @objc func removeAllButtonTapped() {
         try! self.realm.write {
-            DataList.list.realm?.deleteAll()
+            list.removeAll()
             }
         tableView.reloadData()
     }
@@ -49,16 +49,15 @@ final class ListViewController: BaseViewController {
     }
     
     private func sortByTitleButtonTapped() {
-//        list = list.sorted(by: MemoContents.memoTitle.rawValue)
-//    list = list.sorted(byKeyPath: MemoContents.memoTitle.rawValue)
+        list = list.sorted { $0.memoTitle < $1.memoTitle }
         tableView.reloadData()
     }
     private func sortByContentButtonTapped() {
-        DataList.list = DataList.list.sorted(byKeyPath: MemoContents.memo.rawValue)
+        list = list.sorted { $0.memo ?? "" > $1.memo ?? "" }
         tableView.reloadData()
     }
     private func sortByDateButtonTapped() {
-        DataList.list = DataList.list.sorted(byKeyPath: MemoContents.date.rawValue)
+        list = list.sorted {$0.date ?? Date() < $1.date ?? Date()}
         tableView.reloadData()
     }
     override func tableViewSetting() {
@@ -100,7 +99,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     @objc func completeButtonTapped(sender: UIButton) {
-        let complete = DataList.list[sender.tag]
+        let complete = list[sender.tag]
         try! self.realm.write {
             complete.isComplete.toggle()
             self.realm.create(RealmTable.self, value: ["key" : complete.key, "isComplete" : complete.isComplete], update: .modified)
@@ -121,29 +120,29 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         
         let vc = DetailViewController()
-        vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
-        let selectedPriority = DataList.list[indexPath.row].priority
-        vc.getId = DataList.list[indexPath.row].key
+        vc.memoTitleLabel.text = list[indexPath.row].memoTitle
+        let selectedPriority = list[indexPath.row].priority
+        vc.getId = list[indexPath.row].key
         switch selectedPriority {
         case "높음":
-            vc.memoTitleLabel.text = "!!!" + DataList.list[indexPath.row].memoTitle
+            vc.memoTitleLabel.text = "!!!" + list[indexPath.row].memoTitle
         case "중간":
-            vc.memoTitleLabel.text = "!!" + DataList.list[indexPath.row].memoTitle
+            vc.memoTitleLabel.text = "!!" + list[indexPath.row].memoTitle
         case "낮음":
-            vc.memoTitleLabel.text = "!" + DataList.list[indexPath.row].memoTitle
+            vc.memoTitleLabel.text = "!" + list[indexPath.row].memoTitle
         default:
-            vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
+            vc.memoTitleLabel.text = list[indexPath.row].memoTitle
         }
        
-        vc.memoLabel.text = (DataList.list[indexPath.row].memo ?? "")
-        vc.dateLabel.text = Date.getDateString(date: DataList.list[indexPath.row].date ?? Date())
-        vc.tagLabel.text = "\(DataList.list[indexPath.row].tag ?? "")"
+        vc.memoLabel.text = list[indexPath.row].memo ?? ""
+        vc.dateLabel.text = Date.getDateString(date: list[indexPath.row].date ?? Date())
+        vc.tagLabel.text = list[indexPath.row].tag ?? ""
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             try! self.realm.write {
-                self.realm.delete(DataList.list[indexPath.row])
+                self.realm.delete(self.list[indexPath.row])
             }
             tableView.reloadData()
             success(true)
@@ -151,8 +150,8 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         delete.backgroundColor = .systemRed
         let flag = UIContextualAction(style: .normal, title: "깃발") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             try! self.realm.write {
-                DataList.list[indexPath.row].isFlag.toggle()
-                self.realm.create(RealmTable.self, value: ["key" : DataList.list[indexPath.row].key, "isFlag" : DataList.list[indexPath.row].isFlag], update: .modified)
+                self.list[indexPath.row].isFlag.toggle()
+                self.realm.create(RealmTable.self, value: ["key" : self.list[indexPath.row].key, "isFlag" : self.list[indexPath.row].isFlag], update: .modified)
             }
             tableView.reloadData()
             success(true)
