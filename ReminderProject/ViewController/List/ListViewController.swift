@@ -11,6 +11,8 @@ import RealmSwift
 
 final class ListViewController: BaseViewController {
     
+    var list: [RealmTable] = []
+    var folder: Folder?
     private let tableView = UITableView()
     private let realm = try! Realm()
     private lazy var removeAllButton = {
@@ -29,6 +31,10 @@ final class ListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
+     
+        print(DataList.list)
+      
+        
     }
     private func navigationbarSetting() {
         

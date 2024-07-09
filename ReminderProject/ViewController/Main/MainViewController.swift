@@ -16,7 +16,6 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
         listTitle = dataList
         tableView.reloadData()
     }
-    
     func passDataList(_ dataList: RealmSwift.Results<RealmTable>) {
         DataList.list = dataList
         collectionView.reloadData()
@@ -221,6 +220,17 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
+        let vc = ListViewController()
+        vc.navigationItem.title = listTitle[indexPath.row].category
+        let folder = listTitle[indexPath.row]
+        let value = folder.content
+        var aaa: Results<RealmTable>!
+        for i in 0...folder.content.count {
+            let results = realm.objects(RealmTable.self).filter("key == %@", folder.content[i].key)
+            aaa.realm?.add(results)
+        }
+        DataList.list = aaa
         
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -62,14 +62,15 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
             try! realm.write {
                 folder.content.append(newData)
             }
-        } else {
-            let newFolder = Folder()
-            newFolder.category = getList
-            newFolder.content.append(newData)
-            try! realm.write {
-                realm.add(newFolder)
-            }
-        }
+        } 
+//        else {
+//            let newFolder = Folder()
+//            newFolder.category = getList
+//            newFolder.content.append(newData)
+//            try! realm.write {
+//                realm.add(newFolder)
+//            }
+//        }
         if let image = loadedImageView.image {
             saveImageToDocument(image: image, filename: "\(newData.key)")
         }
