@@ -182,20 +182,25 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let vc = ListViewController()
         switch indexPath.row {
         case 0:
-            DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+//            DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
             vc.navigationItem.title = ContentNameEnum.today.rawValue
+            vc.list = repository.fetchCategory(cases: 0)
         case 1:
-            DataList.list = realm.objects(RealmTable.self).filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+//            DataList.list = realm.objects(RealmTable.self).filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
             vc.navigationItem.title = ContentNameEnum.plan.rawValue
+            vc.list = repository.fetchCategory(cases: 1)
         case 2:
-            DataList.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+//            DataList.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
             DataList.list = realm.objects(RealmTable.self).filter("isComplete == false")
             vc.navigationItem.title = ContentNameEnum.all.rawValue
+            vc.list = repository.fetchCategory(cases: 2)
         case 3:
-            DataList.list = realm.objects(RealmTable.self).filter("isFlag == true")
+//        DataList.list = realm.objects(RealmTable.self).filter("isFlag == true")
             vc.navigationItem.title = ContentNameEnum.flag.rawValue
+            vc.list = repository.fetchCategory(cases: 3)
         case 4:
             vc.navigationItem.title = ContentNameEnum.complete.rawValue
+            vc.list = repository.fetchCategory(cases: 4)
         default:
             break
         }
@@ -224,13 +229,12 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         vc.navigationItem.title = listTitle[indexPath.row].category
         let folder = listTitle[indexPath.row]
         let value = folder.content
-        var aaa: Results<RealmTable>!
-        for i in 0...folder.content.count {
-            let results = realm.objects(RealmTable.self).filter("key == %@", folder.content[i].key)
-            aaa.realm?.add(results)
-        }
-        DataList.list = aaa
+        vc.list = Array(value)
         
         navigationController?.pushViewController(vc, animated: true)
     }
+//    func fetchFolder() -> [Folder] {
+//        let value = realm.objects(Folder.self)
+//        return Array(value)
+//    }
 }

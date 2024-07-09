@@ -31,8 +31,6 @@ final class ListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
-     
-        print(DataList.list)
       
         
     }
@@ -51,7 +49,8 @@ final class ListViewController: BaseViewController {
     }
     
     private func sortByTitleButtonTapped() {
-        DataList.list = DataList.list.sorted(byKeyPath: MemoContents.memoTitle.rawValue)
+//        list = list.sorted(by: MemoContents.memoTitle.rawValue)
+//    list = list.sorted(byKeyPath: MemoContents.memoTitle.rawValue)
         tableView.reloadData()
     }
     private func sortByContentButtonTapped() {
@@ -88,11 +87,11 @@ final class ListViewController: BaseViewController {
 }
 extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return DataList.list.count
+        return list.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
-        let data = DataList.list[indexPath.row]
+        let data = list[indexPath.row]
         cell.completeButton.tag = indexPath.row
         let image = data.isComplete ? "circle.fill" : "circle"
         cell.completeButton.setImage(UIImage(systemName: image), for: .normal)
