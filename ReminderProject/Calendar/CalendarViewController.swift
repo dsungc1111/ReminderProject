@@ -39,7 +39,6 @@ final class CalendarViewController: BaseViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        DataList.list = realm.objects(RealmTable.self)
         let date = Date()
         calendarView.select(date)
         calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
@@ -79,38 +78,21 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
          viewModel.selectDate(date: date)
     }
-
 }
-
 extension CalendarViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return DataList.list.count
+        return viewModel.outputSelecteDate.value?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
-        let data = DataList.list[indexPath.row]
+        let data = viewModel.outputSelecteDate.value?[indexPath.row]
         cell.completeButton.tag = indexPath.row
-        let image = data.isComplete ? "circle.fill" : "circle"
+        let image = data?.isComplete ?? false ? "circle.fill" : "circle"
         cell.completeButton.setImage(UIImage(systemName: image), for: .normal)
-        cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
-        cell.configureCell(data: data)
+        cell.configureCell(data: data ?? RealmTable())
         return cell
     }
-    @objc func completeButtonTapped(sender: UIButton) {
-        let complete = DataList.list[sender.tag]
-        try! self.realm.write {
-            complete.isComplete.toggle()
-            self.realm.create(RealmTable.self, value: ["key" : complete.key, "isComplete" : complete.isComplete], update: .modified)
-            let image = complete.isComplete ? "circle.fill" : "circle"
-            sender.setImage(UIImage(systemName: image), for: .normal)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
-        try! self.realm.write {
-                self.realm.delete(complete)
-            }
-            self.searchTableView.reloadData()
-        }
-    }
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
