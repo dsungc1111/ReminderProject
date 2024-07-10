@@ -48,17 +48,14 @@ class AddFolderViewController: BaseViewController {
         text.addTarget(self, action: #selector(listNameDidchange(_:)), for: .editingChanged)
         return text
     }()
-    @objc func listNameDidchange(_ sender: UITextField) {
-        if let text = sender.text, !text.isEmpty {
-            navigationItem.rightBarButtonItem?.isEnabled = true
-            navigationItem.rightBarButtonItem?.tintColor = .black
-        }
-    }
     let realm = try! Realm()
+    let viewModel = AddFolderViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
         listTitle = realm.objects(Folder.self)
+        bindData()
     }
     private func configureNavigationbar() {
         navigationItem.title = NavigationBarTitle.title.rawValue
@@ -69,6 +66,21 @@ class AddFolderViewController: BaseViewController {
         navigationItem.rightBarButtonItem?.isEnabled = false
         navigationItem.backButtonTitle = NavigationBarTitle.cancel.rawValue
     }
+    
+    func bindData() {
+        viewModel.outputButtonBlock.bind { value in
+            if let value = value {
+                self.navigationItem.rightBarButtonItem?.isEnabled = value
+                self.navigationItem.rightBarButtonItem?.tintColor = .black
+            }
+        }
+    }
+    @objc func listNameDidchange(_ sender: UITextField) {
+        if let text = sender.text {
+            viewModel.inputFolderTitle.value = text
+        }
+        viewModel.inputTextChange.value = ()
+    }
     @objc func cancelButtonTapped() {
         navigationController?.dismiss(animated: true)
     }
@@ -76,9 +88,6 @@ class AddFolderViewController: BaseViewController {
         view.makeToast("저장완료!", duration: 2.0, position: .center)
         guard let listNameText = listName.text else { return }
         let newFolder = Folder(category: listNameText, content: List<RealmTable>())
-            
-       let realm = try! Realm()
-        
         try! realm.write {
             realm.add(newFolder)
         }
@@ -86,7 +95,6 @@ class AddFolderViewController: BaseViewController {
         passFolder?.passFolderList(listTitle)
         navigationController?.dismiss(animated: true)
     }
-    
     override func configureHierarchy() {
         view.addSubview(logoBackView)
         view.addSubview(listLogo)
@@ -109,6 +117,4 @@ class AddFolderViewController: BaseViewController {
             make.height.equalTo(50)
         }
     }
-    
-    
 }

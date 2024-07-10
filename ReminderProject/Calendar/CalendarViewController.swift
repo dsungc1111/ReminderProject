@@ -14,7 +14,7 @@ final class CalendarViewController: BaseViewController {
     
     private var chooseMonthOrWeek = true
     private let realm = try! Realm()
-    let viewModel = CalendarViewModel()
+    private let viewModel = CalendarViewModel()
     
     private lazy var calendarView = {
         let calendar = FSCalendar()
@@ -28,7 +28,6 @@ final class CalendarViewController: BaseViewController {
         calendar.addGestureRecognizer(panGestureRecognizer)
         return calendar
     }()
-    
     private lazy var searchTableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -44,7 +43,7 @@ final class CalendarViewController: BaseViewController {
         calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
         bindData()
     }
-    func bindData() {
+    private func bindData() {
         viewModel.inputMonthOrWeek.bind { _ in
             if let calendar = self.viewModel.inputMonthOrWeek.value {
                 self.calendarView.scope = calendar ? .month : .week
@@ -92,12 +91,10 @@ extension CalendarViewController: UITableViewDelegate, UITableViewDataSource {
         cell.configureCell(data: data ?? RealmTable())
         return cell
     }
-
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
-        
     }
 }

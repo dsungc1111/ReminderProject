@@ -18,12 +18,5 @@ final class CalendarViewModel {
 
     func selectDate(date: Date) {
         outputSelecteDate.value = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-        
     }
-    
-    func setPickedDate() {
-        
-    }
- 
-    
 }
