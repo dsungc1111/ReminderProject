@@ -28,9 +28,19 @@ final class SearchViewController: BaseViewController {
         return table
     }()
     private let realm = try! Realm()
+    private let viewModel = SearchViewModel()
+    private var list: [RealmTable] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         DataList.list = realm.objects(RealmTable.self).filter("isComplete == true")
+        bindData()
+    }
+    func bindData() {
+        viewModel.outputText.bind { _ in
+            self.list = self.viewModel.outputText.value ?? [RealmTable]()
+            self.tableView.reloadData()
+        }
+        
     }
     override func configureHierarchy() {
         view.addSubview(searchBar)
@@ -49,26 +59,21 @@ final class SearchViewController: BaseViewController {
     }
 }
 extension SearchViewController: UISearchBarDelegate {
-    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        let filter = realm.objects(RealmTable.self).where {
-            $0.memoTitle.contains(searchText, options: .caseInsensitive)
-        }
-        let result = filter
-        DataList.list = result
-        tableView.reloadData()
+        viewModel.inputSearchText.value = searchText
+        viewModel.inputSearchTextChange.value = ()
     }
 }
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "검색결과 \(DataList.list.count)개"
+        return "검색결과 \(list.count)개"
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return DataList.list.count
+        return list.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
-        let data = DataList.list[indexPath.row]
+        let data = list[indexPath.row]
         cell.completeButton.tag = indexPath.row
         let image = data.isComplete ? "circle.fill" : "circle"
         cell.completeButton.setImage(UIImage(systemName: image), for: .normal)
@@ -77,7 +82,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     @objc func completeButtonTapped(sender: UIButton) {
-        let complete = DataList.list[sender.tag]
+        let complete = list[sender.tag]
         try! self.realm.write {
             complete.isComplete.toggle()
             self.realm.create(RealmTable.self, value: ["key" : complete.key, "isComplete" : complete.isComplete], update: .modified)
@@ -97,28 +102,28 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         let vc = DetailViewController()
-        vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
-        let selectedPriority = DataList.list[indexPath.row].priority
+        vc.memoTitleLabel.text = list[indexPath.row].memoTitle
+        let selectedPriority = list[indexPath.row].priority
         
         switch selectedPriority {
         case "높음":
-            vc.memoTitleLabel.text = "!!!" + DataList.list[indexPath.row].memoTitle
+            vc.memoTitleLabel.text = "!!!" + list[indexPath.row].memoTitle
         case "중간":
-            vc.memoTitleLabel.text = "!!" + DataList.list[indexPath.row].memoTitle
+            vc.memoTitleLabel.text = "!!" + list[indexPath.row].memoTitle
         case "낮음":
-            vc.memoTitleLabel.text = "!" + DataList.list[indexPath.row].memoTitle
+            vc.memoTitleLabel.text = "!" + list[indexPath.row].memoTitle
         default:
-            vc.memoTitleLabel.text = DataList.list[indexPath.row].memoTitle
+            vc.memoTitleLabel.text = list[indexPath.row].memoTitle
         }
-        vc.memoLabel.text = DataList.list[indexPath.row].memo
-        vc.dateLabel.text = Date.getDateString(date: DataList.list[indexPath.row].date ?? Date())
-        vc.tagLabel.text = "#\(DataList.list[indexPath.row].tag ?? "")"
+        vc.memoLabel.text = list[indexPath.row].memo
+        vc.dateLabel.text = Date.getDateString(date: list[indexPath.row].date ?? Date())
+        vc.tagLabel.text = "#\(list[indexPath.row].tag ?? "")"
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             try! self.realm.write {
-                self.realm.delete(DataList.list[indexPath.row])
+                self.realm.delete(self.list[indexPath.row])
             }
             tableView.reloadData()
             success(true)
@@ -126,8 +131,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         delete.backgroundColor = .systemRed
         let flag = UIContextualAction(style: .normal, title: "깃발") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             try! self.realm.write {
-                DataList.list[indexPath.row].isFlag.toggle()
-                self.realm.create(RealmTable.self, value: ["key" : DataList.list[indexPath.row].key, "isFlag" : DataList.list[indexPath.row].isFlag], update: .modified)
+                self.list[indexPath.row].isFlag.toggle()
+                self.realm.create(RealmTable.self, value: ["key" : self.list[indexPath.row].key, "isFlag" : self.list[indexPath.row].isFlag], update: .modified)
             }
             tableView.reloadData()
             success(true)
