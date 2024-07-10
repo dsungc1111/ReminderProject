@@ -26,7 +26,17 @@ final class AddToDoViewController: BaseViewController, PassDateDelegate {
         case cancel = "취소"
         case save = "저장"
     }
-    private let tableView = UITableView()
+    private lazy var tableView = {
+        let view = UITableView()
+        view.delegate = self
+        view.dataSource = self
+        view.register(TodoTableViewCell.self, forCellReuseIdentifier: TodoTableViewCell.id)
+        view.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.id)
+        view.separatorStyle = .none
+        view.backgroundColor = .clear
+        view.showsVerticalScrollIndicator = false
+        return view
+    }()
     private let loadedImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
@@ -69,15 +79,6 @@ final class AddToDoViewController: BaseViewController, PassDateDelegate {
         showToast?()
         passData?.passDataList(DataList.list)
         navigationController?.dismiss(animated: true)
-    }
-    override func tableViewSetting() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: TodoTableViewCell.id)
-        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.id)
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = .clear
-        tableView.showsVerticalScrollIndicator = false
     }
     private func configureNavigationbar() {
         navigationItem.title = NavigationBarTitle.title.rawValue
@@ -211,7 +212,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
                 picker.delegate = self
                 present(picker, animated: true)
             case 4:
-                let vc = ListSelectViewController()
+                let vc = FolderListViewController()
                 vc.passFolder = self
                 vc.navigationItem.title = Category.allCases[4].rawValue
                 navigationController?.pushViewController(vc, animated: true)
@@ -226,9 +227,7 @@ extension AddToDoViewController: PHPickerViewControllerDelegate {
         print(#function)
         if let itemProvider = results.first?.itemProvider,
            itemProvider.canLoadObject(ofClass: UIImage.self) {
-            
             itemProvider.loadObject(ofClass: UIImage.self) { image, error in
-               
                 DispatchQueue.main.async {
                     self.loadedImageView.image = image as? UIImage
                 }

@@ -92,7 +92,6 @@ final class MainViewController: BaseViewController {
         let vc = CalendarViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-    
     @objc func listAddButtonTapped() {
         let vc = AddFolderViewController()
         vc.showToast = {
@@ -187,25 +186,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = ListViewController()
-        switch indexPath.row {
-        case 0:
-            vc.navigationItem.title = ContentNameEnum.today.rawValue
-            vc.list = repository.fetchCategory(cases: 0)
-        case 1:
-            vc.navigationItem.title = ContentNameEnum.plan.rawValue
-            vc.list = repository.fetchCategory(cases: 1)
-        case 2:
-            vc.navigationItem.title = ContentNameEnum.all.rawValue
-            vc.list = repository.fetchCategory(cases: 2)
-        case 3:
-            vc.navigationItem.title = ContentNameEnum.flag.rawValue
-            vc.list = repository.fetchCategory(cases: 3)
-        case 4:
-            vc.navigationItem.title = ContentNameEnum.complete.rawValue
-            vc.list = repository.fetchCategory(cases: 4)
-        default:
-            break
-        }
+        vc.navigationItem.title = ContentNameEnum.allCases[indexPath.row].rawValue
+        vc.list = repository.fetchCategory(cases: indexPath.row)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

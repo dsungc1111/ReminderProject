@@ -42,14 +42,11 @@ final class AddFolderViewModel {
         } else {
             outputButtonBlock.value = true
         }
-        
     }
-    
     private func getNewFoler(title: String) {
         let newFolder = Folder(category: title, content: List<RealmTable>())
         try! realm.write {
             realm.add(newFolder)
         }
     }
-    
 }

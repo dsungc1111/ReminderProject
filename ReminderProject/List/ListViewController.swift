@@ -13,7 +13,14 @@ final class ListViewController: BaseViewController {
     
     var list: [RealmTable] = []
     var folder: Folder?
-    private let tableView = UITableView()
+    private lazy var tableView = {
+        let view = UITableView()
+        view.delegate = self
+        view.dataSource = self
+        view.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
+        view.backgroundColor = .clear
+        return view
+    }()
     private let realm = try! Realm()
     private lazy var removeAllButton = {
        let btn = UIButton()
@@ -59,12 +66,6 @@ final class ListViewController: BaseViewController {
     private func sortByDateButtonTapped() {
         list = list.sorted {$0.date ?? Date() < $1.date ?? Date()}
         tableView.reloadData()
-    }
-    override func tableViewSetting() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
-        tableView.backgroundColor = .clear
     }
     override func configureHierarchy() {
         view.addSubview(removeAllButton)

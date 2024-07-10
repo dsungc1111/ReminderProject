@@ -75,25 +75,7 @@ final class RealmTableRepository {
         return Array(value)
         
     }
-    
-    
-//    func addMemoInFolder(_ folder: Folder) {
-//        
-//        let memo = Memo()
-//        memo.content = "이렇게 메모를 넣어볼까요?"
-//        memo.editDate = Date()
-//        memo.regDate = Date()
-//        
-//        do {
-//            try realm.write {
-//                folder.memo = nil
-//            }
-//        } catch {
-//            print("folder memo failed")
-//        }
-//    }
-//    
-    
+   
     func addFolder(_ folder: Folder) {
         do {
             try realm.write {

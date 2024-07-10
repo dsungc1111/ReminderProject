@@ -33,6 +33,7 @@ final class MainCollectionViewCell: UICollectionViewCell {
     var listTitle: Results<Folder>!
     private let realm = try! Realm()
     let repository = RealmTableRepository()
+    private var list: [RealmTable] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -70,29 +71,7 @@ final class MainCollectionViewCell: UICollectionViewCell {
         contentName.text = ContentNameEnum.allCases[data.row].rawValue
         contentLogo.backgroundColor =  ContentLogoColorEnum.allCases[data.row].value
         contentLogo.image = UIImage(systemName: ContentLogoImageEnum.allCases[data.row].rawValue)
-        filterData(data: data.row)
-        contentCountLabel.text = data.row <= 3 ? "\( DataList.list.count)" : ""
-        if data.row == 2 {
-            contentCountLabel.text = "\(DataList.list.count)"
-        }
-    }
-    func filterData(data: Int) {
-        let date = Date()
-        switch data {
-        case 0:
-            DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-        case 1:
-            DataList.list = realm.objects(RealmTable.self).filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-        case 2:
-            DataList.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
-            DataList.list = realm.objects(RealmTable.self).filter("isComplete == false")
-        case 3:
-            DataList.list = realm.objects(RealmTable.self).filter("isFlag == true")
-        case 4:
-            DataList.completeList = realm.objects(RealmTable.self).filter("isComplete == true")
-            DataList.list = DataList.completeList
-        default:
-            break
-        }
+        list = repository.fetchCategory(cases: data.row)
+        contentCountLabel.text = data.row <= 3 ? "\(list.count)" : ""
     }
 }

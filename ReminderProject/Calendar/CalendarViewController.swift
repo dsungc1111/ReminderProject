@@ -55,8 +55,6 @@ final class CalendarViewController: BaseViewController {
     }
     @objc func panGestureHandler() {
         viewModel.inputMonthOrWeek.value?.toggle()
-//        chooseMonthOrWeek.toggle()
-//        calendarView.scope = chooseMonthOrWeek ? .month : .week
     }
     override func configureHierarchy() {
         view.addSubview(calendarView)

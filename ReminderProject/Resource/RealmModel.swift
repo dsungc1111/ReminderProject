@@ -15,8 +15,6 @@ class Folder: Object {
     
     convenience init(category: String, content: List<RealmTable>) {
         self.init()
-        
-        
         self.category = category
         self.content = content
     }
