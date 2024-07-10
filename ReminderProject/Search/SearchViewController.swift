@@ -32,7 +32,6 @@ final class SearchViewController: BaseViewController {
     private var list: [RealmTable] = []
     override func viewDidLoad() {
         super.viewDidLoad()
-        DataList.list = realm.objects(RealmTable.self).filter("isComplete == true")
         bindData()
     }
     func bindData() {
@@ -40,7 +39,6 @@ final class SearchViewController: BaseViewController {
             self.list = self.viewModel.outputText.value ?? [RealmTable]()
             self.tableView.reloadData()
         }
-        
     }
     override func configureHierarchy() {
         view.addSubview(searchBar)
