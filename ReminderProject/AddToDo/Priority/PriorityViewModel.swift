@@ -10,22 +10,22 @@ import Foundation
 
 class PriorityViewModel {
     
-    var selectedSegment: Observable<String?> = Observable(nil)
+    var outputPriority: Observable<String?> = Observable(nil)
     init() {
-        selectedSegment.bind { _ in
-            self.selectedSegment.value = "대기중"
+        outputPriority.bind { _ in
+            self.outputPriority.value = "대기중"
         }
     }
-    func outputPriority(index: Int) {
+    func inputPriority(index: Int) {
            switch index {
            case 0:
-               selectedSegment.value = "높음"
+               outputPriority.value = "높음"
            case 1:
-               selectedSegment.value = "중간"
+               outputPriority.value = "중간"
            case 2:
-               selectedSegment.value = "낮음"
+               outputPriority.value = "낮음"
            default:
-               selectedSegment.value = ""
+               outputPriority.value = ""
            }
        }
 }

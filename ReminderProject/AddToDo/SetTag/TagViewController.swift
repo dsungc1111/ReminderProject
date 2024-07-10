@@ -10,7 +10,6 @@ import SnapKit
 
 final class TagViewController: BaseViewController {
 
-    
     private let tagTextField = {
         let tag = UITextField()
         tag.backgroundColor = .white
@@ -22,18 +21,31 @@ final class TagViewController: BaseViewController {
         tag.clearButtonMode = .whileEditing
         return tag
     }()
-    
     var passTag: PassDateDelegate?
+    let viewModel = TagViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
+        bindData()
     }
+    func bindData() {
+        viewModel.inputButton.bind { _ in
+            if let tagText = self.tagTextField.text {
+                self.passTag?.passTagValue(tagText)
+            }
+        }
+    }
+    
     @objc func completebuttonTapped() {
-        let tagText = tagTextField.text ?? "땡"
-        passTag?.passTagValue(tagText)
+      
+        viewModel.inputButton.value = ()
         navigationController?.popViewController(animated: true)
     }
+    
+    
+    
+    
     override func configureHierarchy() {
         view.addSubview(tagTextField)
     }

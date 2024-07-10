@@ -14,6 +14,7 @@ final class CalendarViewController: BaseViewController {
     
     private var chooseMonthOrWeek = true
     private let realm = try! Realm()
+    let viewModel = CalendarViewModel()
     
     private lazy var calendarView = {
         let calendar = FSCalendar()
@@ -27,10 +28,7 @@ final class CalendarViewController: BaseViewController {
         calendar.addGestureRecognizer(panGestureRecognizer)
         return calendar
     }()
-    @objc func panGestureHandler() {
-        chooseMonthOrWeek.toggle()
-        calendarView.scope = chooseMonthOrWeek ? .month : .week
-    }
+    
     private lazy var searchTableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -45,6 +43,22 @@ final class CalendarViewController: BaseViewController {
         let date = Date()
         calendarView.select(date)
         calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
+        bindData()
+    }
+    func bindData() {
+        viewModel.inputMonthOrWeek.bind { _ in
+            if let calendar = self.viewModel.inputMonthOrWeek.value {
+                self.calendarView.scope = calendar ? .month : .week
+            }
+        }
+        viewModel.outputSelecteDate.bind { _ in
+            self.searchTableView.reloadData()
+        }
+    }
+    @objc func panGestureHandler() {
+        viewModel.inputMonthOrWeek.value?.toggle()
+//        chooseMonthOrWeek.toggle()
+//        calendarView.scope = chooseMonthOrWeek ? .month : .week
     }
     override func configureHierarchy() {
         view.addSubview(calendarView)
@@ -63,13 +77,9 @@ final class CalendarViewController: BaseViewController {
 }
 extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-        searchTableView.reloadData()
+         viewModel.selectDate(date: date)
     }
-    func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == true", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-        searchTableView.reloadData()
-    }
+
 }
 
 extension CalendarViewController: UITableViewDelegate, UITableViewDataSource {

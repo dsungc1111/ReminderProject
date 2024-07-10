@@ -11,7 +11,7 @@ import PhotosUI
 import RealmSwift
 import Toast
 
-final class RegisterViewController: BaseViewController, PassDateDelegate {
+final class AddToDoViewController: BaseViewController, PassDateDelegate {
  
     var passData: PassDataDelegate?
     private enum Category: String, CaseIterable {
@@ -62,15 +62,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
             try! realm.write {
                 folder.content.append(newData)
             }
-        } 
-//        else {
-//            let newFolder = Folder()
-//            newFolder.category = getList
-//            newFolder.content.append(newData)
-//            try! realm.write {
-//                realm.add(newFolder)
-//            }
-//        }
+        }
         if let image = loadedImageView.image {
             saveImageToDocument(image: image, filename: "\(newData.key)")
         }
@@ -131,7 +123,7 @@ final class RegisterViewController: BaseViewController, PassDateDelegate {
     
    
 }
-extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
+extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
@@ -229,7 +221,7 @@ extension RegisterViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
-extension RegisterViewController: PHPickerViewControllerDelegate {
+extension AddToDoViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         print(#function)
         if let itemProvider = results.first?.itemProvider,

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		8B456F152C33E8D4003CFBD1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F142C33E8D4003CFBD1 /* AppDelegate.swift */; };
 		8B456F172C33E8D4003CFBD1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F162C33E8D4003CFBD1 /* SceneDelegate.swift */; };
-		8B456F192C33E8D4003CFBD1 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F182C33E8D4003CFBD1 /* RegisterViewController.swift */; };
+		8B456F192C33E8D4003CFBD1 /* AddToDoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F182C33E8D4003CFBD1 /* AddToDoViewController.swift */; };
 		8B456F1E2C33E8D6003CFBD1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B456F1D2C33E8D6003CFBD1 /* Assets.xcassets */; };
 		8B456F212C33E8D6003CFBD1 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 8B456F202C33E8D6003CFBD1 /* Base */; };
 		8B456F2B2C33EBB8003CFBD1 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F2A2C33EBB8003CFBD1 /* BaseViewController.swift */; };
@@ -34,6 +34,10 @@
 		8B696A4A2C3D3FDC00D99D4A /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B696A492C3D3FDC00D99D4A /* Observable.swift */; };
 		8B696A4D2C3D569400D99D4A /* PickDateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B696A4C2C3D569400D99D4A /* PickDateViewModel.swift */; };
 		8B696A502C3D79A200D99D4A /* PriorityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B696A4F2C3D79A200D99D4A /* PriorityViewModel.swift */; };
+		8B696A6D2C3E599E00D99D4A /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B696A6C2C3E599E00D99D4A /* MainViewModel.swift */; };
+		8B696A702C3E653A00D99D4A /* TagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B696A6F2C3E653A00D99D4A /* TagViewModel.swift */; };
+		8B8EACDE2C3E715C00D7990B /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8EACDD2C3E715C00D7990B /* RealmModel.swift */; };
+		8B8EACE02C3E71B700D7990B /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8EACDF2C3E71B700D7990B /* CalendarViewModel.swift */; };
 		8BA3BF912C36232400229026 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA3BF902C36232400229026 /* Date+.swift */; };
 		8BA3BF9B2C36E02700229026 /* DataList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA3BF9A2C36E02700229026 /* DataList.swift */; };
 		8BA3BF9E2C36F78100229026 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 8BA3BF9D2C36F78100229026 /* FSCalendar */; };
@@ -53,7 +57,7 @@
 		8B456F112C33E8D4003CFBD1 /* ReminderProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReminderProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B456F142C33E8D4003CFBD1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B456F162C33E8D4003CFBD1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		8B456F182C33E8D4003CFBD1 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		8B456F182C33E8D4003CFBD1 /* AddToDoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToDoViewController.swift; sourceTree = "<group>"; };
 		8B456F1D2C33E8D6003CFBD1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8B456F202C33E8D6003CFBD1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8B456F222C33E8D6003CFBD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -76,6 +80,10 @@
 		8B696A492C3D3FDC00D99D4A /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		8B696A4C2C3D569400D99D4A /* PickDateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickDateViewModel.swift; sourceTree = "<group>"; };
 		8B696A4F2C3D79A200D99D4A /* PriorityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityViewModel.swift; sourceTree = "<group>"; };
+		8B696A6C2C3E599E00D99D4A /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		8B696A6F2C3E653A00D99D4A /* TagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagViewModel.swift; sourceTree = "<group>"; };
+		8B8EACDD2C3E715C00D7990B /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
+		8B8EACDF2C3E71B700D7990B /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
 		8BA3BF902C36232400229026 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		8BA3BF9A2C36E02700229026 /* DataList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataList.swift; sourceTree = "<group>"; };
 		8BFB5C3F2C38EC9400CE14C5 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -214,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				8B456F2E2C33EC4A003CFBD1 /* MainViewController.swift */,
+				8B696A6C2C3E599E00D99D4A /* MainViewModel.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -221,9 +230,9 @@
 		8B696A692C3E563400D99D4A /* AddToDo */ = {
 			isa = PBXGroup;
 			children = (
-				8B456F182C33E8D4003CFBD1 /* RegisterViewController.swift */,
-				8B456F542C3529EA003CFBD1 /* TagViewController.swift */,
+				8B456F182C33E8D4003CFBD1 /* AddToDoViewController.swift */,
 				8BFB5C5F2C3C279700CE14C5 /* ListSelectViewController.swift */,
+				8B696A6E2C3E652E00D99D4A /* SetTag */,
 				8B696A4E2C3D798D00D99D4A /* Priority */,
 				8B696A4B2C3D567C00D99D4A /* PickDate */,
 			);
@@ -247,6 +256,15 @@
 			path = Main;
 			sourceTree = "<group>";
 		};
+		8B696A6E2C3E652E00D99D4A /* SetTag */ = {
+			isa = PBXGroup;
+			children = (
+				8B456F542C3529EA003CFBD1 /* TagViewController.swift */,
+				8B696A6F2C3E653A00D99D4A /* TagViewModel.swift */,
+			);
+			path = SetTag;
+			sourceTree = "<group>";
+		};
 		8BA3BF8F2C3622F400229026 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -264,6 +282,7 @@
 				8B456F492C34BD52003CFBD1 /* Enum.swift */,
 				8BA3BF9A2C36E02700229026 /* DataList.swift */,
 				8BFB5C542C3BBADC00CE14C5 /* RealmRepository.swift */,
+				8B8EACDD2C3E715C00D7990B /* RealmModel.swift */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -280,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				8BFB5C5A2C3BEE3000CE14C5 /* CalendarViewController.swift */,
+				8B8EACDF2C3E71B700D7990B /* CalendarViewModel.swift */,
 			);
 			path = Calendar;
 			sourceTree = "<group>";
@@ -379,9 +399,10 @@
 				8BFB5C582C3BD95600CE14C5 /* AddListViewController.swift in Sources */,
 				8B456F572C3529FF003CFBD1 /* PriorityViewController.swift in Sources */,
 				8B456F3D2C33F9B7003CFBD1 /* BaseTableViewCell.swift in Sources */,
+				8B8EACE02C3E71B700D7990B /* CalendarViewModel.swift in Sources */,
 				8B696A4D2C3D569400D99D4A /* PickDateViewModel.swift in Sources */,
 				8B456F452C340E55003CFBD1 /* Database.swift in Sources */,
-				8B456F192C33E8D4003CFBD1 /* RegisterViewController.swift in Sources */,
+				8B456F192C33E8D4003CFBD1 /* AddToDoViewController.swift in Sources */,
 				8B456F2B2C33EBB8003CFBD1 /* BaseViewController.swift in Sources */,
 				8B456F422C33FACC003CFBD1 /* TodoTableViewCell.swift in Sources */,
 				8B456F5B2C3542EF003CFBD1 /* PassData.swift in Sources */,
@@ -389,6 +410,7 @@
 				8B456F402C33FA27003CFBD1 /* Reusable.swift in Sources */,
 				8B456F152C33E8D4003CFBD1 /* AppDelegate.swift in Sources */,
 				8BA3BF912C36232400229026 /* Date+.swift in Sources */,
+				8B8EACDE2C3E715C00D7990B /* RealmModel.swift in Sources */,
 				8B456F4D2C34C56C003CFBD1 /* MainCollectionViewCell.swift in Sources */,
 				8BFB5C422C38F08E00CE14C5 /* CALayer+.swift in Sources */,
 				8BFB5C402C38EC9400CE14C5 /* SearchViewController.swift in Sources */,
@@ -401,10 +423,12 @@
 				8B456F482C341956003CFBD1 /* ListTableViewCell.swift in Sources */,
 				8BA3BF9B2C36E02700229026 /* DataList.swift in Sources */,
 				8B456F2F2C33EC4A003CFBD1 /* MainViewController.swift in Sources */,
+				8B696A6D2C3E599E00D99D4A /* MainViewModel.swift in Sources */,
 				8BFB5C552C3BBADC00CE14C5 /* RealmRepository.swift in Sources */,
 				8BFB5C482C3933C000CE14C5 /* UIViewController+.swift in Sources */,
 				8B456F552C3529EA003CFBD1 /* TagViewController.swift in Sources */,
 				8BFB5C5B2C3BEE3000CE14C5 /* CalendarViewController.swift in Sources */,
+				8B696A702C3E653A00D99D4A /* TagViewModel.swift in Sources */,
 				8B696A4A2C3D3FDC00D99D4A /* Observable.swift in Sources */,
 				8BFB5C622C3C27E700CE14C5 /* FolderTableViewCell.swift in Sources */,
 				8B456F2D2C33EC01003CFBD1 /* ListViewController.swift in Sources */,

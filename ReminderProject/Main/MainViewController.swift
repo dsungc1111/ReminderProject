@@ -44,15 +44,6 @@ final class MainViewController: BaseViewController {
         btn.addTarget(self, action: #selector(listAddButtonTapped), for: .touchUpInside)
         return btn
     }()
-    @objc func listAddButtonTapped() {
-        let vc = AddListViewController()
-        vc.showToast = {
-            self.view.makeToast("저장완료!")
-        }
-        vc.passFolder = self
-        let nav = UINavigationController(rootViewController: vc)
-        navigationController?.present(nav, animated: true)
-    }
     let myListLabel = {
         let label = UILabel()
         label.text = "나의 목록"
@@ -93,6 +84,33 @@ final class MainViewController: BaseViewController {
     override func viewDidLayoutSubviews() {
         navigationController?.navigationBar.layer.addBorder([.bottom], color: .systemGray4, width: 1)
     }
+    @objc func searchButtonTapped() {
+        let vc = SearchViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    @objc func calendarButtonTapped() {
+        let vc = CalendarViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func listAddButtonTapped() {
+        let vc = AddFolderViewController()
+        vc.showToast = {
+            self.view.makeToast("저장완료!")
+        }
+        vc.passFolder = self
+        let nav = UINavigationController(rootViewController: vc)
+        navigationController?.present(nav, animated: true)
+    }
+    @objc func addButtonTapped() {
+        let vc = AddToDoViewController()
+        vc.showToast = {
+            self.view.makeToast("저장완료!")
+        }
+        vc.passData = self
+        let nav = UINavigationController(rootViewController: vc)
+        navigationController?.present(nav, animated: true)
+    }
     private func collectionViewSetting() {
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -104,23 +122,6 @@ final class MainViewController: BaseViewController {
         navigationItem.title = "대성's 미리알림"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(calendarButtonTapped))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(searchButtonTapped))
-    }
-    @objc func searchButtonTapped() {
-        let vc = SearchViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    @objc func calendarButtonTapped() {
-        let vc = CalendarViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    @objc func addButtonTapped() {
-        let vc = RegisterViewController()
-        vc.showToast = {
-            self.view.makeToast("저장완료!")
-        }
-        vc.passData = self
-        let nav = UINavigationController(rootViewController: vc)
-        navigationController?.present(nav, animated: true)
     }
     override func configureHierarchy() {
         view.addSubview(addButton)

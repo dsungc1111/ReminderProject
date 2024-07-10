@@ -10,7 +10,7 @@ import SnapKit
 import RealmSwift
 import Toast
 
-class AddListViewController: BaseViewController {
+class AddFolderViewController: BaseViewController {
    
     var passFolder: PassFolderDelegate?
     

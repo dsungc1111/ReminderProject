@@ -27,7 +27,6 @@ final class DateViewController: BaseViewController {
         addActions()
         bindData()
     }
-    // pick이 바뀔 때
     func bindData() {
         viewModel.pickDate.bind { _ in
             if let getDate = self.viewModel.pickDate.value {
@@ -39,8 +38,6 @@ final class DateViewController: BaseViewController {
         datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
     }
-    
-    
     @objc func dateChange(_ sender: UIDatePicker) {
         viewModel.pickDate.value = sender.date
     }

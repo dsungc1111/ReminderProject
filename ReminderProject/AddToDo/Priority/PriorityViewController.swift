@@ -18,7 +18,7 @@ final class PriorityViewController: BaseViewController {
         segment.insertSegment(withTitle: "낮음", at: 2, animated: true)
         return segment
     }()
-    let showPriority = {
+    private let showPriority = {
         let label = UILabel()
         label.backgroundColor = .lightGray
         label.textAlignment = .center
@@ -26,7 +26,7 @@ final class PriorityViewController: BaseViewController {
         return label
     }()
     var passPriority: PassDateDelegate?
-    let viewModel = PriorityViewModel()
+    private let viewModel = PriorityViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,27 +36,24 @@ final class PriorityViewController: BaseViewController {
     
     // segmentcontrol이 바뀔 때
     func bindData() {
-        viewModel.selectedSegment.bind { _ in
-                self.showPriority.text = self.viewModel.selectedSegment.value
+        viewModel.outputPriority.bind { _ in
+                self.showPriority.text = self.viewModel.outputPriority.value
         }
     }
-    func addActions() {
+    private func addActions() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
         segmentControl.addTarget(self, action: #selector(segmentValueChanged), for: .valueChanged)
     }
     
     @objc func segmentValueChanged(_ sender:UISegmentedControl) {
-        viewModel.outputPriority(index: sender.selectedSegmentIndex)
+        viewModel.inputPriority(index: sender.selectedSegmentIndex)
     }
-    
     @objc func completebuttonTapped() {
-        if let priority = viewModel.selectedSegment.value {
+        if let priority = viewModel.outputPriority.value {
                   passPriority?.passPriorityValue(priority)
               }
         navigationController?.popViewController(animated: true)
     }
-    
-    
     override func configureHierarchy() {
         view.addSubview(segmentControl)
         view.addSubview(showPriority)
