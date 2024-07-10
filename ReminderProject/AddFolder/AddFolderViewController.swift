@@ -39,13 +39,13 @@ class AddFolderViewController: BaseViewController {
         logo.contentMode = .scaleAspectFit
         return logo
     }()
-    lazy var listName = {
+    lazy var folderName = {
         let text = UITextField()
         text.textAlignment = .center
         text.placeholder = "목록 이름"
         text.layer.cornerRadius = 10
         text.backgroundColor = .systemGray4
-        text.addTarget(self, action: #selector(listNameDidchange(_:)), for: .editingChanged)
+        text.addTarget(self, action: #selector(folderNameDidchange(_:)), for: .editingChanged)
         return text
     }()
     let realm = try! Realm()
@@ -66,7 +66,6 @@ class AddFolderViewController: BaseViewController {
         navigationItem.rightBarButtonItem?.isEnabled = false
         navigationItem.backButtonTitle = NavigationBarTitle.cancel.rawValue
     }
-    
     func bindData() {
         viewModel.outputButtonBlock.bind { value in
             if let value = value {
@@ -75,7 +74,7 @@ class AddFolderViewController: BaseViewController {
             }
         }
     }
-    @objc func listNameDidchange(_ sender: UITextField) {
+    @objc func folderNameDidchange(_ sender: UITextField) {
         if let text = sender.text {
             viewModel.inputFolderTitle.value = text
         }
@@ -86,11 +85,10 @@ class AddFolderViewController: BaseViewController {
     }
     @objc func saveButtonTapped() {
         view.makeToast("저장완료!", duration: 2.0, position: .center)
-        guard let listNameText = listName.text else { return }
-        let newFolder = Folder(category: listNameText, content: List<RealmTable>())
-        try! realm.write {
-            realm.add(newFolder)
+        if let folderTitle = folderName.text {
+            viewModel.inputFolderName.value = folderTitle
         }
+        viewModel.inputFolderChanged.value = ()
         showToast?()
         passFolder?.passFolderList(listTitle)
         navigationController?.dismiss(animated: true)
@@ -98,7 +96,7 @@ class AddFolderViewController: BaseViewController {
     override func configureHierarchy() {
         view.addSubview(logoBackView)
         view.addSubview(listLogo)
-        view.addSubview(listName)
+        view.addSubview(folderName)
     }
     override func configureLayout() {
         logoBackView.snp.makeConstraints { make in
@@ -111,7 +109,7 @@ class AddFolderViewController: BaseViewController {
             make.centerX.equalTo(view.safeAreaLayoutGuide)
             make.size.equalTo(80)
         }
-        listName.snp.makeConstraints { make in
+        folderName.snp.makeConstraints { make in
             make.top.equalTo(listLogo.snp.bottom).offset(20)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(50)
