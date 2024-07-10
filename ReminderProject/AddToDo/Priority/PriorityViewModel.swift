@@ -11,16 +11,11 @@ import Foundation
 class PriorityViewModel {
     
     var selectedSegment: Observable<String?> = Observable(nil)
-    
-    
     init() {
         selectedSegment.bind { _ in
             self.selectedSegment.value = "대기중"
         }
     }
-    
-    
-    
     func outputPriority(index: Int) {
            switch index {
            case 0:
@@ -33,8 +28,4 @@ class PriorityViewModel {
                selectedSegment.value = ""
            }
        }
-    
-    
-    
-    
 }

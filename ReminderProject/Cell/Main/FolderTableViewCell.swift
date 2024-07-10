@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ListSelectTableViewCell: BaseTableViewCell {
+class FolderTableViewCell: BaseTableViewCell {
 
     let contentLogo = {
         let logo = UIImageView()

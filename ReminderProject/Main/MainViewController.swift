@@ -11,16 +11,8 @@ import RealmSwift
 import IQKeyboardManagerSwift
 import Toast
 
-final class MainViewController: BaseViewController, PassDataDelegate, PassFolderDelegate {
-    func passFolderList(_ dataList: RealmSwift.Results<Folder>) {
-        listTitle = dataList
-        tableView.reloadData()
-    }
-    func passDataList(_ dataList: RealmSwift.Results<RealmTable>) {
-        DataList.list = dataList
-        collectionView.reloadData()
-        tableView.reloadData()
-    }
+final class MainViewController: BaseViewController {
+   
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
     private static func collectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewFlowLayout()
@@ -61,7 +53,7 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
         let nav = UINavigationController(rootViewController: vc)
         navigationController?.present(nav, animated: true)
     }
-    let myList = {
+    let myListLabel = {
         let label = UILabel()
         label.text = "나의 목록"
         label.font = .boldSystemFont(ofSize: 20)
@@ -77,18 +69,21 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
         let view = UITableView()
         view.delegate = self
         view.dataSource = self
-        view.register(AddListTableViewCell.self, forCellReuseIdentifier: AddListTableViewCell.id)
+        view.register(AddFolderTableViewCell.self, forCellReuseIdentifier: AddFolderTableViewCell.id)
         view.layer.cornerRadius = 10
         view.showsVerticalScrollIndicator = false
+        view.estimatedRowHeight = 50
+        view.rowHeight = UITableView.automaticDimension
         return view
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
+        listTitle = realm.objects(Folder.self)
         navigationbarSetting()
         collectionViewSetting()
+        myListLabel.isHidden = listTitle.count != 0 ? false : true
         DataList.list = realm.objects(RealmTable.self)
         listTitle = realm.objects(Folder.self)
-        myList.isHidden = listTitle.count != 0 ? false : true
     }
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -131,7 +126,7 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
         view.addSubview(addButton)
         view.addSubview(listAddButton)
         view.addSubview(collectionView)
-        view.addSubview(myList)
+        view.addSubview(myListLabel)
         view.addSubview(containerView)
         view.addSubview(tableView)
     }
@@ -153,12 +148,12 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(320)
         }
-        myList.snp.makeConstraints { make in
+        myListLabel.snp.makeConstraints { make in
             make.top.equalTo(collectionView.snp.bottom)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
         }
         containerView.snp.makeConstraints { make in
-            make.top.equalTo(myList.snp.bottom)
+            make.top.equalTo(myListLabel.snp.bottom)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(10)
             make.bottom.equalTo(listAddButton.snp.top)
         }
@@ -166,6 +161,17 @@ final class MainViewController: BaseViewController, PassDataDelegate, PassFolder
             make.top.equalTo(containerView.snp.top).inset(10)
             make.horizontalEdges.bottom.equalTo(containerView.safeAreaLayoutGuide).inset(5)
         }
+    }
+}
+extension MainViewController:  PassDataDelegate, PassFolderDelegate {
+    func passFolderList(_ dataList: RealmSwift.Results<Folder>) {
+        listTitle = dataList
+        tableView.reloadData()
+    }
+    func passDataList(_ dataList: RealmSwift.Results<RealmTable>) {
+        DataList.list = dataList
+        collectionView.reloadData()
+        tableView.reloadData()
     }
 }
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -182,20 +188,15 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let vc = ListViewController()
         switch indexPath.row {
         case 0:
-//            DataList.list = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
             vc.navigationItem.title = ContentNameEnum.today.rawValue
             vc.list = repository.fetchCategory(cases: 0)
         case 1:
-//            DataList.list = realm.objects(RealmTable.self).filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
             vc.navigationItem.title = ContentNameEnum.plan.rawValue
             vc.list = repository.fetchCategory(cases: 1)
         case 2:
-//            DataList.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
-            DataList.list = realm.objects(RealmTable.self).filter("isComplete == false")
             vc.navigationItem.title = ContentNameEnum.all.rawValue
             vc.list = repository.fetchCategory(cases: 2)
         case 3:
-//        DataList.list = realm.objects(RealmTable.self).filter("isFlag == true")
             vc.navigationItem.title = ContentNameEnum.flag.rawValue
             vc.list = repository.fetchCategory(cases: 3)
         case 4:
@@ -207,21 +208,19 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         navigationController?.pushViewController(vc, animated: true)
     }
 }
-
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listTitle.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: AddListTableViewCell.id, for: indexPath) as? AddListTableViewCell else { return AddListTableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: AddFolderTableViewCell.id, for: indexPath) as? AddFolderTableViewCell else { return AddFolderTableViewCell() }
         let data = listTitle[indexPath.row]
         cell.contentName.text = data.category
         cell.numberOfContentsLabel.text = "\(data.content.count)" + "개"
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return tableView.rowHeight
+        return UITableView.automaticDimension
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
@@ -233,8 +232,4 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         navigationController?.pushViewController(vc, animated: true)
     }
-//    func fetchFolder() -> [Folder] {
-//        let value = realm.objects(Folder.self)
-//        return Array(value)
-//    }
 }

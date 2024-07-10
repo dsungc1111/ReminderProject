@@ -18,7 +18,7 @@ final class ListSelectViewController: BaseViewController {
         let view = UITableView()
         view.delegate = self
         view.dataSource = self
-        view.register(ListSelectTableViewCell.self, forCellReuseIdentifier: ListSelectTableViewCell.id)
+        view.register(FolderTableViewCell.self, forCellReuseIdentifier: FolderTableViewCell.id)
         view.backgroundColor = .clear
         return view
     }()
@@ -45,7 +45,7 @@ extension ListSelectViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ListSelectTableViewCell.id, for: indexPath) as? ListSelectTableViewCell else { return ListSelectTableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: FolderTableViewCell.id, for: indexPath) as? FolderTableViewCell else { return FolderTableViewCell() }
         cell.contentName.text = listTitle[indexPath.row].category
         return cell
     }

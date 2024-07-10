@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 
-class AddListTableViewCell: BaseTableViewCell {
+class AddFolderTableViewCell: BaseTableViewCell {
 
     let contentLogo = {
         let logo = UIImageView()

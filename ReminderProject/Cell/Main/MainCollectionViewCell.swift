@@ -32,6 +32,8 @@ final class MainCollectionViewCell: UICollectionViewCell {
     }()
     var listTitle: Results<Folder>!
     private let realm = try! Realm()
+    let repository = RealmTableRepository()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
