@@ -38,4 +38,17 @@ final class RealmTableRepository {
         
         return Array(value)
     }
+    var list: [RealmTable] = []
+    func selectedPrioprity(list: RealmTable) -> String{
+        switch list.priority {
+        case "높음":
+            return "!!! " + list.memoTitle
+        case "중간":
+            return "!! " + list.memoTitle
+        case "낮음":
+            return "! " + list.memoTitle
+        default:
+            return list.memoTitle
+        }
+    }
 }

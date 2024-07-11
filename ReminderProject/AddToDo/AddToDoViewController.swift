@@ -110,7 +110,7 @@ final class AddToDoViewController: BaseViewController, PassDateDelegate {
         tableView.reloadData()
     }
     func passTagValue(_ text: String) {
-        getTagText = "# \(text)"
+        getTagText = !text.isEmpty ? "# \(text)" : ""
         tableView.reloadData()
     }
     func passPriorityValue(_ text: String) {

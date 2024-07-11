@@ -30,13 +30,17 @@ final class SearchViewController: BaseViewController {
     private let realm = try! Realm()
     private let viewModel = SearchViewModel()
     private var list: [RealmTable] = []
+    private let repository = RealmTableRepository()
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "검색"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
         bindData()
     }
     func bindData() {
-        viewModel.outputText.bind { _ in
-            self.list = self.viewModel.outputText.value ?? [RealmTable]()
+        viewModel.outputList.bind { _ in
+            self.list = self.viewModel.outputList.value ?? [RealmTable]()
             self.tableView.reloadData()
         }
     }
@@ -75,49 +79,45 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         cell.completeButton.tag = indexPath.row
         let image = data.isComplete ? "circle.fill" : "circle"
         cell.completeButton.setImage(UIImage(systemName: image), for: .normal)
-        cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
+//        cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
         cell.configureCell(data: data)
         return cell
     }
-    @objc func completeButtonTapped(sender: UIButton) {
-        let complete = list[sender.tag]
-        try! self.realm.write {
-            complete.isComplete.toggle()
-            self.realm.create(RealmTable.self, value: ["key" : complete.key, "isComplete" : complete.isComplete], update: .modified)
-            let image = complete.isComplete ? "circle.fill" : "circle"
-            sender.setImage(UIImage(systemName: image), for: .normal)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
-        try! self.realm.write {
-                self.realm.delete(complete)
-            }
-            self.tableView.reloadData()
-        }
-    }
+//    @objc func completeButtonTapped(sender: UIButton) {
+//        let complete = list[sender.tag]
+//        try! self.realm.write {
+//            complete.isComplete.toggle()
+//            self.realm.create(RealmTable.self, value: ["key" : complete.key, "isComplete" : complete.isComplete], update: .modified)
+//            let image = complete.isComplete ? "circle.fill" : "circle"
+//            sender.setImage(UIImage(systemName: image), for: .normal)
+//        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
+//        try! self.realm.write {
+//                self.realm.delete(complete)
+//            }
+//            self.tableView.reloadData()
+//        }
+//    }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         let vc = DetailViewController()
+
         vc.memoTitleLabel.text = list[indexPath.row].memoTitle
-        let selectedPriority = list[indexPath.row].priority
-        
-        switch selectedPriority {
-        case "높음":
-            vc.memoTitleLabel.text = "!!!" + list[indexPath.row].memoTitle
-        case "중간":
-            vc.memoTitleLabel.text = "!!" + list[indexPath.row].memoTitle
-        case "낮음":
-            vc.memoTitleLabel.text = "!" + list[indexPath.row].memoTitle
-        default:
-            vc.memoTitleLabel.text = list[indexPath.row].memoTitle
+        if let selectedPriority = list[indexPath.row].priority {
+            vc.memoTitleLabel.text = repository.selectedPrioprity(list: list[indexPath.row])
         }
         vc.memoLabel.text = list[indexPath.row].memo
         vc.dateLabel.text = Date.getDateString(date: list[indexPath.row].date ?? Date())
-        vc.tagLabel.text = "#\(list[indexPath.row].tag ?? "")"
+        if let tag = list[indexPath.row].tag,
+            !tag.isEmpty {
+            vc.tagLabel.text = "#" + tag
+        }
         navigationController?.pushViewController(vc, animated: true)
     }
+  
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             try! self.realm.write {

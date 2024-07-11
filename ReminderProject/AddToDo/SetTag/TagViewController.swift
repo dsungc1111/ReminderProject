@@ -36,16 +36,10 @@ final class TagViewController: BaseViewController {
             }
         }
     }
-    
     @objc func completebuttonTapped() {
-      
         viewModel.inputButton.value = ()
         navigationController?.popViewController(animated: true)
     }
-    
-    
-    
-    
     override func configureHierarchy() {
         view.addSubview(tagTextField)
     }
