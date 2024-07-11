@@ -14,6 +14,15 @@ final class RealmTableRepository {
     
     private let realm = try! Realm()
     
+    func fetchRealmTable() -> [RealmTable] {
+        let value = realm.objects(RealmTable.self)
+        return Array(value)
+    }
+    func fetchFolder() -> [Folder] {
+        let value = realm.objects(Folder.self)
+        return Array(value)
+    }
+    
     func detectRealmURL() {
         print(realm.configuration.fileURL ?? "")
     }

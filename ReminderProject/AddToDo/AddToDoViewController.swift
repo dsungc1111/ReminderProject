@@ -52,13 +52,13 @@ final class AddToDoViewController: BaseViewController, PassDateDelegate {
     private var getList = ""
     var showToast: (() -> Void)?
     private let realm = try! Realm()
-    private var list: Results<RealmTable>!
+    private var toDolist: [RealmTable] = []
     private var folder: Folder?
     let repository = RealmTableRepository()
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
-        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+//        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
     }
     @objc func cancelButtonTapped() {
         navigationController?.dismiss(animated: true)
@@ -77,7 +77,7 @@ final class AddToDoViewController: BaseViewController, PassDateDelegate {
             saveImageToDocument(image: image, filename: "\(newData.key)")
         }
         showToast?()
-        passData?.passDataList(DataList.list)
+        passData?.passDataList(toDolist)
         navigationController?.dismiss(animated: true)
     }
     private func configureNavigationbar() {

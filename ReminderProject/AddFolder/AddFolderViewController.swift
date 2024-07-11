@@ -15,7 +15,7 @@ class AddFolderViewController: BaseViewController {
     var passFolder: PassFolderDelegate?
     
     var showToast: (() -> Void)?
-    var listTitle: Results<Folder>!
+    var listTitle:[Folder] = []
     private enum NavigationBarTitle: String {
         case title = "새로운 목록"
         case cancel = "취소"
@@ -54,7 +54,7 @@ class AddFolderViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
-        listTitle = realm.objects(Folder.self)
+//        listTitle = realm.objects(Folder.self)
         bindData()
     }
     private func configureNavigationbar() {

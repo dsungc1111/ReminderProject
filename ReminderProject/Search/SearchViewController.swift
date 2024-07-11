@@ -10,6 +10,11 @@ import SnapKit
 
 final class SearchViewController: BaseViewController {
 
+    private enum SwipeButtonTitle: String {
+        case flag = "깃발"
+        case delete = "삭제"
+    }
+    private let repository = RealmTableRepository()
     private lazy var searchBar = {
         let search = UISearchBar()
         search.delegate = self
@@ -28,12 +33,13 @@ final class SearchViewController: BaseViewController {
     }()
     private let viewModel = SearchViewModel()
     private var list: [RealmTable] = []
-    private let repository = RealmTableRepository()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "검색"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
+        list = repository.fetchRealmTable()
         bindData()
     }
     func bindData() {
@@ -105,12 +111,12 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+        let delete = UIContextualAction(style: .normal, title: SwipeButtonTitle.delete.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             self.viewModel.deleteToDo(list: self.list, index: indexPath.row)
             success(true)
         }
         delete.backgroundColor = .systemRed
-        let flag = UIContextualAction(style: .normal, title: "깃발") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+        let flag = UIContextualAction(style: .normal, title: SwipeButtonTitle.flag.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             self.viewModel.changeFlag(list: self.list, index: indexPath.row)
             success(true)
         }

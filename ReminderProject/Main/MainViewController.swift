@@ -6,9 +6,8 @@
 //
 
 import UIKit
-import SnapKit
-import RealmSwift
 import IQKeyboardManagerSwift
+import SnapKit
 import Toast
 
 final class MainViewController: BaseViewController {
@@ -44,17 +43,17 @@ final class MainViewController: BaseViewController {
         btn.addTarget(self, action: #selector(listAddButtonTapped), for: .touchUpInside)
         return btn
     }()
-    let myListLabel = {
+    private let myListLabel = {
         let label = UILabel()
         label.text = "나의 목록"
         label.font = .boldSystemFont(ofSize: 20)
         label.isHidden = true
         return label
     }()
-    private let realm = try! Realm()
-    private let date = Date()
     private let repository = RealmTableRepository()
-    var listTitle: Results<Folder>!
+    private let date = Date()
+    private var listTitle: [Folder] = []
+    private var toDoList: [RealmTable] = []
     private let containerView = UIView()
     private lazy var tableView = {
         let view = UITableView()
@@ -69,11 +68,10 @@ final class MainViewController: BaseViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        listTitle = realm.objects(Folder.self)
+        listTitle = repository.fetchFolder()
         navigationbarSetting()
         collectionViewSetting()
         myListLabel.isHidden = listTitle.count != 0 ? false : true
-        DataList.list = realm.objects(RealmTable.self)
     }
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -163,12 +161,12 @@ final class MainViewController: BaseViewController {
     }
 }
 extension MainViewController:  PassDataDelegate, PassFolderDelegate {
-    func passFolderList(_ dataList: RealmSwift.Results<Folder>) {
+    func passFolderList(_ dataList: [Folder]) {
         listTitle = dataList
         tableView.reloadData()
     }
-    func passDataList(_ dataList: RealmSwift.Results<RealmTable>) {
-        DataList.list = dataList
+    func passDataList(_ dataList: [RealmTable]) {
+        toDoList = dataList
         collectionView.reloadData()
         tableView.reloadData()
     }
@@ -211,7 +209,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let folder = listTitle[indexPath.row]
         let value = folder.content
         vc.list = Array(value)
-        
         navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -7,10 +7,10 @@
 
 import UIKit
 import SnapKit
-import RealmSwift
 
 final class MainCollectionViewCell: UICollectionViewCell {
     
+    let repository = RealmTableRepository()
     let contentLogo = {
         let logo = UIImageView()
         logo.backgroundColor = .black
@@ -22,7 +22,6 @@ final class MainCollectionViewCell: UICollectionViewCell {
         let name = UILabel()
         name.font = .systemFont(ofSize: 15)
         name.textColor = .darkGray
-        name.text = "df"
         return name
     }()
     var contentCountLabel = {
@@ -30,9 +29,7 @@ final class MainCollectionViewCell: UICollectionViewCell {
         label.font = .boldSystemFont(ofSize: 30)
         return label
     }()
-    var listTitle: Results<Folder>!
-    private let realm = try! Realm()
-    let repository = RealmTableRepository()
+    var listTitle: [Folder] = []
     private var list: [RealmTable] = []
     
     override init(frame: CGRect) {
@@ -42,7 +39,6 @@ final class MainCollectionViewCell: UICollectionViewCell {
         configureHierarchy()
         configureLayout()
         contentLogo.layer.cornerRadius = 15
-        DataList.list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
     }
     func configureHierarchy() {
         contentView.addSubview(contentLogo)
