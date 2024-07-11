@@ -7,13 +7,12 @@
 
 import UIKit
 import FSCalendar
-import RealmSwift
 import SnapKit
 
 final class CalendarViewController: BaseViewController {
     
     private var chooseMonthOrWeek = true
-    private let realm = try! Realm()
+    
     private let viewModel = CalendarViewModel()
     
     private lazy var calendarView = {
@@ -44,17 +43,17 @@ final class CalendarViewController: BaseViewController {
         bindData()
     }
     private func bindData() {
-        viewModel.inputMonthOrWeek.bind { _ in
-            if let calendar = self.viewModel.inputMonthOrWeek.value {
+        viewModel.monthOrWeek.bind { _ in
+            if let calendar = self.viewModel.monthOrWeek.value {
                 self.calendarView.scope = calendar ? .month : .week
             }
         }
-        viewModel.outputSelecteDate.bind { _ in
+        viewModel.outputSelecteDateList.bind { _ in
             self.searchTableView.reloadData()
         }
     }
     @objc func panGestureHandler() {
-        viewModel.inputMonthOrWeek.value?.toggle()
+        viewModel.monthOrWeek.value?.toggle()
     }
     override func configureHierarchy() {
         view.addSubview(calendarView)
@@ -78,11 +77,11 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
 }
 extension CalendarViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.outputSelecteDate.value?.count ?? 0
+        return viewModel.outputSelecteDateList.value?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
-        let data = viewModel.outputSelecteDate.value?[indexPath.row]
+        let data = viewModel.outputSelecteDateList.value?[indexPath.row]
         cell.completeButton.tag = indexPath.row
         let image = data?.isComplete ?? false ? "circle.fill" : "circle"
         cell.completeButton.setImage(UIImage(systemName: image), for: .normal)

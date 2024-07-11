@@ -7,7 +7,6 @@
 
 import UIKit
 import SnapKit
-import RealmSwift
 
 final class SearchViewController: BaseViewController {
 
@@ -27,7 +26,6 @@ final class SearchViewController: BaseViewController {
         table.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
         return table
     }()
-    private let realm = try! Realm()
     private let viewModel = SearchViewModel()
     private var list: [RealmTable] = []
     private let repository = RealmTableRepository()

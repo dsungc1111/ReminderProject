@@ -33,9 +33,7 @@ final class SearchViewModel {
         }
         let result = Array(filter)
         return result
-    } 
-    
-    
+    }
     func completeButtonTapped(list: [RealmTable], index: Int) -> String {
         var image = ""
         try! self.realm.write {
@@ -46,8 +44,6 @@ final class SearchViewModel {
         }
         return image
     }
-    
-    
     func deleteToDo(list: [RealmTable], index: Int) {
         try! self.realm.write {
             self.realm.delete(list[index])

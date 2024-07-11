@@ -6,17 +6,16 @@
 //
 
 import Foundation
-import RealmSwift
+
 
 final class CalendarViewModel {
     
-    private let realm = try! Realm()
+    private let repository = RealmTableRepository()
     
-    var inputMonthOrWeek: Observable<Bool?> = Observable(true)
-    
-    var outputSelecteDate: Observable<Results<RealmTable>?> = Observable(nil)
+    var monthOrWeek: Observable<Bool?> = Observable(true)
 
+    var outputSelecteDateList: Observable<[RealmTable]?> = Observable(nil)
     func selectDate(date: Date) {
-        outputSelecteDate.value = realm.objects(RealmTable.self).filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+        outputSelecteDateList.value = repository.fetchCategory(cases: 0)
     }
 }
