@@ -43,7 +43,9 @@ final class DateViewController: BaseViewController {
     }
     
     @objc func completebuttonTapped() {
-        passDate?.passDateValue(viewModel.pickDate.value ?? Date())
+        if let date = viewModel.pickDate.value {
+            passDate?.passDateValue(date)
+        }
         navigationController?.popViewController(animated: true)
     }
     override func configureHierarchy() {

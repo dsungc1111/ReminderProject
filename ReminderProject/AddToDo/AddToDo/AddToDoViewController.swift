@@ -8,10 +8,9 @@
 import UIKit
 import SnapKit
 import PhotosUI
-import RealmSwift
 import Toast
 
-final class AddToDoViewController: BaseViewController, PassDateDelegate {
+final class AddToDoViewController: BaseViewController {
  
     var passData: PassDataDelegate?
     private enum Category: String, CaseIterable {
@@ -26,6 +25,8 @@ final class AddToDoViewController: BaseViewController, PassDateDelegate {
         case cancel = "취소"
         case save = "저장"
     }
+    private let viewModel = AddToDoViewModel()
+    private let repository = RealmTableRepository()
     private lazy var tableView = {
         let view = UITableView()
         view.delegate = self
@@ -43,36 +44,32 @@ final class AddToDoViewController: BaseViewController, PassDateDelegate {
         view.clipsToBounds = true
         return view
     }()
-    var listTitle: Results<Folder>!
+    private var listTitle: [Folder] = []
+    private var toDolist: [RealmTable] = []
     private var memoTitleText = ""
     private var memoContentText = ""
-    private var getDueDate: Date?
-    private var getTagText = ""
-    private var getPriority = ""
-    private var getList = ""
+    
     var showToast: (() -> Void)?
-    private let realm = try! Realm()
-    private var toDolist: [RealmTable] = []
-    private var folder: Folder?
-    let repository = RealmTableRepository()
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
-//        list = realm.objects(RealmTable.self).sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+        bindData()
     }
+    func bindData() {
+        viewModel.outputData.bind { _ in
+            self.tableView.reloadData()
+        }
+    }
+    
     @objc func cancelButtonTapped() {
         navigationController?.dismiss(animated: true)
     }
     @objc func saveButtonTapped() {
         view.makeToast("저장완료!", duration: 2.0, position: .center)
-        let realm = try! Realm()
-        let newData = RealmTable(memoTitle: memoTitleText, date: getDueDate, memo: memoContentText, tag: getTagText, priority: getPriority, isFlag: false, complete: false )
         
-        if let folder = realm.objects(Folder.self).filter("category == %@", getList).first {
-            try! realm.write {
-                folder.content.append(newData)
-            }
-        }
+        let newData = RealmTable(memoTitle: memoTitleText, date: viewModel.getDueDate, memo: memoContentText, tag: viewModel.getTagText, priority: viewModel.getPriority, isFlag: false, complete: false )
+        
+        viewModel.saveData(data: newData)
         if let image = loadedImageView.image {
             saveImageToDocument(image: image, filename: "\(newData.key)")
         }
@@ -105,24 +102,6 @@ final class AddToDoViewController: BaseViewController, PassDateDelegate {
             make.trailing.equalTo(view.safeAreaLayoutGuide).inset(60)
         }
     }
-    func passDateValue(_ date: Date) {
-        getDueDate = date
-        tableView.reloadData()
-    }
-    func passTagValue(_ text: String) {
-        getTagText = !text.isEmpty ? "# \(text)" : ""
-        tableView.reloadData()
-    }
-    func passPriorityValue(_ text: String) {
-        getPriority = text
-        tableView.reloadData()
-    }
-    func passList(_ text: String) {
-        getList = text
-        tableView.reloadData()
-    }
-    
-   
 }
 extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -145,19 +124,19 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.id, for: indexPath) as? CategoryTableViewCell else { return CategoryTableViewCell() }
             switch indexPath.row {
             case 0:
-                if let date = getDueDate {
+                if let date = viewModel.getDueDate {
                     cell.resultLabel.text = Date.getDateString(date: date)
                 } else {
                     cell.resultLabel.text = ""
                 }
             case 1:
-                cell.resultLabel.text = getTagText
+                cell.resultLabel.text = viewModel.getTagText
             case 2:
-                cell.resultLabel.text = getPriority
+                cell.resultLabel.text = viewModel.getPriority
             case 3:
                 cell.resultLabel.text = ""
             case 4:
-                cell.resultLabel.text = getList
+                cell.resultLabel.text = viewModel.getFolder
             default:
                 break
             }
@@ -193,16 +172,16 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
             case 0:
                 let vc = DateViewController()
                 vc.navigationItem.title = Category.allCases[0].rawValue
-                vc.passDate = self
+                vc.passDate = viewModel
                 navigationController?.pushViewController(vc, animated: true)
             case 1:
                 let vc = TagViewController()
                 vc.navigationItem.title = Category.allCases[1].rawValue
-                vc.passTag = self
+                vc.passTag = viewModel
                 navigationController?.pushViewController(vc, animated: true)
             case 2:
                 let vc = PriorityViewController()
-                vc.passPriority = self
+                vc.passPriority = viewModel
                 vc.navigationItem.title = Category.allCases[2].rawValue
                 navigationController?.pushViewController(vc, animated: true)
             case 3:
@@ -213,7 +192,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
                 present(picker, animated: true)
             case 4:
                 let vc = FolderListViewController()
-                vc.passFolder = self
+                vc.passFolder = viewModel
                 vc.navigationItem.title = Category.allCases[4].rawValue
                 navigationController?.pushViewController(vc, animated: true)
             default:

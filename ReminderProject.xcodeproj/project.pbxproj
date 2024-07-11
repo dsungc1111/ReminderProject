@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B4474C52C3FF76D00AEFCE1 /* AddToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4474C42C3FF76D00AEFCE1 /* AddToDoViewModel.swift */; };
 		8B456F152C33E8D4003CFBD1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F142C33E8D4003CFBD1 /* AppDelegate.swift */; };
 		8B456F172C33E8D4003CFBD1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F162C33E8D4003CFBD1 /* SceneDelegate.swift */; };
 		8B456F192C33E8D4003CFBD1 /* AddToDoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F182C33E8D4003CFBD1 /* AddToDoViewController.swift */; };
@@ -56,6 +57,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8B4474C42C3FF76D00AEFCE1 /* AddToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToDoViewModel.swift; sourceTree = "<group>"; };
 		8B456F112C33E8D4003CFBD1 /* ReminderProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReminderProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B456F142C33E8D4003CFBD1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B456F162C33E8D4003CFBD1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -117,6 +119,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8B4474C32C3FF75600AEFCE1 /* AddToDo */ = {
+			isa = PBXGroup;
+			children = (
+				8B456F182C33E8D4003CFBD1 /* AddToDoViewController.swift */,
+				8B4474C42C3FF76D00AEFCE1 /* AddToDoViewModel.swift */,
+			);
+			path = AddToDo;
+			sourceTree = "<group>";
+		};
 		8B456F082C33E8D4003CFBD1 = {
 			isa = PBXGroup;
 			children = (
@@ -234,7 +245,7 @@
 		8B696A692C3E563400D99D4A /* AddToDo */ = {
 			isa = PBXGroup;
 			children = (
-				8B456F182C33E8D4003CFBD1 /* AddToDoViewController.swift */,
+				8B4474C32C3FF75600AEFCE1 /* AddToDo */,
 				8B696A4B2C3D567C00D99D4A /* PickDate */,
 				8B696A6E2C3E652E00D99D4A /* SetTag */,
 				8B696A4E2C3D798D00D99D4A /* Priority */,
@@ -430,6 +441,7 @@
 				8B456F532C3529DF003CFBD1 /* DateViewController.swift in Sources */,
 				8B456F482C341956003CFBD1 /* ListTableViewCell.swift in Sources */,
 				8BA3BF9B2C36E02700229026 /* DataList.swift in Sources */,
+				8B4474C52C3FF76D00AEFCE1 /* AddToDoViewModel.swift in Sources */,
 				8B456F2F2C33EC4A003CFBD1 /* MainViewController.swift in Sources */,
 				8B696A6D2C3E599E00D99D4A /* MainViewModel.swift in Sources */,
 				8BFB5C552C3BBADC00CE14C5 /* RealmRepository.swift in Sources */,

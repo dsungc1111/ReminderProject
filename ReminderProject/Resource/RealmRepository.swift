@@ -90,4 +90,12 @@ final class RealmTableRepository {
         }
         return list
     }
+    
+    func saveData(text: String, data: RealmTable) {
+        if let folder = realm.objects(Folder.self).filter("category == %@", text).first {
+            try! realm.write {
+                folder.content.append(data)
+            }
+        }
+    }
 }
