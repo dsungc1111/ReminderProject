@@ -35,12 +35,20 @@ final class SearchViewModel {
         return result
     } 
     
+    func deleteToDo(list: [RealmTable], index: Int) {
+        try! self.realm.write {
+            self.realm.delete(list[index])
+        }
+        let filter = Array(self.realm.objects(RealmTable.self))
+        outputList.value = filter
+    }
     
     func changeFlag(list: [RealmTable], index: Int) {
         try! self.realm.write {
             list[index].isFlag.toggle()
             let filter = self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isFlag" : list[index].isFlag], update: .modified)
         }
+        outputList.value = list
     }
     
 }

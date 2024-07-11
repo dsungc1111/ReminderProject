@@ -43,9 +43,6 @@ final class SearchViewController: BaseViewController {
             self.list = self.viewModel.outputList.value ?? [RealmTable]()
             self.tableView.reloadData()
         }
-        viewModel.inputFlagChange.bind { _ in
-            self.tableView.reloadData()
-        }
     }
     override func configureHierarchy() {
         view.addSubview(searchBar)
@@ -119,17 +116,12 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            print("delete")
-            try! self.realm.write {
-                self.realm.delete(self.list[indexPath.row])
-            }
-            tableView.reloadData()
+            self.viewModel.deleteToDo(list: self.list, index: indexPath.row)
             success(true)
         }
         delete.backgroundColor = .systemRed
         let flag = UIContextualAction(style: .normal, title: "깃발") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             self.viewModel.changeFlag(list: self.list, index: indexPath.row)
-            self.viewModel.inputFlagChange.value = ()
             success(true)
         }
         flag.backgroundColor = .systemYellow
