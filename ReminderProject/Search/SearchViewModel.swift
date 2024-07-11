@@ -35,6 +35,19 @@ final class SearchViewModel {
         return result
     } 
     
+    
+    func completeButtonTapped(list: [RealmTable], index: Int) -> String {
+        var image = ""
+        try! self.realm.write {
+            list[index].isComplete.toggle()
+            self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
+            outputList.value = Array(self.realm.objects(RealmTable.self))
+            image = list[index].isComplete ? "circle.fill" : "circle"
+        }
+        return image
+    }
+    
+    
     func deleteToDo(list: [RealmTable], index: Int) {
         try! self.realm.write {
             self.realm.delete(list[index])

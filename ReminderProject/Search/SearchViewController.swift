@@ -79,25 +79,17 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         cell.completeButton.tag = indexPath.row
         let image = data.isComplete ? "circle.fill" : "circle"
         cell.completeButton.setImage(UIImage(systemName: image), for: .normal)
-//        cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
+        cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
         cell.configureCell(data: data)
         return cell
     }
-//    @objc func completeButtonTapped(sender: UIButton) {
-//        let complete = list[sender.tag]
-//        try! self.realm.write {
-//            complete.isComplete.toggle()
-//            self.realm.create(RealmTable.self, value: ["key" : complete.key, "isComplete" : complete.isComplete], update: .modified)
-//            let image = complete.isComplete ? "circle.fill" : "circle"
-//            sender.setImage(UIImage(systemName: image), for: .normal)
-//        }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
-//        try! self.realm.write {
-//                self.realm.delete(complete)
-//            }
-//            self.tableView.reloadData()
-//        }
-//    }
+    @objc func completeButtonTapped(sender: UIButton) {
+        let image = self.viewModel.completeButtonTapped(list: self.list, index: sender.tag)
+        sender.setImage(UIImage(systemName: image), for: .normal)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
+            self.viewModel.deleteToDo(list: self.list, index: sender.tag)
+        }
+    }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
