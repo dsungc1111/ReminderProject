@@ -6,17 +6,14 @@
 //
 
 import Foundation
-import RealmSwift
 
 final class SearchViewModel {
     
-    private let realm = try! Realm()
-    // 텍스트 받아와
+    private let repository = RealmTableRepository()
     var inputSearchText: Observable<String?> = Observable(nil)
     var inputSearchTextChange: Observable<Void?> = Observable(nil)
     var outputList: Observable<[RealmTable]?> = Observable(nil)
    
-    
     var inputFlagChange: Observable<Void?> = Observable(nil)
     var inputFlagList: Observable<RealmTable?> = Observable(nil)
     
@@ -28,36 +25,20 @@ final class SearchViewModel {
         }
     }
     private func filterSearchText(text: String) -> [RealmTable] {
-        let filter = realm.objects(RealmTable.self).where {
-            $0.memoTitle.contains(text, options: .caseInsensitive)
-        }
-        let result = Array(filter)
+        let result = repository.filterBySearchText(text: text)
         return result
     }
     func completeButtonTapped(list: [RealmTable], index: Int) -> String {
         var image = ""
-        try! self.realm.write {
-            list[index].isComplete.toggle()
-            self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
-            outputList.value = Array(self.realm.objects(RealmTable.self))
-            image = list[index].isComplete ? "circle.fill" : "circle"
-        }
+        outputList.value = repository.completeButtonTapped(list: list, index: index)
+        image = list[index].isComplete ? "circle.fill" : "circle"
         return image
     }
     func deleteToDo(list: [RealmTable], index: Int) {
-        try! self.realm.write {
-            self.realm.delete(list[index])
-        }
-        let filter = Array(self.realm.objects(RealmTable.self))
-        outputList.value = filter
+        outputList.value = repository.deleteToDo(list: list, index: index)
     }
-    
     func changeFlag(list: [RealmTable], index: Int) {
-        try! self.realm.write {
-            list[index].isFlag.toggle()
-            let filter = self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isFlag" : list[index].isFlag], update: .modified)
-        }
-        outputList.value = list
+        outputList.value = repository.changeFlag(list: list, index: index)
     }
     
 }

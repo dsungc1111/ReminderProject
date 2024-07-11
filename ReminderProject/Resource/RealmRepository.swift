@@ -51,4 +51,34 @@ final class RealmTableRepository {
             return list.memoTitle
         }
     }
+    func filterBySearchText(text: String) -> [RealmTable] {
+        let filter = realm.objects(RealmTable.self).where {
+            $0.memoTitle.contains(text, options: .caseInsensitive)
+        }
+        let result = Array(filter)
+        return result
+    }
+    func completeButtonTapped(list: [RealmTable], index: Int)  -> [RealmTable] {
+        try! self.realm.write {
+            list[index].isComplete.toggle()
+            self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
+        }
+        let result = Array(self.realm.objects(RealmTable.self))
+        return result
+    }
+    func deleteToDo(list: [RealmTable], index: Int) -> [RealmTable] {
+        try! self.realm.write {
+            self.realm.delete(list[index])
+        }
+        let filter = Array(self.realm.objects(RealmTable.self))
+        return filter
+    }
+    func changeFlag(list: [RealmTable], index: Int) -> [RealmTable]{
+        try! self.realm.write {
+            list[index].isFlag.toggle()
+            let filter = self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isFlag" : list[index].isFlag], update: .modified)
+            self.list = [filter]
+        }
+        return list
+    }
 }

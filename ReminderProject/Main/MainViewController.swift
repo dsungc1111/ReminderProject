@@ -74,7 +74,6 @@ final class MainViewController: BaseViewController {
         collectionViewSetting()
         myListLabel.isHidden = listTitle.count != 0 ? false : true
         DataList.list = realm.objects(RealmTable.self)
-        listTitle = realm.objects(Folder.self)
     }
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
