@@ -43,6 +43,9 @@ final class SearchViewController: BaseViewController {
             self.list = self.viewModel.outputList.value ?? [RealmTable]()
             self.tableView.reloadData()
         }
+        viewModel.inputFlagChange.bind { _ in
+            self.tableView.reloadData()
+        }
     }
     override func configureHierarchy() {
         view.addSubview(searchBar)
@@ -104,11 +107,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         let vc = DetailViewController()
-
         vc.memoTitleLabel.text = list[indexPath.row].memoTitle
-        if let selectedPriority = list[indexPath.row].priority {
-            vc.memoTitleLabel.text = repository.selectedPrioprity(list: list[indexPath.row])
-        }
+        vc.memoTitleLabel.text = repository.selectedPrioprity(list: list[indexPath.row])
         vc.memoLabel.text = list[indexPath.row].memo
         vc.dateLabel.text = Date.getDateString(date: list[indexPath.row].date ?? Date())
         if let tag = list[indexPath.row].tag,
@@ -117,9 +117,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         }
         navigationController?.pushViewController(vc, animated: true)
     }
-  
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            print("delete")
             try! self.realm.write {
                 self.realm.delete(self.list[indexPath.row])
             }
@@ -128,11 +128,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         }
         delete.backgroundColor = .systemRed
         let flag = UIContextualAction(style: .normal, title: "깃발") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            try! self.realm.write {
-                self.list[indexPath.row].isFlag.toggle()
-                self.realm.create(RealmTable.self, value: ["key" : self.list[indexPath.row].key, "isFlag" : self.list[indexPath.row].isFlag], update: .modified)
-            }
-            tableView.reloadData()
+            self.viewModel.changeFlag(list: self.list, index: indexPath.row)
+            self.viewModel.inputFlagChange.value = ()
             success(true)
         }
         flag.backgroundColor = .systemYellow

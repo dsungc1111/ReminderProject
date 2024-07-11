@@ -16,6 +16,10 @@ final class SearchViewModel {
     var inputSearchTextChange: Observable<Void?> = Observable(nil)
     var outputList: Observable<[RealmTable]?> = Observable(nil)
    
+    
+    var inputFlagChange: Observable<Void?> = Observable(nil)
+    var inputFlagList: Observable<RealmTable?> = Observable(nil)
+    
     init() {
         inputSearchTextChange.bind { _ in
             if let text = self.inputSearchText.value {
@@ -30,4 +34,13 @@ final class SearchViewModel {
         let result = Array(filter)
         return result
     } 
+    
+    
+    func changeFlag(list: [RealmTable], index: Int) {
+        try! self.realm.write {
+            list[index].isFlag.toggle()
+            let filter = self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isFlag" : list[index].isFlag], update: .modified)
+        }
+    }
+    
 }
