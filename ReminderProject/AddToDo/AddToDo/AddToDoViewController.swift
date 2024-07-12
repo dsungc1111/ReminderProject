@@ -38,8 +38,6 @@ final class AddToDoViewController: BaseViewController {
     }()
     private var listTitle: [Folder] = []
     private var toDolist: [RealmTable] = []
-    private var memoTitleText = ""
-    private var memoContentText = ""
     var showToast: (() -> Void)?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +45,10 @@ final class AddToDoViewController: BaseViewController {
         bindData()
     }
     func bindData() {
+        viewModel.outputMemoTitle.bindLater { _ in
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
+            self.navigationItem.rightBarButtonItem?.tintColor = .black
+        }
         viewModel.getData.bind { _ in
             self.tableView.reloadData()
         }
@@ -62,7 +64,7 @@ final class AddToDoViewController: BaseViewController {
     }
     @objc func saveButtonTapped() {
         view.makeToast("저장완료!", duration: 2.0, position: .center)
-        viewModel.saveData(memotitle: memoTitleText, memo: memoContentText)
+        viewModel.inputSaveButton.value = ()
         showToast?()
         navigationController?.dismiss(animated: true)
     }
@@ -100,7 +102,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
         if section == 0 {
             return 1
         } else {
-            return viewModel.outputSelectCategory.value?.count ?? 0
+            return viewModel.outputSelectCategory.value.count
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -112,15 +114,11 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.id, for: indexPath) as? CategoryTableViewCell else { return CategoryTableViewCell() }
             if indexPath.row == 0 {
-                if let date = viewModel.getDueDate {
-                    cell.resultLabel.text = Date.getDateString(date: date)
-                } else {
-                    cell.resultLabel.text = ""
-                }
+                cell.resultLabel.text = Date.getDateString(date: viewModel.inputDueDate.value)
             } else {
-                cell.resultLabel.text = viewModel.getDataList[indexPath.row-1]
+                cell.resultLabel.text = viewModel.getDataList.value[indexPath.row-1]
             }
-            cell.titleLabel.text = viewModel.outputSelectCategory.value?[indexPath.row]
+            cell.titleLabel.text = viewModel.outputSelectCategory.value[indexPath.row]
             return cell
         }
     }
@@ -130,8 +128,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
             return
         }
         viewModel.inputMemoTitle.value = text
-        navigationItem.rightBarButtonItem?.isEnabled = true
-        navigationItem.rightBarButtonItem?.tintColor = .black
+      
     }
     @objc func memoFieldChange(_ textField: UITextField) {
         guard let text = textField.text, !text.isEmpty else { return }
@@ -147,8 +144,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
-        viewModel.inputSelectCategory.value = ()
-        guard let list = viewModel.outputSelectCategory.value else { return }
+         let list = viewModel.outputSelectCategory.value 
         if indexPath.section != 0 {
             switch indexPath.row {
             case 0:
