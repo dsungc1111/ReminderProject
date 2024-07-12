@@ -48,7 +48,6 @@ final class AddToDoViewModel: PassDateDelegate {
     init() {
         inputSelectCategory.bind { _ in
             self.getCategory()
-            print(self.getDataList)
         }
     }
     private func getCategory(){
@@ -70,7 +69,7 @@ final class AddToDoViewModel: PassDateDelegate {
     }
     func passList(_ text: String) {
         getFolder = text
-        getDataList[2] = getFolder
+        getDataList[3] = getFolder
         getData.value = ()
     }
     func saveData(memotitle: String, memo: String) {

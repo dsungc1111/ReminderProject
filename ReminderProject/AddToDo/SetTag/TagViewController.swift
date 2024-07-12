@@ -28,7 +28,6 @@ final class TagViewController: BaseViewController {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
     }
-  
     @objc func completebuttonTapped() {
         viewModel.tagText.value = tagTextField.text
         navigationController?.popViewController(animated: true)

@@ -119,6 +119,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             } else {
                 cell.resultLabel.text = viewModel.getDataList[indexPath.row-1]
+                print(viewModel.getDataList)
             }
             cell.titleLabel.text = viewModel.outputSelectCategory.value?[indexPath.row]
             return cell
@@ -163,7 +164,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
                 navigationController?.pushViewController(vc, animated: true)
             case 2:
                 let vc = PriorityViewController()
-                vc.passPriority = viewModel
+                vc.viewModel.passPriority = self.viewModel
                 vc.navigationItem.title = list[2]
                 navigationController?.pushViewController(vc, animated: true)
             case 3:
@@ -174,7 +175,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
                 present(picker, animated: true)
             case 4:
                 let vc = FolderListViewController()
-                vc.passFolder = viewModel
+                vc.viewModel.passFolder = self.viewModel
                 vc.navigationItem.title = list[4]
                 navigationController?.pushViewController(vc, animated: true)
             default:
@@ -192,7 +193,7 @@ extension AddToDoViewController: PHPickerViewControllerDelegate {
                     self.loadedImageView.image = image as? UIImage
                 }
             }
-            dismiss(animated: true)
+            
         }
         dismiss(animated: true)
     }

@@ -9,23 +9,31 @@ import Foundation
 
 
 class PriorityViewModel {
+    var passPriority: PassDateDelegate?
     
-    var outputPriority: Observable<String?> = Observable(nil)
+    var priorityText: Observable<String?> = Observable(nil)
+    
+    var completionButtonTapped: Observable<Void?> = Observable(nil)
     init() {
-        outputPriority.bind { _ in
-            self.outputPriority.value = "대기중"
+        priorityText.bind { _ in
+            self.passPriorityData()
         }
     }
     func inputPriority(index: Int) {
-           switch index {
-           case 0:
-               outputPriority.value = "높음"
-           case 1:
-               outputPriority.value = "중간"
-           case 2:
-               outputPriority.value = "낮음"
-           default:
-               outputPriority.value = ""
-           }
-       }
+        switch index {
+        case 0:
+            priorityText.value = "높음"
+        case 1:
+            priorityText.value = "중간"
+        case 2:
+            priorityText.value = "낮음"
+        default:
+            priorityText.value = ""
+        }
+    }
+    private func passPriorityData() {
+        if let priority = priorityText.value {
+                  passPriority?.passPriorityValue(priority)
+              }
+    }
 }

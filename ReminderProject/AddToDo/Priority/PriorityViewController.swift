@@ -26,19 +26,11 @@ final class PriorityViewController: BaseViewController {
         return label
     }()
     var passPriority: PassDateDelegate?
-    private let viewModel = PriorityViewModel()
+    let viewModel = PriorityViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addActions()
-        bindData()
-    }
-    
-    // segmentcontrol이 바뀔 때
-    func bindData() {
-        viewModel.outputPriority.bind { _ in
-                self.showPriority.text = self.viewModel.outputPriority.value
-        }
     }
     private func addActions() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
@@ -49,9 +41,7 @@ final class PriorityViewController: BaseViewController {
         viewModel.inputPriority(index: sender.selectedSegmentIndex)
     }
     @objc func completebuttonTapped() {
-        if let priority = viewModel.outputPriority.value {
-                  passPriority?.passPriorityValue(priority)
-              }
+        viewModel.completionButtonTapped.value = ()
         navigationController?.popViewController(animated: true)
     }
     override func configureHierarchy() {

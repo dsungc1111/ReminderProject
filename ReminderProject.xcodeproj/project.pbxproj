@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B4118212C4109A2009DA271 /* FolderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4118202C4109A2009DA271 /* FolderViewModel.swift */; };
 		8B4474C52C3FF76D00AEFCE1 /* AddToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4474C42C3FF76D00AEFCE1 /* AddToDoViewModel.swift */; };
 		8B456F152C33E8D4003CFBD1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F142C33E8D4003CFBD1 /* AppDelegate.swift */; };
 		8B456F172C33E8D4003CFBD1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F162C33E8D4003CFBD1 /* SceneDelegate.swift */; };
@@ -57,6 +58,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8B4118202C4109A2009DA271 /* FolderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderViewModel.swift; sourceTree = "<group>"; };
 		8B4474C42C3FF76D00AEFCE1 /* AddToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToDoViewModel.swift; sourceTree = "<group>"; };
 		8B456F112C33E8D4003CFBD1 /* ReminderProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReminderProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B456F142C33E8D4003CFBD1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -119,6 +121,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8B41181F2C410972009DA271 /* Folder */ = {
+			isa = PBXGroup;
+			children = (
+				8BFB5C5F2C3C279700CE14C5 /* FolderListViewController.swift */,
+				8B4118202C4109A2009DA271 /* FolderViewModel.swift */,
+			);
+			path = Folder;
+			sourceTree = "<group>";
+		};
 		8B4474C32C3FF75600AEFCE1 /* AddToDo */ = {
 			isa = PBXGroup;
 			children = (
@@ -249,7 +260,7 @@
 				8B696A4B2C3D567C00D99D4A /* PickDate */,
 				8B696A6E2C3E652E00D99D4A /* SetTag */,
 				8B696A4E2C3D798D00D99D4A /* Priority */,
-				8BFB5C5F2C3C279700CE14C5 /* FolderListViewController.swift */,
+				8B41181F2C410972009DA271 /* Folder */,
 			);
 			path = AddToDo;
 			sourceTree = "<group>";
@@ -421,6 +432,7 @@
 				8B696A4D2C3D569400D99D4A /* DateViewModel.swift in Sources */,
 				8B456F452C340E55003CFBD1 /* Database.swift in Sources */,
 				8B456F192C33E8D4003CFBD1 /* AddToDoViewController.swift in Sources */,
+				8B4118212C4109A2009DA271 /* FolderViewModel.swift in Sources */,
 				8B456F2B2C33EBB8003CFBD1 /* BaseViewController.swift in Sources */,
 				8B456F422C33FACC003CFBD1 /* TodoTableViewCell.swift in Sources */,
 				8B456F5B2C3542EF003CFBD1 /* PassData.swift in Sources */,

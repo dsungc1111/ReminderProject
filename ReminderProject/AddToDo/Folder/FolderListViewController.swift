@@ -6,14 +6,13 @@
 //
 
 import UIKit
-import RealmSwift
 import SnapKit
 
 final class FolderListViewController: BaseViewController {
 
-    let realm = try! Realm()
-    var listTitle: Results<Folder>!
-    var passFolder: PassDateDelegate?
+    private let repository = RealmTableRepository()
+    private var listTitle: [Folder] = []
+    let viewModel = FolderViewModel()
     lazy var tableView = {
         let view = UITableView()
         view.delegate = self
@@ -24,7 +23,7 @@ final class FolderListViewController: BaseViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        listTitle = realm.objects(Folder.self)
+        listTitle = repository.fetchFolder()
     }
     override func configureHierarchy() {
         view.addSubview(tableView)
@@ -45,7 +44,7 @@ extension FolderListViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        passFolder?.passList(listTitle[indexPath.row].category)
+        viewModel.passFolderData(list: listTitle[indexPath.row])
         navigationController?.popViewController(animated: true)
     }
 }

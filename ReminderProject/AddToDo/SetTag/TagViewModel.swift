@@ -18,13 +18,9 @@ final class TagViewModel {
             self.passTagData()
         }
     }
-    
-    
     private func passTagData() {
         if let tag = tagText.value {
-            print(tag)
             passTag?.passTagValue(tag)
         }
-        
     }
 }
