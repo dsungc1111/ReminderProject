@@ -12,20 +12,12 @@ import Toast
 
 final class AddToDoViewController: BaseViewController {
  
-    var passData: PassDataDelegate?
-    private enum Category: String, CaseIterable {
-        case dueDate = "마감일"
-        case tag = "태그"
-        case priority = "우선순위"
-        case addImage = "이미지 추가"
-        case list = "목록"
-    }
     private enum NavigationBarTitle: String {
         case title = "새로운 미리 알림"
         case cancel = "취소"
         case save = "저장"
     }
-    private let viewModel = AddToDoViewModel()
+    let viewModel = AddToDoViewModel()
     private let repository = RealmTableRepository()
     private lazy var tableView = {
         let view = UITableView()
@@ -48,17 +40,21 @@ final class AddToDoViewController: BaseViewController {
     private var toDolist: [RealmTable] = []
     private var memoTitleText = ""
     private var memoContentText = ""
-    
     var showToast: (() -> Void)?
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
         bindData()
-        
     }
     func bindData() {
-        viewModel.outputData.bind { _ in
+        viewModel.getData.bind { _ in
             self.tableView.reloadData()
+        }
+        viewModel.outputDataList.bind { _ in
+            if let image = self.loadedImageView.image,
+               let filename = self.viewModel.outputDataList.value?.key {
+                self.saveImageToDocument(image: image, filename: "\(filename)")
+            }
         }
     }
     @objc func cancelButtonTapped() {
@@ -66,15 +62,8 @@ final class AddToDoViewController: BaseViewController {
     }
     @objc func saveButtonTapped() {
         view.makeToast("저장완료!", duration: 2.0, position: .center)
-        
-        let newData = RealmTable(memoTitle: memoTitleText, date: viewModel.getDueDate, memo: memoContentText, tag: viewModel.getTagText, priority: viewModel.getPriority, isFlag: false, complete: false )
-        
-        viewModel.saveData(data: newData)
-        if let image = loadedImageView.image {
-            saveImageToDocument(image: image, filename: "\(newData.key)")
-        }
+        viewModel.saveData(memotitle: memoTitleText, memo: memoContentText)
         showToast?()
-        passData?.passDataList(toDolist)
         navigationController?.dismiss(animated: true)
     }
     private func configureNavigationbar() {
@@ -111,7 +100,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
         if section == 0 {
             return 1
         } else {
-            return Category.allCases.count
+            return viewModel.outputSelectCategory.value?.count ?? 0
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -122,25 +111,16 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.id, for: indexPath) as? CategoryTableViewCell else { return CategoryTableViewCell() }
-            switch indexPath.row {
-            case 0:
+            if indexPath.row == 0 {
                 if let date = viewModel.getDueDate {
                     cell.resultLabel.text = Date.getDateString(date: date)
                 } else {
                     cell.resultLabel.text = ""
                 }
-            case 1:
-                cell.resultLabel.text = viewModel.getTagText
-            case 2:
-                cell.resultLabel.text = viewModel.getPriority
-            case 3:
-                cell.resultLabel.text = ""
-            case 4:
-                cell.resultLabel.text = viewModel.getFolder
-            default:
-                break
+            } else {
+                cell.resultLabel.text = viewModel.getDataList[indexPath.row-1]
             }
-            cell.titleLabel.text = Category.allCases[indexPath.row].rawValue
+            cell.titleLabel.text = viewModel.outputSelectCategory.value?[indexPath.row]
             return cell
         }
     }
@@ -149,13 +129,13 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
             navigationItem.rightBarButtonItem?.isEnabled = false
             return
         }
-        memoTitleText = text
+        viewModel.inputMemoTitle.value = text
         navigationItem.rightBarButtonItem?.isEnabled = true
         navigationItem.rightBarButtonItem?.tintColor = .black
     }
     @objc func memoFieldChange(_ textField: UITextField) {
         guard let text = textField.text, !text.isEmpty else { return }
-        memoContentText = text
+        viewModel.inputMemoContent.value = text
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
@@ -167,22 +147,24 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
+        viewModel.inputSelectCategory.value = ()
+        guard let list = viewModel.outputSelectCategory.value else { return }
         if indexPath.section != 0 {
             switch indexPath.row {
             case 0:
                 let vc = DateViewController()
-                vc.navigationItem.title = Category.allCases[0].rawValue
+                vc.navigationItem.title = list[0]
                 vc.viewModel.passDate = self.viewModel
                 navigationController?.pushViewController(vc, animated: true)
             case 1:
                 let vc = TagViewController()
-                vc.navigationItem.title = Category.allCases[1].rawValue
+                vc.navigationItem.title = list[1]
                 vc.passTag = viewModel
                 navigationController?.pushViewController(vc, animated: true)
             case 2:
                 let vc = PriorityViewController()
                 vc.passPriority = viewModel
-                vc.navigationItem.title = Category.allCases[2].rawValue
+                vc.navigationItem.title = list[2]
                 navigationController?.pushViewController(vc, animated: true)
             case 3:
                 var config = PHPickerConfiguration()
@@ -193,7 +175,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
             case 4:
                 let vc = FolderListViewController()
                 vc.passFolder = viewModel
-                vc.navigationItem.title = Category.allCases[4].rawValue
+                vc.navigationItem.title = list[4]
                 navigationController?.pushViewController(vc, animated: true)
             default:
                 break
@@ -214,6 +196,4 @@ extension AddToDoViewController: PHPickerViewControllerDelegate {
             dismiss(animated: true)
         }
     }
-    
-    
 }

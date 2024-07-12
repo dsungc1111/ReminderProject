@@ -18,7 +18,6 @@ final class DateViewController: BaseViewController {
         return label
     }()
     let viewModel = DateViewModel()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         datePicker.datePickerMode = .date
