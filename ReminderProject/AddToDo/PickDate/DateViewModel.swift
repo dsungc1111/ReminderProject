@@ -25,7 +25,6 @@ final class DateViewModel {
     private func passDateInfo() {
         if let date = pickDate.value {
             passDate?.passDateValue(date)
-            
         }
     }
     

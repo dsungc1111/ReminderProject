@@ -25,8 +25,7 @@ final class AddToDoViewModel: PassDateDelegate {
     
     private let repository = RealmTableRepository()
   // 데어터 받았을 때
-    var getData: Observable<
-        Void?> = Observable(nil)
+    var getData: Observable<Void?> = Observable(nil)
     
     //뷰컨에서 받은 데이터들로 새로운 데이터 배열 생성 후 output
     var outputDataList: Observable< RealmTable?> = Observable(nil)
@@ -49,23 +48,29 @@ final class AddToDoViewModel: PassDateDelegate {
     init() {
         inputSelectCategory.bind { _ in
             self.getCategory()
+            print(self.getDataList)
         }
     }
-
+    private func getCategory(){
+        outputSelectCategory.value = CategoryToDo.allCases.map { $0.rawValue }
+    }
     func passDateValue(_ date: Date) {
         getDueDate = date
         getData.value = ()
     }
     func passTagValue(_ text: String) {
         getTagText = !text.isEmpty ? "# \(text)" : ""
+        getDataList[0] = getTagText
         getData.value = ()
     }
     func passPriorityValue(_ text: String) {
         getPriority = text
+        getDataList[1] = getPriority
         getData.value = ()
     }
     func passList(_ text: String) {
         getFolder = text
+        getDataList[2] = getFolder
         getData.value = ()
     }
     func saveData(memotitle: String, memo: String) {
@@ -74,8 +79,5 @@ final class AddToDoViewModel: PassDateDelegate {
         outputDataList.value = newData
         passData?.passDataList([newData])
     }
-    
-    private func getCategory(){
-        outputSelectCategory.value = CategoryToDo.allCases.map { $0.rawValue }
-    }
+   
 }

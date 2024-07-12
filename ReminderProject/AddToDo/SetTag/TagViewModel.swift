@@ -8,6 +8,23 @@
 import Foundation
 
 final class TagViewModel {
+    var passTag: PassDateDelegate?
     
-    var inputButton: Observable<Void?> = Observable(nil)
+    
+    var tagText: Observable<String?> = Observable("")
+    
+    init() {
+        tagText.bind { _ in
+            self.passTagData()
+        }
+    }
+    
+    
+    private func passTagData() {
+        if let tag = tagText.value {
+            print(tag)
+            passTag?.passTagValue(tag)
+        }
+        
+    }
 }

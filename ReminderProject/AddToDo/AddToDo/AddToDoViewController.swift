@@ -159,7 +159,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
             case 1:
                 let vc = TagViewController()
                 vc.navigationItem.title = list[1]
-                vc.passTag = viewModel
+                vc.viewModel.passTag = self.viewModel
                 navigationController?.pushViewController(vc, animated: true)
             case 2:
                 let vc = PriorityViewController()
@@ -185,7 +185,6 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
 }
 extension AddToDoViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        print(#function)
         if let itemProvider = results.first?.itemProvider,
            itemProvider.canLoadObject(ofClass: UIImage.self) {
             itemProvider.loadObject(ofClass: UIImage.self) { image, error in
@@ -195,5 +194,6 @@ extension AddToDoViewController: PHPickerViewControllerDelegate {
             }
             dismiss(animated: true)
         }
+        dismiss(animated: true)
     }
 }
