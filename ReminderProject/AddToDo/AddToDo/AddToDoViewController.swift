@@ -119,7 +119,6 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             } else {
                 cell.resultLabel.text = viewModel.getDataList[indexPath.row-1]
-                print(viewModel.getDataList)
             }
             cell.titleLabel.text = viewModel.outputSelectCategory.value?[indexPath.row]
             return cell

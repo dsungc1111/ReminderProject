@@ -103,7 +103,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         vc.memoTitleLabel.text = list[indexPath.row].memoTitle
         vc.memoTitleLabel.text = repository.selectedPrioprity(list: list[indexPath.row])
         vc.memoLabel.text = list[indexPath.row].memo
-        vc.dateLabel.text = Date.getDateString(date: list[indexPath.row].date ?? Date())
+        vc.dateLabel.text = Date.getDateString(date: list[indexPath.row].date ?? Date()) 
         if let tag = list[indexPath.row].tag,
             !tag.isEmpty {
             vc.tagLabel.text = "#" + tag

@@ -26,23 +26,19 @@ final class DateViewController: BaseViewController {
         bindData()
     }
     func bindData() {
-        viewModel.pickDate.bind { _ in
-            if let getDate = self.viewModel.pickDate.value {
-                self.showDateLabel.text = Date.getDateString(date: getDate)
-            }
+        viewModel.outputPickDate.bind { _ in
+            self.showDateLabel.text = self.viewModel.outputPickDate.value
         }
-       
     }
     func addActions() {
         datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
     }
     @objc func dateChange(_ sender: UIDatePicker) {
-        viewModel.pickDate.value = sender.date
+        viewModel.inputPickDate.value = sender.date
     }
-    
     @objc func completebuttonTapped() {
-        viewModel.completionButtonTapped.value = ()
+        viewModel.inputCompletionButtonTapped.value = ()
         self.navigationController?.popViewController(animated: true)
     }
     override func configureHierarchy() {

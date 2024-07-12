@@ -83,7 +83,7 @@ final class ListTableViewCell: BaseTableViewCell {
     func configureCell(data: RealmTable) {
         titleLabel.text = data.memoTitle
         contentLabel.text = data.memo
-        dueDateLabel.text =  Date.getDateString(date: data.date ?? Date())
+        dueDateLabel.text =  Date.getDateString(date: data.date ?? Date()) 
         if let tag = data.tag { tagLabel.text = tag }
         if data.isFlag == false {
             flagLogoView.isHidden = true

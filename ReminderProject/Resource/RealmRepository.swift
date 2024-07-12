@@ -33,6 +33,7 @@ final class RealmTableRepository {
         case 0:
             value = value.filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
         case 1:
+            
             value = value.filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
         case 2:
             value = value.sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)

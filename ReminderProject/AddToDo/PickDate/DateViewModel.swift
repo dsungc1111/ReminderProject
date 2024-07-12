@@ -10,24 +10,28 @@ import Foundation
 final class DateViewModel {
     var passDate: PassDateDelegate?
     
-    var pickDate: Observable<Date?> = Observable(Date())
-
+    var inputPickDate: Observable<Date?> = Observable(Date())
+    var outputPickDate: Observable<String?> = Observable("")
     
-    var completionButtonTapped: Observable<Void?> = Observable(nil)
+    var inputCompletionButtonTapped: Observable<Void?> = Observable(nil)
     
     
     init() {
-        completionButtonTapped.bind { _ in
+        transform()
+    }
+    private func transform() {
+        inputPickDate.bind { _ in
+            if let date = self.inputPickDate.value {
+                self.outputPickDate.value = Date.getDateString(date: date)
+            }
+        }
+        inputCompletionButtonTapped.bind { _ in
             self.passDateInfo()
         }
     }
-    
     private func passDateInfo() {
-        if let date = pickDate.value {
+        if let date = inputPickDate.value {
             passDate?.passDateValue(date)
         }
     }
-    
-    
-    
 }
