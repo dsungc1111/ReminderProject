@@ -19,10 +19,17 @@ class AddToDoViewModel: PassDateDelegate {
     var outputData: Observable<
         Void?> = Observable(nil)
     
+    init() {
+      
+        
+    }
+    
+    
+    
+    
     func passDateValue(_ date: Date) {
         getDueDate = date
         outputData.value = ()
-        
     }
     func passTagValue(_ text: String) {
         getTagText = !text.isEmpty ? "# \(text)" : ""
@@ -34,7 +41,6 @@ class AddToDoViewModel: PassDateDelegate {
     }
     func passList(_ text: String) {
         getFolder = text
-//        tableView.reloadData()
         outputData.value = ()
     }
     func saveData(data: RealmTable) {

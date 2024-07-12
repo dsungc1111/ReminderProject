@@ -11,7 +11,6 @@ import UIKit
 final class DateViewController: BaseViewController {
     
     private let datePicker = UIDatePicker()
-    var passDate: PassDateDelegate?
     private let showDateLabel = {
         let label = UILabel()
         label.backgroundColor = .systemGray
@@ -33,6 +32,7 @@ final class DateViewController: BaseViewController {
                 self.showDateLabel.text = Date.getDateString(date: getDate)
             }
         }
+       
     }
     func addActions() {
         datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
@@ -43,10 +43,8 @@ final class DateViewController: BaseViewController {
     }
     
     @objc func completebuttonTapped() {
-        if let date = viewModel.pickDate.value {
-            passDate?.passDateValue(date)
-        }
-        navigationController?.popViewController(animated: true)
+        viewModel.completionButtonTapped.value = ()
+        self.navigationController?.popViewController(animated: true)
     }
     override func configureHierarchy() {
         view.addSubview(datePicker)

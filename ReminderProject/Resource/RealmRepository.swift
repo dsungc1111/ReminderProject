@@ -47,7 +47,6 @@ final class RealmTableRepository {
         
         return Array(value)
     }
-    var list: [RealmTable] = []
     func selectedPrioprity(list: RealmTable) -> String{
         switch list.priority {
         case "높음":
@@ -83,12 +82,13 @@ final class RealmTableRepository {
         return filter
     }
     func changeFlag(list: [RealmTable], index: Int) -> [RealmTable]{
+        var array: [RealmTable] = []
         try! self.realm.write {
             list[index].isFlag.toggle()
             let filter = self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isFlag" : list[index].isFlag], update: .modified)
-            self.list = [filter]
+           array = [filter]
         }
-        return list
+        return array
     }
     
     func saveData(text: String, data: RealmTable) {

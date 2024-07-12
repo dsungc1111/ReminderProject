@@ -54,13 +54,13 @@ final class AddToDoViewController: BaseViewController {
         super.viewDidLoad()
         configureNavigationbar()
         bindData()
+        
     }
     func bindData() {
         viewModel.outputData.bind { _ in
             self.tableView.reloadData()
         }
     }
-    
     @objc func cancelButtonTapped() {
         navigationController?.dismiss(animated: true)
     }
@@ -172,7 +172,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
             case 0:
                 let vc = DateViewController()
                 vc.navigationItem.title = Category.allCases[0].rawValue
-                vc.passDate = viewModel
+                vc.viewModel.passDate = self.viewModel
                 navigationController?.pushViewController(vc, animated: true)
             case 1:
                 let vc = TagViewController()
