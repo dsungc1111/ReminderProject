@@ -24,6 +24,13 @@ final class FolderListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         listTitle = repository.fetchFolder()
+        bindData()
+    }
+    func bindData() {
+        viewModel.outputSelectedFolder.bind { void in
+            guard let void else { return }
+            self.navigationController?.popViewController(animated: true)
+        }
     }
     override func configureHierarchy() {
         view.addSubview(tableView)
@@ -44,7 +51,7 @@ extension FolderListViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.passFolderData(list: listTitle[indexPath.row])
-        navigationController?.popViewController(animated: true)
+        viewModel.inputSelectedFolder.value = listTitle[indexPath.row]
+        viewModel.outputSelectedFolder.value = ()
     }
 }

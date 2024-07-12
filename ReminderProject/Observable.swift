@@ -22,4 +22,8 @@ class Observable<T> {
         clousre(value)
         self.clousre = clousre
     }
+    func bindLater(clousre: @escaping (T) -> Void) {
+//        clousre(value)
+        self.clousre = clousre
+    }
 }

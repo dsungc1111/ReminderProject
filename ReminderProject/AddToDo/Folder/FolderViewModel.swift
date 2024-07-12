@@ -10,10 +10,22 @@ import Foundation
 class FolderViewModel {
     var passFolder: PassDateDelegate?
     
+    var inputSelectedFolder: Observable<Folder?> = Observable(nil)
     
-    func passFolderData(list: Folder) {
+    var outputSelectedFolder: Observable<Void?> = Observable(nil)
+    
+    init() {
+        transform()
+    }
+    private func transform() {
+        inputSelectedFolder.bind { value in
+            if let value = value {
+                self.passFolderData(list: value)
+            }
+        }
+    }
+    private func passFolderData(list: Folder) {
         passFolder?.passList(list.category)
-        
     }
     
     

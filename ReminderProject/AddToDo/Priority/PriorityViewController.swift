@@ -31,14 +31,19 @@ final class PriorityViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         addActions()
+        bindData()
+    }
+    func bindData() {
+        viewModel.outputPriority.bind { value in
+            self.showPriority.text = value
+        }
     }
     private func addActions() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
         segmentControl.addTarget(self, action: #selector(segmentValueChanged), for: .valueChanged)
     }
-    
     @objc func segmentValueChanged(_ sender:UISegmentedControl) {
-        viewModel.inputPriority(index: sender.selectedSegmentIndex)
+        viewModel.inputPriority.value = segmentControl.selectedSegmentIndex
     }
     @objc func completebuttonTapped() {
         viewModel.completionButtonTapped.value = ()

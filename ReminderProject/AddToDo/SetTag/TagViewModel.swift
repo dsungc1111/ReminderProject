@@ -11,15 +11,15 @@ final class TagViewModel {
     var passTag: PassDateDelegate?
     
     
-    var tagText: Observable<String?> = Observable("")
+    var inputTagText: Observable<String?> = Observable("")
     
     init() {
-        tagText.bind { _ in
+        inputTagText.bind { _ in
             self.passTagData()
         }
     }
     private func passTagData() {
-        if let tag = tagText.value {
+        if let tag = inputTagText.value {
             passTag?.passTagValue(tag)
         }
     }
