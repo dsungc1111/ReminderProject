@@ -22,7 +22,6 @@ final class RealmTableRepository {
         let value = realm.objects(Folder.self)
         return Array(value)
     }
-    
     func detectRealmURL() {
         print(realm.configuration.fileURL ?? "")
     }
@@ -33,7 +32,6 @@ final class RealmTableRepository {
         case 0:
             value = value.filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
         case 1:
-            
             value = value.filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
         case 2:
             value = value.sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
@@ -45,7 +43,6 @@ final class RealmTableRepository {
         default:
             return Array(value)
         }
-        
         return Array(value)
     }
     func selectedPrioprity(list: RealmTable) -> String{
@@ -91,12 +88,17 @@ final class RealmTableRepository {
         }
         return array
     }
-    
     func saveData(text: String, data: RealmTable) {
         if let folder = realm.objects(Folder.self).filter("category == %@", text).first {
             try! realm.write {
                 folder.content.append(data)
             }
+        }
+    }
+    func createFolder(title: String) {
+        let newFolder = Folder(category: title, content: List<RealmTable>())
+        try! realm.write {
+            realm.add(newFolder)
         }
     }
 }

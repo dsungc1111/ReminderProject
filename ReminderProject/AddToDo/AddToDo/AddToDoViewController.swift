@@ -144,7 +144,7 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
-         let list = viewModel.outputSelectCategory.value 
+        let list = viewModel.outputSelectCategory.value
         if indexPath.section != 0 {
             switch indexPath.row {
             case 0:

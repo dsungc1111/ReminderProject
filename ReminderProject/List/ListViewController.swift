@@ -29,23 +29,20 @@ final class ListViewController: BaseViewController {
         btn.addTarget(self, action: #selector(removeAllButtonTapped), for: .touchUpInside)
         return btn
     }()
+  
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationbarSetting()
+    }
     @objc func removeAllButtonTapped() {
         try! self.realm.write {
             list.removeAll()
             }
         tableView.reloadData()
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationbarSetting()
-      
-        
-    }
     private func navigationbarSetting() {
-        
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: SortButtonImages.ellipsis.rawValue), style: .plain, target: self, action: nil)
         
         let memoTitle = UIAction(title: SortButtonTitle.sortByTitle.rawValue, image: UIImage(systemName: SortButtonImages.lineweight.rawValue), handler: { _ in self.sortByTitleButtonTapped() })

@@ -7,20 +7,17 @@
 
 import UIKit
 import SnapKit
-import RealmSwift
 import Toast
 
-class AddFolderViewController: BaseViewController {
-   
-    var passFolder: PassFolderDelegate?
-    
-    var showToast: (() -> Void)?
-    var listTitle:[Folder] = []
+final class AddFolderViewController: BaseViewController {
     private enum NavigationBarTitle: String {
         case title = "새로운 목록"
         case cancel = "취소"
         case save = "저장"
     }
+    let viewModel = AddFolderViewModel()
+    var showToast: (() -> Void)?
+    var listTitle:[Folder] = []
     let logoBackView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemGray6
@@ -39,7 +36,7 @@ class AddFolderViewController: BaseViewController {
         logo.contentMode = .scaleAspectFit
         return logo
     }()
-    lazy var folderName = {
+    lazy var folderNameTextField = {
         let text = UITextField()
         text.textAlignment = .center
         text.placeholder = "목록 이름"
@@ -48,14 +45,34 @@ class AddFolderViewController: BaseViewController {
         text.addTarget(self, action: #selector(folderNameDidchange(_:)), for: .editingChanged)
         return text
     }()
-    let realm = try! Realm()
-    let viewModel = AddFolderViewModel()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
-//        listTitle = realm.objects(Folder.self)
         bindData()
+    }
+    func bindData() {
+        viewModel.outputFolderTitle.bind { value in
+            if let value = value {
+                self.navigationItem.rightBarButtonItem?.isEnabled = value
+                self.navigationItem.rightBarButtonItem?.tintColor = .black
+            }
+        }
+        viewModel.outputSaveFolder.bindLater { _ in
+            self.view.makeToast("저장완료!", duration: 2.0, position: .center)
+            self.showToast?()
+            self.navigationController?.dismiss(animated: true)
+        }
+    }
+    @objc func folderNameDidchange(_ sender: UITextField) {
+        guard let text = sender.text else { return }
+        viewModel.inputFolderTitle.value = text
+    }
+    @objc func cancelButtonTapped() {
+        navigationController?.dismiss(animated: true)
+    }
+    @objc func saveButtonTapped() {
+        guard let folderTitle = folderNameTextField.text else { return}
+        viewModel.inputSaveFolder.value = folderTitle
     }
     private func configureNavigationbar() {
         navigationItem.title = NavigationBarTitle.title.rawValue
@@ -66,37 +83,10 @@ class AddFolderViewController: BaseViewController {
         navigationItem.rightBarButtonItem?.isEnabled = false
         navigationItem.backButtonTitle = NavigationBarTitle.cancel.rawValue
     }
-    func bindData() {
-        viewModel.outputButtonBlock.bind { value in
-            if let value = value {
-                self.navigationItem.rightBarButtonItem?.isEnabled = value
-                self.navigationItem.rightBarButtonItem?.tintColor = .black
-            }
-        }
-    }
-    @objc func folderNameDidchange(_ sender: UITextField) {
-        if let text = sender.text {
-            viewModel.inputFolderTitle.value = text
-        }
-        viewModel.inputTextChange.value = ()
-    }
-    @objc func cancelButtonTapped() {
-        navigationController?.dismiss(animated: true)
-    }
-    @objc func saveButtonTapped() {
-        view.makeToast("저장완료!", duration: 2.0, position: .center)
-        if let folderTitle = folderName.text {
-            viewModel.inputFolderName.value = folderTitle
-        }
-        viewModel.inputFolderChanged.value = ()
-        showToast?()
-        passFolder?.passFolderList(listTitle)
-        navigationController?.dismiss(animated: true)
-    }
     override func configureHierarchy() {
         view.addSubview(logoBackView)
         view.addSubview(listLogo)
-        view.addSubview(folderName)
+        view.addSubview(folderNameTextField)
     }
     override func configureLayout() {
         logoBackView.snp.makeConstraints { make in
@@ -109,7 +99,7 @@ class AddFolderViewController: BaseViewController {
             make.centerX.equalTo(view.safeAreaLayoutGuide)
             make.size.equalTo(80)
         }
-        folderName.snp.makeConstraints { make in
+        folderNameTextField.snp.makeConstraints { make in
             make.top.equalTo(listLogo.snp.bottom).offset(20)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(50)

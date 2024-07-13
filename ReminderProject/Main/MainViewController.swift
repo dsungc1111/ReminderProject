@@ -94,7 +94,7 @@ final class MainViewController: BaseViewController {
         vc.showToast = {
             self.view.makeToast("저장완료!")
         }
-        vc.passFolder = self
+        vc.viewModel.passFolder = self
         let nav = UINavigationController(rootViewController: vc)
         navigationController?.present(nav, animated: true)
     }

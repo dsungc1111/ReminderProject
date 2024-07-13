@@ -31,19 +31,10 @@ final class AddToDoViewModel: PassDateDelegate {
     var inputFolder: Observable<String?> = Observable(nil)
     lazy var getDataList: Observable<[String]> = Observable([inputTagText.value, inputPriority.value ?? "", "", inputFolder.value ?? ""])
 
-  // 데어터 받았을 때
     var getData: Observable<Void?> = Observable(nil)
     
-    //뷰컨에서 받은 데이터들로 새로운 데이터 배열 생성 후 output
     var outputDataList: Observable< RealmTable?> = Observable(nil)
-    // 메모 타이틀 받아오는 인스턴스
-    // 저장 버트 눌렀음을 알게해주는 인스턴스
-    var saveButtontapped: Observable<
-        Void?> = Observable(nil)
-    // ToDo Category 눌렀음 인지
-//    var inputSelectCategory: Observable<
-//        Void?> = Observable(nil)
-    // ToDo Category 전달해주는 인스턴스
+    
     var outputSelectCategory: Observable<
         [String]> = Observable([""])
     
@@ -64,6 +55,12 @@ final class AddToDoViewModel: PassDateDelegate {
     private func getCategory(){
         outputSelectCategory.value = CategoryToDo.allCases.map { $0.rawValue }
     }
+    private func saveData(memotitle: String, memo: String) {
+        let newData = RealmTable(memoTitle: inputMemoTitle.value, date: inputDueDate.value, memo: inputMemoContent.value, tag: inputTagText.value, priority: inputPriority.value ?? "", isFlag: false, complete: false )
+        repository.saveData(text: inputFolder.value ?? "", data: newData)
+        outputDataList.value = newData
+        passData?.passDataList([newData])
+    }
     func passDateValue(_ date: Date) {
         inputDueDate.value = date
         getData.value = ()
@@ -83,11 +80,6 @@ final class AddToDoViewModel: PassDateDelegate {
         getDataList.value[3] = inputFolder.value ?? ""
         getData.value = ()
     }
-    private func saveData(memotitle: String, memo: String) {
-        let newData = RealmTable(memoTitle: inputMemoTitle.value, date: inputDueDate.value, memo: inputMemoContent.value, tag: inputTagText.value, priority: inputPriority.value ?? "", isFlag: false, complete: false )
-        repository.saveData(text: inputFolder.value ?? "", data: newData)
-        outputDataList.value = newData
-        passData?.passDataList([newData])
-    }
+
    
 }
