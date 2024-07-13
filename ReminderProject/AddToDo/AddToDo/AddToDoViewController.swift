@@ -18,7 +18,6 @@ final class AddToDoViewController: BaseViewController {
         case save = "저장"
     }
     let viewModel = AddToDoViewModel()
-    private let repository = RealmTableRepository()
     private lazy var tableView = {
         let view = UITableView()
         view.delegate = self

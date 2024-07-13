@@ -7,11 +7,10 @@
 
 import UIKit
 import SnapKit
-import RealmSwift
+
 
 final class DetailViewController: BaseViewController {
     
-    let gettt = ObjectId()
     var viewModel = DetailViewModel()
     let memoTitleLabel = {
         let label = UILabel()
@@ -62,7 +61,6 @@ final class DetailViewController: BaseViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "수정", style: .plain, target: self, action: #selector(editButtonTapped))
     }
     @objc func editButtonTapped() {
-        
         if editMemoTitleTextField.text == "" {
             viewModel.inputMemoTitle.value = memoTitleLabel.text ?? ""
         } else {
@@ -74,7 +72,6 @@ final class DetailViewController: BaseViewController {
             viewModel.inputMemoContent.value = editMemoTextField.text ?? ""
         }
         viewModel.inputEditButton.value = ()
-        
     }
     override func viewDidLayoutSubviews() {
         editMemoTitleTextField.layer.addBorder([.bottom], color: .darkGray, width: 1)

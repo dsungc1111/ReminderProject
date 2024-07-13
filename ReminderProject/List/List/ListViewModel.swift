@@ -74,7 +74,6 @@ final class ListViewModel {
         guard let index = inputCompleteButton.value?.values.first else { return "" }
         let updatedList = repository.completeButtonTapped(list: list, index: index)
         image = updatedList[index].isComplete == true ? "circle.fill" : "circle"
-        
         return image
     }
     

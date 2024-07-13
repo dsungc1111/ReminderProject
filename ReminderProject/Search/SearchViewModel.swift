@@ -10,35 +10,55 @@ import Foundation
 final class SearchViewModel {
     
     private let repository = RealmTableRepository()
+    
     var inputSearchText: Observable<String?> = Observable(nil)
-    var inputSearchTextChange: Observable<Void?> = Observable(nil)
-    var outputList: Observable<[RealmTable]?> = Observable(nil)
-   
+    var outputSearchList: Observable<[RealmTable]> = Observable([])
+    var inputCompleteButton: Observable<[[RealmTable] : Int]?> = Observable(nil)
+    var outputCompleteButton: Observable<String> = Observable("")
+    
+    var inputReloadList: Observable<Void?> = Observable(nil)
+    var outputReloadList: Observable<[RealmTable]?> = Observable(nil)
+    
+    
+    
     var inputFlagChange: Observable<Void?> = Observable(nil)
     var inputFlagList: Observable<RealmTable?> = Observable(nil)
     
     init() {
-        inputSearchTextChange.bind { _ in
+        inputSearchText.bind { _ in
             if let text = self.inputSearchText.value {
-                self.outputList.value = self.filterSearchText(text: text)
+                self.outputSearchList.value = self.filterSearchText(text: text)
             }
+        }
+        inputCompleteButton.bindLater { value in
+            guard let list = self.inputCompleteButton.value?.keys.first else { return }
+            guard let index = self.inputCompleteButton.value?.values.first else { return }
+            self.completeButtonTapped(list: list, index: index)
+        }
+        inputReloadList.bindLater { _ in
+            self.fetchList()
         }
     }
     private func filterSearchText(text: String) -> [RealmTable] {
         let result = repository.filterBySearchText(text: text)
         return result
     }
-    func completeButtonTapped(list: [RealmTable], index: Int) -> String {
-        var image = ""
-        outputList.value = repository.completeButtonTapped(list: list, index: index)
-        image = list[index].isComplete ? "circle.fill" : "circle"
-        return image
+    private func completeButtonTapped(list: [RealmTable], index: Int) {
+        outputSearchList.value = repository.completeButtonTapped(list: list, index: index)
+        
+        let updatedList = repository.completeButtonTapped(list: list, index: index)
+        outputCompleteButton.value = updatedList[index].isComplete ? "circle.fill" : "circle"
     }
-    func deleteToDo(list: [RealmTable], index: Int) {
-        outputList.value = repository.deleteToDo(list: list, index: index)
+    private func fetchList() {
+        let list = repository.fetchCategory(cases: 2)
+        outputReloadList.value = list
     }
-    func changeFlag(list: [RealmTable], index: Int) {
-        outputList.value = repository.changeFlag(list: list, index: index)
+    
+   private func deleteToDo(list: [RealmTable], index: Int) {
+        outputSearchList.value = repository.deleteToDo(list: list, index: index)
+    }
+    private func changeFlag(list: [RealmTable], index: Int) {
+        outputSearchList.value = repository.changeFlag(list: list, index: index)
     }
     
 }

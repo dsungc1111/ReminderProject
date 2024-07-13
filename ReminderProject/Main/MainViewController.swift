@@ -25,14 +25,14 @@ final class MainViewController: BaseViewController {
         layout.sectionInset = UIEdgeInsets(top: sectionSpacing, left: sectionSpacing, bottom: sectionSpacing, right: sectionSpacing)
         return layout
     }
-    private lazy var addButton = {
+    private lazy var addToDoButton = {
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
         btn.contentMode = .scaleAspectFill
         btn.setTitle(" 새로운 일 추가", for: .normal)
         btn.setTitleColor(.systemBlue, for: .normal)
         btn.titleLabel?.font = .boldSystemFont(ofSize: 18)
-        btn.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(addToDoButtonTapped), for: .touchUpInside)
         return btn
     }()
     private lazy var listAddButton = {
@@ -50,7 +50,7 @@ final class MainViewController: BaseViewController {
         label.isHidden = true
         return label
     }()
-    private let repository = RealmTableRepository()
+    private var viewModel = MainViewModel()
     private let date = Date()
     private var listTitle: [Folder] = []
     private var toDoList: [RealmTable] = []
@@ -68,10 +68,15 @@ final class MainViewController: BaseViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        listTitle = repository.fetchFolder()
         navigationbarSetting()
         collectionViewSetting()
-        myListLabel.isHidden = listTitle.count != 0 ? false : true
+        bindData()
+    }
+    private func bindData() {
+        viewModel.setListTitleTrigger.bind { value in
+            self.listTitle = value
+            self.myListLabel.isHidden = self.listTitle.count != 0 ? false : true
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -98,7 +103,7 @@ final class MainViewController: BaseViewController {
         let nav = UINavigationController(rootViewController: vc)
         navigationController?.present(nav, animated: true)
     }
-    @objc func addButtonTapped() {
+    @objc func addToDoButtonTapped() {
         let vc = AddToDoViewController()
         vc.showToast = {
             self.view.makeToast("저장완료!")
@@ -120,7 +125,7 @@ final class MainViewController: BaseViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(searchButtonTapped))
     }
     override func configureHierarchy() {
-        view.addSubview(addButton)
+        view.addSubview(addToDoButton)
         view.addSubview(listAddButton)
         view.addSubview(collectionView)
         view.addSubview(myListLabel)
@@ -128,7 +133,7 @@ final class MainViewController: BaseViewController {
         view.addSubview(tableView)
     }
     override func configureLayout() {
-        addButton.snp.makeConstraints { make in
+        addToDoButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.leading.equalTo(view.safeAreaLayoutGuide).inset(5)
             make.height.equalTo(30)
@@ -184,7 +189,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = ListViewController()
         vc.navigationItem.title = ContentNameEnum.allCases[indexPath.row].rawValue
-        vc.list = repository.fetchCategory(cases: indexPath.row)
+        viewModel.inputPassList.value = indexPath.row
+        vc.list = viewModel.outputPassList.value
         navigationController?.pushViewController(vc, animated: true)
     }
 }

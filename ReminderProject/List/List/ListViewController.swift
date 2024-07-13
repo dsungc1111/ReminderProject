@@ -16,7 +16,6 @@ final class ListViewController: BaseViewController {
     }
     var list: [RealmTable] = []
     let viewModel = ListViewModel()
-    var folder: Folder?
     private lazy var tableView = {
         let view = UITableView()
         view.delegate = self

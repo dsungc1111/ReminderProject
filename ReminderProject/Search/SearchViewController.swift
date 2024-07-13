@@ -14,7 +14,7 @@ final class SearchViewController: BaseViewController {
         case flag = "깃발"
         case delete = "삭제"
     }
-    private let repository = RealmTableRepository()
+    
     private lazy var searchBar = {
         let search = UISearchBar()
         search.delegate = self
@@ -39,12 +39,11 @@ final class SearchViewController: BaseViewController {
         navigationItem.title = "검색"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        list = repository.fetchRealmTable()
         bindData()
     }
     func bindData() {
-        viewModel.outputList.bind { _ in
-            self.list = self.viewModel.outputList.value ?? [RealmTable]()
+        viewModel.outputSearchList.bind { _ in
+            self.list = self.viewModel.outputSearchList.value
             self.tableView.reloadData()
         }
     }
@@ -67,7 +66,6 @@ final class SearchViewController: BaseViewController {
 extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.inputSearchText.value = searchText
-        viewModel.inputSearchTextChange.value = ()
     }
 }
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
@@ -88,10 +86,11 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     @objc func completeButtonTapped(sender: UIButton) {
-        let image = self.viewModel.completeButtonTapped(list: self.list, index: sender.tag)
+        viewModel.inputCompleteButton.value = [list: sender.tag]
+        let image = viewModel.outputCompleteButton.value
         sender.setImage(UIImage(systemName: image), for: .normal)
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
-            self.viewModel.deleteToDo(list: self.list, index: sender.tag)
+            self.viewModel.inputReloadList.value = ()
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -101,7 +100,6 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         let vc = DetailViewController()
         vc.memoTitleLabel.text = list[indexPath.row].memoTitle
-        vc.memoTitleLabel.text = repository.selectedPrioprity(list: list[indexPath.row])
         vc.memoLabel.text = list[indexPath.row].memo
         vc.dateLabel.text = Date.getDateString(date: list[indexPath.row].date ?? Date()) 
         if let tag = list[indexPath.row].tag,

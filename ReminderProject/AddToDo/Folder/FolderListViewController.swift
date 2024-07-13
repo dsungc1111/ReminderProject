@@ -10,7 +10,6 @@ import SnapKit
 
 final class FolderListViewController: BaseViewController {
 
-    private let repository = RealmTableRepository()
     private var listTitle: [Folder] = []
     let viewModel = FolderViewModel()
     lazy var tableView = {
@@ -23,10 +22,13 @@ final class FolderListViewController: BaseViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        listTitle = repository.fetchFolder()
+
         bindData()
     }
     func bindData() {
+        viewModel.outputListTitle.bind { value in
+            self.listTitle = value
+        }
         viewModel.outputSelectedFolder.bind { void in
             guard let void else { return }
             self.navigationController?.popViewController(animated: true)
