@@ -90,5 +90,7 @@ final class ListTableViewCell: BaseTableViewCell {
         } else {
             flagLogoView.isHidden = false
         }
+        let image = data.isComplete ? "circle.fill" : "circle"
+        completeButton.setImage(UIImage(systemName: image), for: .normal)
     }
 }

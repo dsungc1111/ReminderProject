@@ -67,18 +67,6 @@ final class ListViewController: BaseViewController {
     private func sortButtonTapped(index: Int) {
         viewModel.inputSortIndex.value = index
     }
-//    private func sortByTitleButtonTapped() {
-//        list = list.sorted { $0.memoTitle < $1.memoTitle }
-//        tableView.reloadData()
-//    }
-//    private func sortByContentButtonTapped() {
-//        list = list.sorted { $0.memo ?? "" > $1.memo ?? "" }
-//        tableView.reloadData()
-//    }
-//    private func sortByDateButtonTapped() {
-//        list = list.sorted {$0.date ?? Date() < $1.date ?? Date()}
-//        tableView.reloadData()
-//    }
     override func configureHierarchy() {
         view.addSubview(removeAllButton)
         view.addSubview(tableView)
@@ -93,9 +81,6 @@ final class ListViewController: BaseViewController {
             make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
         }
     }
-    override func viewDidDisappear(_ animated: Bool) {
-        tableView.reloadData()
-    }
 }
 extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -108,18 +93,18 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
         let data = list[indexPath.row]
         cell.completeButton.tag = indexPath.row
-        let image = data.isComplete ? "circle.fill" : "circle"
-        cell.completeButton.setImage(UIImage(systemName: image), for: .normal)
         cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
         cell.configureCell(data: data)
         return cell
     }
     @objc func completeButtonTapped(sender: UIButton) {
-//        let image = self.viewModel.completeButtonTapped(list: self.list, index: sender.tag)
-//        sender.setImage(UIImage(systemName: image), for: .normal)
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
-//            self.viewModel.deleteToDo(list: self.list, index: sender.tag)
-//        }
+        viewModel.inputCompleteButton.value = [list: sender.tag]
+        guard let image = viewModel.outputCompleteButton.value else { return }
+        sender.setImage(UIImage(systemName: image), for: .normal)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
+            self.list = self.repository.fetchCategory(cases: 2)
+            self.tableView.reloadData()
+        }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
