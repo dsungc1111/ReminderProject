@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B3DDA652C4233C20010A5FF /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3DDA642C4233C20010A5FF /* ListViewModel.swift */; };
 		8B4118212C4109A2009DA271 /* FolderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4118202C4109A2009DA271 /* FolderViewModel.swift */; };
 		8B4474C52C3FF76D00AEFCE1 /* AddToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4474C42C3FF76D00AEFCE1 /* AddToDoViewModel.swift */; };
 		8B456F152C33E8D4003CFBD1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B456F142C33E8D4003CFBD1 /* AppDelegate.swift */; };
@@ -58,6 +59,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8B3DDA642C4233C20010A5FF /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
 		8B4118202C4109A2009DA271 /* FolderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderViewModel.swift; sourceTree = "<group>"; };
 		8B4474C42C3FF76D00AEFCE1 /* AddToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToDoViewModel.swift; sourceTree = "<group>"; };
 		8B456F112C33E8D4003CFBD1 /* ReminderProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReminderProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,6 +123,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8B3DDA632C4233B40010A5FF /* List */ = {
+			isa = PBXGroup;
+			children = (
+				8B456F2C2C33EC01003CFBD1 /* ListViewController.swift */,
+				8B3DDA642C4233C20010A5FF /* ListViewModel.swift */,
+			);
+			path = List;
+			sourceTree = "<group>";
+		};
 		8B41181F2C410972009DA271 /* Folder */ = {
 			isa = PBXGroup;
 			children = (
@@ -220,7 +231,7 @@
 		8B456F5E2C3617D6003CFBD1 /* List */ = {
 			isa = PBXGroup;
 			children = (
-				8B456F2C2C33EC01003CFBD1 /* ListViewController.swift */,
+				8B3DDA632C4233B40010A5FF /* List */,
 				8B456F5F2C3617E9003CFBD1 /* DetailViewController.swift */,
 			);
 			path = List;
@@ -426,6 +437,7 @@
 			files = (
 				8BFB5C582C3BD95600CE14C5 /* AddFolderViewController.swift in Sources */,
 				8B456F572C3529FF003CFBD1 /* PriorityViewController.swift in Sources */,
+				8B3DDA652C4233C20010A5FF /* ListViewModel.swift in Sources */,
 				8B456F3D2C33F9B7003CFBD1 /* BaseTableViewCell.swift in Sources */,
 				8B8EACE02C3E71B700D7990B /* CalendarViewModel.swift in Sources */,
 				8B8EACE22C3E908200D7990B /* AddFolderViewModel.swift in Sources */,

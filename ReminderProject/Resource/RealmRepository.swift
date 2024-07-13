@@ -22,6 +22,12 @@ final class RealmTableRepository {
         let value = realm.objects(Folder.self)
         return Array(value)
     }
+    func deleteAll() {
+        var list = realm.objects(RealmTable.self)
+        try! self.realm.write {
+            list.realm?.deleteAll()
+        }
+    }
     func detectRealmURL() {
         print(realm.configuration.fileURL ?? "")
     }
@@ -100,5 +106,20 @@ final class RealmTableRepository {
         try! realm.write {
             realm.add(newFolder)
         }
+    }
+    
+    func sortList(index: Int) -> [RealmTable] {
+        var list = fetchRealmTable()
+        switch index {
+        case 0:
+            list = list.sorted { $0.memoTitle < $1.memoTitle }
+        case 1:
+            list = list.sorted { $0.memo ?? "" > $1.memo ?? "" }
+        case 2:
+            list = list.sorted {$0.date ?? Date() < $1.date ?? Date()}
+        default:
+            list = list.sorted { $0.memoTitle < $1.memoTitle }
+        }
+        return list
     }
 }

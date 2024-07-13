@@ -7,11 +7,16 @@
 
 import UIKit
 import SnapKit
-import RealmSwift
+
 
 final class ListViewController: BaseViewController {
-    
+    private enum SwipeButtonTitle: String {
+        case flag = "깃발"
+        case delete = "삭제"
+    }
     var list: [RealmTable] = []
+    let viewModel = ListViewModel()
+    private let repository = RealmTableRepository()
     var folder: Folder?
     private lazy var tableView = {
         let view = UITableView()
@@ -21,7 +26,6 @@ final class ListViewController: BaseViewController {
         view.backgroundColor = .clear
         return view
     }()
-    private let realm = try! Realm()
     private lazy var removeAllButton = {
        let btn = UIButton()
         btn.setTitle("전체 삭제", for: .normal)
@@ -29,41 +33,52 @@ final class ListViewController: BaseViewController {
         btn.addTarget(self, action: #selector(removeAllButtonTapped), for: .touchUpInside)
         return btn
     }()
-  
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
+        bindData()
+    }
+    func bindData() {
+        viewModel.outputDeleteAll.bindLater { value in
+            guard let value = value else { return }
+            self.list = value
+            self.tableView.reloadData()
+        }
+        viewModel.outputSortList.bind { value in
+            guard let value = value else { return }
+            self.list = value
+            self.tableView.reloadData()
+        }
     }
     @objc func removeAllButtonTapped() {
-        try! self.realm.write {
-            list.removeAll()
-            }
-        tableView.reloadData()
+        viewModel.inputDeleteAll.value = ()
     }
     private func navigationbarSetting() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: SortButtonImages.ellipsis.rawValue), style: .plain, target: self, action: nil)
         
-        let memoTitle = UIAction(title: SortButtonTitle.sortByTitle.rawValue, image: UIImage(systemName: SortButtonImages.lineweight.rawValue), handler: { _ in self.sortByTitleButtonTapped() })
-        let memoContent = UIAction(title: SortButtonTitle.sortByContent.rawValue, image: UIImage(systemName: SortButtonImages.note.rawValue), handler: { _ in self.sortByContentButtonTapped() })
-        let memoDate = UIAction(title: SortButtonTitle.sortByTime.rawValue, image: UIImage(systemName: SortButtonImages.calender.rawValue), handler: { _ in self.sortByDateButtonTapped() })
+        let memoTitle = UIAction(title: SortButtonTitle.sortByTitle.rawValue, image: UIImage(systemName: SortButtonImages.lineweight.rawValue), handler: { _ in self.sortButtonTapped(index: 0) })
+        let memoContent = UIAction(title: SortButtonTitle.sortByContent.rawValue, image: UIImage(systemName: SortButtonImages.note.rawValue), handler: { _ in self.sortButtonTapped(index: 1) })
+        let memoDate = UIAction(title: SortButtonTitle.sortByTime.rawValue, image: UIImage(systemName: SortButtonImages.calender.rawValue), handler: { _ in self.sortButtonTapped(index: 2) })
 
         navigationItem.rightBarButtonItem?.menu = UIMenu(title: SortButtonTitle.sortButton.rawValue, options: .displayInline, children: [memoTitle, memoContent, memoDate])
     }
-    
-    private func sortByTitleButtonTapped() {
-        list = list.sorted { $0.memoTitle < $1.memoTitle }
-        tableView.reloadData()
+    private func sortButtonTapped(index: Int) {
+        viewModel.inputSortIndex.value = index
     }
-    private func sortByContentButtonTapped() {
-        list = list.sorted { $0.memo ?? "" > $1.memo ?? "" }
-        tableView.reloadData()
-    }
-    private func sortByDateButtonTapped() {
-        list = list.sorted {$0.date ?? Date() < $1.date ?? Date()}
-        tableView.reloadData()
-    }
+//    private func sortByTitleButtonTapped() {
+//        list = list.sorted { $0.memoTitle < $1.memoTitle }
+//        tableView.reloadData()
+//    }
+//    private func sortByContentButtonTapped() {
+//        list = list.sorted { $0.memo ?? "" > $1.memo ?? "" }
+//        tableView.reloadData()
+//    }
+//    private func sortByDateButtonTapped() {
+//        list = list.sorted {$0.date ?? Date() < $1.date ?? Date()}
+//        tableView.reloadData()
+//    }
     override func configureHierarchy() {
         view.addSubview(removeAllButton)
         view.addSubview(tableView)
@@ -83,6 +98,9 @@ final class ListViewController: BaseViewController {
     }
 }
 extension ListViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "검색결과 \(list.count)개"
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list.count
     }
@@ -97,61 +115,36 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     @objc func completeButtonTapped(sender: UIButton) {
-        let complete = list[sender.tag]
-        try! self.realm.write {
-            complete.isComplete.toggle()
-            self.realm.create(RealmTable.self, value: ["key" : complete.key, "isComplete" : complete.isComplete], update: .modified)
-            let image = complete.isComplete ? "circle.fill" : "circle"
-            sender.setImage(UIImage(systemName: image), for: .normal)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
-        try! self.realm.write {
-                self.realm.delete(complete)
-            }
-            self.tableView.reloadData()
-        }
+//        let image = self.viewModel.completeButtonTapped(list: self.list, index: sender.tag)
+//        sender.setImage(UIImage(systemName: image), for: .normal)
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
+//            self.viewModel.deleteToDo(list: self.list, index: sender.tag)
+//        }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
-        
         let vc = DetailViewController()
         vc.memoTitleLabel.text = list[indexPath.row].memoTitle
-        let selectedPriority = list[indexPath.row].priority
-        vc.getId = list[indexPath.row].key
-        switch selectedPriority {
-        case "높음":
-            vc.memoTitleLabel.text = "!!!" + list[indexPath.row].memoTitle
-        case "중간":
-            vc.memoTitleLabel.text = "!!" + list[indexPath.row].memoTitle
-        case "낮음":
-            vc.memoTitleLabel.text = "!" + list[indexPath.row].memoTitle
-        default:
-            vc.memoTitleLabel.text = list[indexPath.row].memoTitle
-        }
-       
-        vc.memoLabel.text = list[indexPath.row].memo ?? ""
+        vc.memoTitleLabel.text = repository.selectedPrioprity(list: list[indexPath.row])
+        vc.memoLabel.text = list[indexPath.row].memo
         vc.dateLabel.text = Date.getDateString(date: list[indexPath.row].date ?? Date())
-        vc.tagLabel.text = list[indexPath.row].tag ?? ""
+        if let tag = list[indexPath.row].tag,
+            !tag.isEmpty {
+            vc.tagLabel.text = "#" + tag
+        }
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            try! self.realm.write {
-                self.realm.delete(self.list[indexPath.row])
-            }
-            tableView.reloadData()
+        let delete = UIContextualAction(style: .normal, title: SwipeButtonTitle.delete.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+//            self.viewModel.deleteToDo(list: self.list, index: indexPath.row)
             success(true)
         }
         delete.backgroundColor = .systemRed
-        let flag = UIContextualAction(style: .normal, title: "깃발") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            try! self.realm.write {
-                self.list[indexPath.row].isFlag.toggle()
-                self.realm.create(RealmTable.self, value: ["key" : self.list[indexPath.row].key, "isFlag" : self.list[indexPath.row].isFlag], update: .modified)
-            }
-            tableView.reloadData()
+        let flag = UIContextualAction(style: .normal, title: SwipeButtonTitle.flag.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+//            self.viewModel.changeFlag(list: self.list, index: indexPath.row)
             success(true)
         }
         flag.backgroundColor = .systemYellow

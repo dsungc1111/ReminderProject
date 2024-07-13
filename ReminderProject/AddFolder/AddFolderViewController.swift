@@ -17,7 +17,6 @@ final class AddFolderViewController: BaseViewController {
     }
     let viewModel = AddFolderViewModel()
     var showToast: (() -> Void)?
-    var listTitle:[Folder] = []
     let logoBackView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemGray6
