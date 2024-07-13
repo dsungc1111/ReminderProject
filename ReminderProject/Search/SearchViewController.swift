@@ -42,8 +42,13 @@ final class SearchViewController: BaseViewController {
         bindData()
     }
     func bindData() {
-        viewModel.outputSearchList.bind { _ in
-            self.list = self.viewModel.outputSearchList.value
+        renewValue(list: viewModel.outputSearchList)
+        renewValue(list: viewModel.outputDeleteInfo)
+        renewValue(list: viewModel.outputFlagList)
+    }
+    private func renewValue(list: Observable<[RealmTable]>) {
+        list.bindLater { value in
+            self.list = value
             self.tableView.reloadData()
         }
     }
@@ -110,12 +115,12 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: SwipeButtonTitle.delete.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            self.viewModel.deleteToDo(list: self.list, index: indexPath.row)
+            self.viewModel.inputDeleteInfo.value = [self.list : indexPath.row]
             success(true)
         }
         delete.backgroundColor = .systemRed
         let flag = UIContextualAction(style: .normal, title: SwipeButtonTitle.flag.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            self.viewModel.changeFlag(list: self.list, index: indexPath.row)
+            self.viewModel.inputFlagList.value = [self.list : indexPath.row]
             success(true)
         }
         flag.backgroundColor = .systemYellow

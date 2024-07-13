@@ -90,8 +90,8 @@ final class RealmTableRepository {
         try! self.realm.write {
             list[index].isFlag.toggle()
             let filter = self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isFlag" : list[index].isFlag], update: .modified)
-           array = [filter]
         }
+        array = Array(self.realm.objects(RealmTable.self))
         return array
     }
     func saveData(text: String, data: RealmTable) {
