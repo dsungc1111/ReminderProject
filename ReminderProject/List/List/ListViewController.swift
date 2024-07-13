@@ -37,6 +37,9 @@ final class ListViewController: BaseViewController {
         navigationbarSetting()
         bindData()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
     private func bindData() {
         renewValue(list: viewModel.outputDeleteAll)
         renewValue(list: viewModel.outputSortList)
