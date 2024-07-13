@@ -107,7 +107,6 @@ final class RealmTableRepository {
             realm.add(newFolder)
         }
     }
-    
     func sortList(index: Int) -> [RealmTable] {
         var list = fetchRealmTable()
         switch index {
@@ -122,4 +121,28 @@ final class RealmTableRepository {
         }
         return list
     }
+    
+
+    func filterByMemoContents(memo: String, id: ObjectId) {
+      print("1010")
+        try! realm.write {
+            self.realm.create(RealmTable.self, value: ["key" :id, "memo" : memo], update: .modified)
+        }
+    }
+    func filterByMemoTitle(title: String, id: ObjectId) {
+        let result = realm.objects(RealmTable.self).filter("key == %@", id)
+        try! realm.write {
+            result.setValue(title, forKey: "\(MemoContents.memoTitle.rawValue)")
+        }
+    }
+    
+    func filterByBothThings(title: String, memo: String, id: ObjectId) {
+        print("010101010101")
+        let result = realm.objects(RealmTable.self).filter("key == %@", id)
+        try! realm.write {
+            result.setValue(title, forKey: "\(MemoContents.memoTitle.rawValue)")
+            result.setValue(memo, forKey: "\(MemoContents.memo.rawValue)")
+        }
+    }
+    
 }

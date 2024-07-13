@@ -11,8 +11,8 @@ import RealmSwift
 
 final class DetailViewController: BaseViewController {
     
-    var getId = ObjectId()
-    private let realm = try! Realm()
+    let gettt = ObjectId()
+    var viewModel = DetailViewModel()
     let memoTitleLabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 40)
@@ -47,38 +47,33 @@ final class DetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationButtonSetting()
+        bindData()
+    }
+    private func bindData() {
+        viewModel.outputEditButton.bindLater { _ in
+            self.memoTitleLabel.text = self.viewModel.outputMemoTitle.value
+            self.memoLabel.text = self.viewModel.outputMemoContent.value
+        }
     }
     private func navigationButtonSetting() {
         navigationItem.title = "상세화면"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "수정", style: .plain, target: self, action: #selector(editButtonTapped))
     }
     @objc func editButtonTapped() {
-        let result = realm.objects(RealmTable.self).filter("key == %@", getId)
-        guard let memoTitle = editMemoTitleTextField.text,
-              let memo = editMemoTextField.text else { return }
-        if memoTitle.isEmpty && memo.isEmpty {
-            showAlert(title: "공백", message: "")
-        } else if memoTitle.isEmpty && !memo.isEmpty {
-            try! realm.write {
-                result.setValue(memo, forKey: "\(MemoContents.memo.rawValue)")
-            }
-            memoLabel.text = memo
-        } else if !memoTitle.isEmpty && memo.isEmpty {
-            try! realm.write {
-                result.setValue(memoTitle, forKey: "\(MemoContents.memoTitle.rawValue)")
-            }
-            memoTitleLabel.text = memoTitle
+        
+        if editMemoTitleTextField.text == "" {
+            viewModel.inputMemoTitle.value = memoTitleLabel.text ?? ""
         } else {
-            try! realm.write {
-                result.setValue(memoTitle, forKey: "\(MemoContents.memoTitle.rawValue)")
-                result.setValue(memo, forKey: "\(MemoContents.memo.rawValue)")
-            }
-            memoTitleLabel.text = memoTitle
-            memoLabel.text = memo
+            viewModel.inputMemoTitle.value = editMemoTitleTextField.text ?? ""
         }
+        if editMemoTextField.text == "" {
+            viewModel.inputMemoContent.value = memoLabel.text ?? ""
+        } else {
+            viewModel.inputMemoContent.value = editMemoTextField.text ?? ""
+        }
+        viewModel.inputEditButton.value = ()
         
     }
     override func viewDidLayoutSubviews() {

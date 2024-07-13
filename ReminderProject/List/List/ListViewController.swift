@@ -121,6 +121,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
             !tag.isEmpty {
             vc.tagLabel.text = "#" + tag
         }
+        vc.viewModel.getId = list[indexPath.row].key
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
