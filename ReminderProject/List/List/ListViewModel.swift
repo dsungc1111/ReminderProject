@@ -18,6 +18,19 @@ final class ListViewModel {
     var inputCompleteButton: Observable<[[RealmTable] : Int]?> = Observable(nil)
     var outputCompleteButton: Observable<String?> = Observable(nil)
     
+    var inputReloadList: Observable<Void?> = Observable(nil)
+    var outputReloadList: Observable<[RealmTable]?> = Observable(nil)
+    
+    var inputPriority: Observable<RealmTable?> = Observable(nil)
+    var outputPriority: Observable<String?> = Observable(nil)
+    
+    var inputDeleteInfo: Observable<[[RealmTable] : Int]?> = Observable(nil)
+    var outputDeleteInfo: Observable<[RealmTable]?> = Observable(nil)
+    
+    var inputFlagList: Observable<[[RealmTable] : Int]?> = Observable(nil)
+    var outputFlagList: Observable<[RealmTable]?> = Observable(nil)
+    
+    
     init() {
         transform()
     }
@@ -33,7 +46,25 @@ final class ListViewModel {
         inputCompleteButton.bindLater { _ in
             self.outputCompleteButton.value = self.completeToDo()
         }
+        inputReloadList.bindLater { _ in
+            self.fetchList()
+        }
+        inputPriority.bindLater { value in
+            guard let value = value else { return }
+            self.getPriority(list: value)
+        }
+        inputDeleteInfo.bindLater { value in
+            guard let list = value?.keys.first else { return }
+            guard let index = value?.values.first else { return }
+            self.deleteToDo(list: list, index: index)
+        }
+        inputFlagList.bindLater { value in
+            guard let list = value?.keys.first else { return }
+            guard let index = value?.values.first else { return }
+            self.changeFlag(list: list, index: index)
+        }
     }
+    
     private func sortFunction(index: Int) {
         outputSortList.value = repository.sortList(index: index)
     }
@@ -41,9 +72,25 @@ final class ListViewModel {
         var image = ""
         guard let list = inputCompleteButton.value?.keys.first else { return "" }
         guard let index = inputCompleteButton.value?.values.first else { return "" }
-        var updatedList = repository.completeButtonTapped(list: list, index: index)
+        let updatedList = repository.completeButtonTapped(list: list, index: index)
         image = updatedList[index].isComplete == true ? "circle.fill" : "circle"
         
         return image
     }
+    
+    private func fetchList() {
+        let list = repository.fetchCategory(cases: 2)
+        outputReloadList.value = list
+    }
+    private func getPriority(list: RealmTable) {
+        outputPriority.value = repository.selectedPrioprity(list: list)
+    }
+    
+    private func deleteToDo(list: [RealmTable], index: Int) {
+        outputDeleteInfo.value = repository.deleteToDo(list: list, index: index)
+    }
+    private func changeFlag(list: [RealmTable], index: Int) {
+        outputFlagList.value = repository.changeFlag(list: list, index: index)
+    }
+    
 }

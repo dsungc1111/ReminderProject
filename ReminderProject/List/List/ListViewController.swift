@@ -16,7 +16,6 @@ final class ListViewController: BaseViewController {
     }
     var list: [RealmTable] = []
     let viewModel = ListViewModel()
-    private let repository = RealmTableRepository()
     var folder: Folder?
     private lazy var tableView = {
         let view = UITableView()
@@ -38,13 +37,15 @@ final class ListViewController: BaseViewController {
         navigationbarSetting()
         bindData()
     }
-    func bindData() {
-        viewModel.outputDeleteAll.bindLater { value in
-            guard let value = value else { return }
-            self.list = value
-            self.tableView.reloadData()
-        }
-        viewModel.outputSortList.bind { value in
+    private func bindData() {
+        renewValue(list: viewModel.outputDeleteAll)
+        renewValue(list: viewModel.outputSortList)
+        renewValue(list: viewModel.outputReloadList)
+        renewValue(list: viewModel.outputDeleteInfo)
+        renewValue(list: viewModel.outputFlagList)
+    }
+    private func renewValue(list: Observable<[RealmTable]?>) {
+        list.bindLater { value in
             guard let value = value else { return }
             self.list = value
             self.tableView.reloadData()
@@ -101,9 +102,8 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         viewModel.inputCompleteButton.value = [list: sender.tag]
         guard let image = viewModel.outputCompleteButton.value else { return }
         sender.setImage(UIImage(systemName: image), for: .normal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
-            self.list = self.repository.fetchCategory(cases: 2)
-            self.tableView.reloadData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0 ) {
+            self.viewModel.inputReloadList.value = ()
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -113,7 +113,8 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         let vc = DetailViewController()
         vc.memoTitleLabel.text = list[indexPath.row].memoTitle
-        vc.memoTitleLabel.text = repository.selectedPrioprity(list: list[indexPath.row])
+        viewModel.inputPriority.value = list[indexPath.row]
+        vc.memoTitleLabel.text = viewModel.outputPriority.value
         vc.memoLabel.text = list[indexPath.row].memo
         vc.dateLabel.text = Date.getDateString(date: list[indexPath.row].date ?? Date())
         if let tag = list[indexPath.row].tag,
@@ -124,12 +125,12 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: SwipeButtonTitle.delete.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-//            self.viewModel.deleteToDo(list: self.list, index: indexPath.row)
+            self.viewModel.inputDeleteInfo.value = [self.list : indexPath.row]
             success(true)
         }
         delete.backgroundColor = .systemRed
         let flag = UIContextualAction(style: .normal, title: SwipeButtonTitle.flag.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-//            self.viewModel.changeFlag(list: self.list, index: indexPath.row)
+            self.viewModel.inputFlagList.value = [self.list : indexPath.row]
             success(true)
         }
         flag.backgroundColor = .systemYellow
