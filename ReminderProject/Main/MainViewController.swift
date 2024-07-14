@@ -54,7 +54,9 @@ final class MainViewController: BaseViewController {
     private let date = Date()
     private var listTitle: [Folder] = []
     private var toDoList: [RealmTable] = []
-    private let containerView = UIView()
+//    private let containerView = UIView()
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     private lazy var tableView = {
         let view = UITableView()
         view.delegate = self
@@ -66,10 +68,12 @@ final class MainViewController: BaseViewController {
         view.rowHeight = UITableView.automaticDimension
         return view
     }()
+    private let tabBarView = UIView()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
         collectionViewSetting()
+        configureContentView()
         bindData()
     }
     private func bindData() {
@@ -125,43 +129,54 @@ final class MainViewController: BaseViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(searchButtonTapped))
     }
     override func configureHierarchy() {
-        view.addSubview(addToDoButton)
-        view.addSubview(listAddButton)
-        view.addSubview(collectionView)
-        view.addSubview(myListLabel)
-        view.addSubview(containerView)
-        view.addSubview(tableView)
+        view.addSubview(scrollView)
+        view.addSubview(tabBarView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(collectionView)
+        contentView.addSubview(myListLabel)
+        contentView.addSubview(tableView)
+        tabBarView.addSubview(addToDoButton)
+        tabBarView.addSubview(listAddButton)
     }
     override func configureLayout() {
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        tabBarView.backgroundColor = .systemGray6
+        tabBarView.snp.makeConstraints { make in
+            make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(80)
+        }
         addToDoButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
-            make.leading.equalTo(view.safeAreaLayoutGuide).inset(5)
+            make.bottom.equalTo(tabBarView).inset(20)
+            make.leading.equalTo(tabBarView).inset(25)
             make.height.equalTo(30)
-            make.width.equalTo(150)
         }
         listAddButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
-            make.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(tabBarView).inset(20)
+            make.trailing.equalTo(tabBarView)
             make.height.equalTo(30)
             make.width.equalTo(100)
         }
+        contentView.snp.makeConstraints { make in
+            make.width.equalTo(scrollView.snp.width)
+            make.verticalEdges.equalTo(scrollView)
+        }
+    }
+    func configureContentView() {
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
-            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(contentView).inset(10)
+            make.horizontalEdges.equalTo(contentView)
             make.height.equalTo(320)
         }
         myListLabel.snp.makeConstraints { make in
             make.top.equalTo(collectionView.snp.bottom)
-            make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
-        }
-        containerView.snp.makeConstraints { make in
-            make.top.equalTo(myListLabel.snp.bottom)
-            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(10)
-            make.bottom.equalTo(listAddButton.snp.top)
+            make.leading.equalTo(contentView).inset(20)
         }
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(containerView.snp.top).inset(10)
-            make.horizontalEdges.bottom.equalTo(containerView.safeAreaLayoutGuide).inset(5)
+            make.top.equalTo(myListLabel.snp.bottom).offset(10)
+            make.horizontalEdges.bottom.equalTo(contentView).inset(10)
+            make.height.equalTo(400)
         }
     }
 }
@@ -205,9 +220,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         cell.numberOfContentsLabel.text = "\(data.content.count)" + "개"
         return cell
     }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
+  
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         let vc = ListViewController()
