@@ -29,8 +29,7 @@ final class FolderListViewController: BaseViewController {
         viewModel.outputListTitle.bind { value in
             self.listTitle = value
         }
-        viewModel.outputSelectedFolder.bind { void in
-            guard let void else { return }
+        viewModel.outputSelectedFolder.bindLater { _ in
             self.navigationController?.popViewController(animated: true)
         }
     }

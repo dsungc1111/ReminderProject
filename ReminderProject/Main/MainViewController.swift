@@ -238,14 +238,12 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50
     }
-    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             self.viewModel.inputDeleteInfo.value = [self.listTitle : indexPath.row]
             success(true)
         }
         delete.backgroundColor = .systemRed
-       
         return UISwipeActionsConfiguration(actions:[delete])
     }
 }

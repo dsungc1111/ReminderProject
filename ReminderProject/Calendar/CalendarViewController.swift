@@ -72,7 +72,7 @@ final class CalendarViewController: BaseViewController {
 }
 extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-         viewModel.selectDate(date: date)
+        viewModel.inputDate.value = date
     }
 }
 extension CalendarViewController: UITableViewDelegate, UITableViewDataSource {

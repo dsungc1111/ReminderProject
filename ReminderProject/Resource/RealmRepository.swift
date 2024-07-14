@@ -23,7 +23,7 @@ final class RealmTableRepository {
         return Array(value)
     }
     func deleteAll() {
-        var list = realm.objects(RealmTable.self)
+        let list = realm.objects(RealmTable.self)
         try! self.realm.write {
             list.realm?.deleteAll()
         }
@@ -49,6 +49,12 @@ final class RealmTableRepository {
         default:
             return Array(value)
         }
+        return Array(value)
+    }
+    func getToDoTable(date: Date) -> [RealmTable] {
+        var value = realm.objects(RealmTable.self)
+        value = value.filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+        
         return Array(value)
     }
     func selectedPrioprity(list: RealmTable) -> String{
