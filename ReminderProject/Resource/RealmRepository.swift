@@ -75,7 +75,8 @@ final class RealmTableRepository {
             list[index].isComplete.toggle()
             self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
         }
-        let result = Array(self.realm.objects(RealmTable.self))
+        print(list[index].isComplete)
+        let result = Array(self.realm.objects(RealmTable.self).filter("isComplete == true"))
         return result
     }
     func deleteToDo(list: [RealmTable], index: Int) -> [RealmTable] {
@@ -90,8 +91,8 @@ final class RealmTableRepository {
         try! self.realm.write {
             list[index].isFlag.toggle()
             let filter = self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isFlag" : list[index].isFlag], update: .modified)
+           array = [filter]
         }
-        array = Array(self.realm.objects(RealmTable.self))
         return array
     }
     func saveData(text: String, data: RealmTable) {

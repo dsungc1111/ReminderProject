@@ -16,7 +16,7 @@ final class ListViewController: BaseViewController {
     }
     var list: [RealmTable] = []
     let viewModel = ListViewModel()
-    private lazy var tableView = {
+    lazy var tableView = {
         let view = UITableView()
         view.delegate = self
         view.dataSource = self
@@ -24,19 +24,22 @@ final class ListViewController: BaseViewController {
         view.backgroundColor = .clear
         return view
     }()
-    private lazy var removeAllButton = {
-       let btn = UIButton()
-        btn.setTitle("전체 삭제", for: .normal)
-        btn.setTitleColor(.systemBlue, for: .normal)
-        btn.addTarget(self, action: #selector(removeAllButtonTapped), for: .touchUpInside)
-        return btn
-    }()
+//    private lazy var removeAllButton = {
+//       let btn = UIButton()
+//        btn.setTitle("전체 삭제", for: .normal)
+//        btn.setTitleColor(.systemBlue, for: .normal)
+//        btn.addTarget(self, action: #selector(removeAllButtonTapped), for: .touchUpInside)
+//        return btn
+//    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
         bindData()
     }
     override func viewWillAppear(_ animated: Bool) {
+//        if list.count == 0 {
+//            removeAllButton.isHidden = true
+//        }
         tableView.reloadData()
     }
     private func bindData() {
@@ -50,6 +53,9 @@ final class ListViewController: BaseViewController {
         list.bindLater { value in
             guard let value = value else { return }
             self.list = value
+//            if self.list.count == 0 {
+//                self.removeAllButton.isHidden = true
+//            }
             self.tableView.reloadData()
         }
     }
@@ -60,34 +66,33 @@ final class ListViewController: BaseViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: SortButtonImages.ellipsis.rawValue), style: .plain, target: self, action: nil)
-        
         let memoTitle = UIAction(title: SortButtonTitle.sortByTitle.rawValue, image: UIImage(systemName: SortButtonImages.lineweight.rawValue), handler: { _ in self.sortButtonTapped(index: 0) })
         let memoContent = UIAction(title: SortButtonTitle.sortByContent.rawValue, image: UIImage(systemName: SortButtonImages.note.rawValue), handler: { _ in self.sortButtonTapped(index: 1) })
         let memoDate = UIAction(title: SortButtonTitle.sortByTime.rawValue, image: UIImage(systemName: SortButtonImages.calender.rawValue), handler: { _ in self.sortButtonTapped(index: 2) })
-
         navigationItem.rightBarButtonItem?.menu = UIMenu(title: SortButtonTitle.sortButton.rawValue, options: .displayInline, children: [memoTitle, memoContent, memoDate])
     }
     private func sortButtonTapped(index: Int) {
         viewModel.inputSortIndex.value = index
     }
     override func configureHierarchy() {
-        view.addSubview(removeAllButton)
+        
         view.addSubview(tableView)
     }
     override func configureLayout() {
-        removeAllButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
-            make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
-        }
+//        removeAllButton.snp.makeConstraints { make in
+//            make.top.equalTo(view.safeAreaLayoutGuide)
+//            make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
+//            make.height.equalTo(20)
+//        }
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(removeAllButton.snp.bottom).offset(10)
-            make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+//            make.top.equalTo(removeAllButton.snp.bottom)
+            make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
 }
 extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "검색결과 \(list.count)개"
+        return "결과 \(list.count)개"
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list.count
@@ -105,7 +110,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         guard let image = viewModel.outputCompleteButton.value else { return }
         sender.setImage(UIImage(systemName: image), for: .normal)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0 ) {
-            self.viewModel.inputReloadList.value = ()
+            self.viewModel.inputReloadList.value = sender.tag
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -18,7 +18,7 @@ final class ListViewModel {
     var inputCompleteButton: Observable<[[RealmTable] : Int]?> = Observable(nil)
     var outputCompleteButton: Observable<String?> = Observable(nil)
     
-    var inputReloadList: Observable<Void?> = Observable(nil)
+    var inputReloadList: Observable<Int> = Observable(0)
     var outputReloadList: Observable<[RealmTable]?> = Observable(nil)
     
     var inputPriority: Observable<RealmTable?> = Observable(nil)
@@ -46,8 +46,8 @@ final class ListViewModel {
         inputCompleteButton.bindLater { _ in
             self.outputCompleteButton.value = self.completeToDo()
         }
-        inputReloadList.bindLater { _ in
-            self.fetchList()
+        inputReloadList.bindLater { value in
+            self.fetchList(index: value)
         }
         inputPriority.bindLater { value in
             guard let value = value else { return }
@@ -73,12 +73,18 @@ final class ListViewModel {
         guard let list = inputCompleteButton.value?.keys.first else { return "" }
         guard let index = inputCompleteButton.value?.values.first else { return "" }
         let updatedList = repository.completeButtonTapped(list: list, index: index)
-        image = updatedList[index].isComplete == true ? "circle.fill" : "circle"
+        if updatedList.count != 0 {
+            image = updatedList[index].isComplete == true ? "circle.fill" : "circle"
+        } else { image = "circle" }
         return image
     }
-    
-    private func fetchList() {
-        let list = repository.fetchCategory(cases: 2)
+    private func fetchList(index: Int) {
+        var list = repository.fetchRealmTable()
+        if list[index].isComplete == true {
+             list = repository.fetchCategory(cases: 2)
+        } else {
+            list = repository.fetchCategory(cases: 4)
+        }
         outputReloadList.value = list
     }
     private func getPriority(list: RealmTable) {
