@@ -22,6 +22,11 @@ final class RealmTableRepository {
         let value = realm.objects(Folder.self)
         return Array(value)
     }
+    func fetchFolderInComplete() -> [Folder] {
+        var value = realm.objects(Folder.self)
+        value = value.filter("isComplete = false")
+        return Array(value)
+    }
     func deleteAll() {
         let list = realm.objects(RealmTable.self)
         try! self.realm.write {

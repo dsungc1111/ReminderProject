@@ -19,7 +19,8 @@ class MainViewModel {
     var inputDeleteInfo: Observable<[[Folder] : Int]?> = Observable(nil)
     var outputDeleteInfo: Observable<[Folder]> = Observable([])
     
-    
+    var inputFolderTrigger: Observable<Void?> = Observable(nil)
+    var outputFolderTrigger:Observable<[Folder]> = Observable([])
     init() {
         transform()
     }
@@ -32,6 +33,9 @@ class MainViewModel {
             guard let list = value?.keys.first else { return }
             guard let index = value?.values.first else { return }
             self.deleteFolder(list: list, index: index)
+        }
+        inputFolderTrigger.bind { _ in
+            self.outputFolderTrigger.value = self.repository.fetchFolder()
         }
     }
     private func fetchCategory(index: Int) {

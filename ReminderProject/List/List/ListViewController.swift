@@ -14,7 +14,8 @@ final class ListViewController: BaseViewController {
         case flag = "깃발"
         case delete = "삭제"
     }
-    var list: [RealmTable] = []
+    var toDoList: [RealmTable] = []
+    var folderList: [Folder] = []
     let viewModel = ListViewModel()
     lazy var tableView = {
         let view = UITableView()
@@ -24,25 +25,21 @@ final class ListViewController: BaseViewController {
         view.backgroundColor = .clear
         return view
     }()
-//    private lazy var removeAllButton = {
-//       let btn = UIButton()
-//        btn.setTitle("전체 삭제", for: .normal)
-//        btn.setTitleColor(.systemBlue, for: .normal)
-//        btn.addTarget(self, action: #selector(removeAllButtonTapped), for: .touchUpInside)
-//        return btn
-//    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
         bindData()
     }
     override func viewWillAppear(_ animated: Bool) {
-//        if list.count == 0 {
-//            removeAllButton.isHidden = true
-//        }
         tableView.reloadData()
     }
     private func bindData() {
+        //        viewModel.outputToDoTrigger.bind { value in
+        //            self.toDoList = value
+        //        }
+//        viewModel.outputFolderTrigger.bind { value in
+//            self.folderList = value
+//        }
         renewValue(list: viewModel.outputDeleteAll)
         renewValue(list: viewModel.outputSortList)
         renewValue(list: viewModel.outputReloadList)
@@ -52,10 +49,7 @@ final class ListViewController: BaseViewController {
     private func renewValue(list: Observable<[RealmTable]?>) {
         list.bindLater { value in
             guard let value = value else { return }
-            self.list = value
-//            if self.list.count == 0 {
-//                self.removeAllButton.isHidden = true
-//            }
+            self.toDoList = value
             self.tableView.reloadData()
         }
     }
@@ -75,38 +69,46 @@ final class ListViewController: BaseViewController {
         viewModel.inputSortIndex.value = index
     }
     override func configureHierarchy() {
-        
         view.addSubview(tableView)
     }
     override func configureLayout() {
-//        removeAllButton.snp.makeConstraints { make in
-//            make.top.equalTo(view.safeAreaLayoutGuide)
-//            make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
-//            make.height.equalTo(20)
-//        }
         tableView.snp.makeConstraints { make in
-//            make.top.equalTo(removeAllButton.snp.bottom)
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide)
         }
     }
 }
 extension ListViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return folderList.count
+    }
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "결과 \(list.count)개"
+        return folderList[section].category
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count
+        if folderList[section].content.count != 0 {
+            return folderList[section].content.count
+        } else {
+            return 2
+        }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
-        let data = list[indexPath.row]
-        cell.completeButton.tag = indexPath.row
-        cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
-        cell.configureCell(data: data)
-        return cell
+        if folderList[indexPath.section].content.count != 0 {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
+            let data = folderList[indexPath.section].content[indexPath.row]
+                    cell.configureCell(data: data)
+            cell.completeButton.tag = indexPath.row
+            cell.completeButton.addTarget(self, action: #selector(completeButtonTapped(sender:)), for: .touchUpInside)
+            return cell
+        } else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
+            cell.completeButton.setImage(UIImage(systemName: "circle.dotted"), for: .normal)
+            cell.titleLabel.text = "00"
+            return cell
+        }
     }
     @objc func completeButtonTapped(sender: UIButton) {
-        viewModel.inputCompleteButton.value = [list: sender.tag]
+        viewModel.inputCompleteButton.value = [toDoList: sender.tag]
         guard let image = viewModel.outputCompleteButton.value else { return }
         sender.setImage(UIImage(systemName: image), for: .normal)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0 ) {
@@ -114,31 +116,31 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 50
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         let vc = DetailViewController()
-        vc.memoTitleLabel.text = list[indexPath.row].memoTitle
-        viewModel.inputPriority.value = list[indexPath.row]
+        vc.memoTitleLabel.text = toDoList[indexPath.row].memoTitle
+        viewModel.inputPriority.value = toDoList[indexPath.row]
         vc.memoTitleLabel.text = viewModel.outputPriority.value
-        vc.memoLabel.text = list[indexPath.row].memo
-        vc.dateLabel.text = Date.getDateString(date: list[indexPath.row].date ?? Date())
-        if let tag = list[indexPath.row].tag,
-            !tag.isEmpty {
+        vc.memoLabel.text = toDoList[indexPath.row].memo
+        vc.dateLabel.text = Date.getDateString(date: toDoList[indexPath.row].date ?? Date())
+        if let tag = toDoList[indexPath.row].tag,
+           !tag.isEmpty {
             vc.tagLabel.text = "#" + tag
         }
-        vc.viewModel.getId = list[indexPath.row].key
+        vc.viewModel.getId = toDoList[indexPath.row].key
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: SwipeButtonTitle.delete.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            self.viewModel.inputDeleteInfo.value = [self.list : indexPath.row]
+            self.viewModel.inputDeleteInfo.value = [self.toDoList : indexPath.row]
             success(true)
         }
         delete.backgroundColor = .systemRed
         let flag = UIContextualAction(style: .normal, title: SwipeButtonTitle.flag.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            self.viewModel.inputFlagList.value = [self.list : indexPath.row]
+            self.viewModel.inputFlagList.value = [self.toDoList : indexPath.row]
             success(true)
         }
         flag.backgroundColor = .systemYellow

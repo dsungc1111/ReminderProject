@@ -130,11 +130,12 @@ extension AddFolderViewController: UIColorPickerViewControllerDelegate {
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
         logoBackView.layer.shadowColor = viewController.selectedColor.cgColor
         listLogo.tintColor = viewController.selectedColor
-        dismiss(animated: true)
+        print("dfdf")
     }
     
-    func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
-        logoBackView.layer.shadowColor = viewController.selectedColor.cgColor
-        listLogo.tintColor = viewController.selectedColor
-    }
+//    func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
+//        logoBackView.layer.shadowColor = viewController.selectedColor.cgColor
+//        listLogo.tintColor = viewController.selectedColor
+//        print(type(of: viewController.selectedColor))
+//    }
 }

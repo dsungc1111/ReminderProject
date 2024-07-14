@@ -63,6 +63,7 @@ final class MainViewController: BaseViewController {
         view.register(AddFolderTableViewCell.self, forCellReuseIdentifier: AddFolderTableViewCell.id)
         view.layer.cornerRadius = 10
         view.showsVerticalScrollIndicator = false
+        view.isScrollEnabled = false
         view.estimatedRowHeight = 50
         view.rowHeight = UITableView.automaticDimension
         return view
@@ -211,7 +212,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let vc = ListViewController()
         vc.navigationItem.title = ContentNameEnum.allCases[indexPath.row].rawValue
         viewModel.inputPassList.value = indexPath.row
-        vc.list = viewModel.outputPassList.value
+        vc.toDoList = viewModel.outputPassList.value
+        vc.folderList = viewModel.outputFolderTrigger.value
         navigationController?.pushViewController(vc, animated: true)
     }
 }
@@ -232,7 +234,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         vc.navigationItem.title = listTitle[indexPath.row].category
         let folder = listTitle[indexPath.row]
         let value = folder.content
-        vc.list = Array(value)
+        vc.toDoList = Array(value)
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

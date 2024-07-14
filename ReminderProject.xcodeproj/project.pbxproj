@@ -45,7 +45,6 @@
 		8B8EACE22C3E908200D7990B /* AddFolderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8EACE12C3E908200D7990B /* AddFolderViewModel.swift */; };
 		8B8EACE42C3EB34500D7990B /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8EACE32C3EB34500D7990B /* SearchViewModel.swift */; };
 		8BA3BF912C36232400229026 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA3BF902C36232400229026 /* Date+.swift */; };
-		8BA3BF9B2C36E02700229026 /* DataList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA3BF9A2C36E02700229026 /* DataList.swift */; };
 		8BA3BF9E2C36F78100229026 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 8BA3BF9D2C36F78100229026 /* FSCalendar */; };
 		8BFB5C3E2C37EBF100CE14C5 /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 8BFB5C3D2C37EBF100CE14C5 /* Toast */; };
 		8BFB5C402C38EC9400CE14C5 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB5C3F2C38EC9400CE14C5 /* SearchViewController.swift */; };
@@ -97,7 +96,6 @@
 		8B8EACE12C3E908200D7990B /* AddFolderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFolderViewModel.swift; sourceTree = "<group>"; };
 		8B8EACE32C3EB34500D7990B /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		8BA3BF902C36232400229026 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
-		8BA3BF9A2C36E02700229026 /* DataList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataList.swift; sourceTree = "<group>"; };
 		8BFB5C3F2C38EC9400CE14C5 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		8BFB5C412C38F08E00CE14C5 /* CALayer+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+.swift"; sourceTree = "<group>"; };
 		8BFB5C472C3933C000CE14C5 /* UIViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+.swift"; sourceTree = "<group>"; };
@@ -329,7 +327,6 @@
 			children = (
 				8B456F442C340E55003CFBD1 /* Database.swift */,
 				8B456F492C34BD52003CFBD1 /* Enum.swift */,
-				8BA3BF9A2C36E02700229026 /* DataList.swift */,
 				8BFB5C542C3BBADC00CE14C5 /* RealmRepository.swift */,
 				8B8EACDD2C3E715C00D7990B /* RealmModel.swift */,
 			);
@@ -476,7 +473,6 @@
 				8BFB5C5E2C3C0E0300CE14C5 /* AddFolderTableViewCell.swift in Sources */,
 				8B456F532C3529DF003CFBD1 /* DateViewController.swift in Sources */,
 				8B456F482C341956003CFBD1 /* ListTableViewCell.swift in Sources */,
-				8BA3BF9B2C36E02700229026 /* DataList.swift in Sources */,
 				8B4474C52C3FF76D00AEFCE1 /* AddToDoViewModel.swift in Sources */,
 				8B456F2F2C33EC4A003CFBD1 /* MainViewController.swift in Sources */,
 				8B696A6D2C3E599E00D99D4A /* MainViewModel.swift in Sources */,

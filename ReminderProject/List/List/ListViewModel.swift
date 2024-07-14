@@ -32,11 +32,25 @@ final class ListViewModel {
     var outputFlagList: Observable<[RealmTable]?> = Observable(nil)
     
     
+    var inputToDoTrigger: Observable<Void?> = Observable(nil)
+    var outputToDoTrigger:Observable<[RealmTable]> = Observable([])
+    var inputFolderTrigger: Observable<Void?> = Observable(nil)
+    var outputFolderTrigger:Observable<[Folder]> = Observable([])
+    
+    
+    
+    
     init() {
         transform()
     }
     
     private func transform() {
+        inputToDoTrigger.bind { _ in
+            self.outputToDoTrigger.value = self.repository.fetchCategory(cases: 2)
+        }
+        inputFolderTrigger.bind { _ in
+            self.outputFolderTrigger.value = self.repository.fetchFolder()
+        }
         inputDeleteAll.bindLater { _ in
             self.repository.deleteAll()
             self.outputDeleteAll.value = self.repository.fetchRealmTable()

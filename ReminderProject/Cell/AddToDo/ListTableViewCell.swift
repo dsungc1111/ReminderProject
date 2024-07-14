@@ -21,17 +21,17 @@ final class ListTableViewCell: BaseTableViewCell {
         label.font = .boldSystemFont(ofSize: 15)
         return label
     }()
-    let contentLabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 13)
-        return label
-    }()
-    let dueDateLabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 13)
-        return label
-    }()
-    let tagLabel = {
+//    let contentLabel = {
+//        let label = UILabel()
+//        label.font = .systemFont(ofSize: 13)
+//        return label
+//    }()
+//    let dueDateLabel = {
+//        let label = UILabel()
+//        label.font = .systemFont(ofSize: 13)
+//        return label
+//    }()
+    var tagLabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13)
         label.textColor = .systemBlue
@@ -42,13 +42,14 @@ final class ListTableViewCell: BaseTableViewCell {
         view.contentMode = .scaleAspectFill
         view.image = UIImage(systemName: ContentLogoImageEnum.flag.rawValue)
         view.tintColor = .systemYellow
+        view.isHidden = true
         return view
     }()
     override func configureHierarchy() {
         contentView.addSubview(completeButton)
         contentView.addSubview(titleLabel)
-        contentView.addSubview(contentLabel)
-        contentView.addSubview(dueDateLabel)
+//        contentView.addSubview(contentLabel)
+//        contentView.addSubview(dueDateLabel)
         contentView.addSubview(tagLabel)
         contentView.addSubview(flagLogoView)
     }
@@ -56,24 +57,24 @@ final class ListTableViewCell: BaseTableViewCell {
         completeButton.snp.makeConstraints { make in
             make.verticalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(5)
             make.leading.equalTo(contentView.safeAreaLayoutGuide).inset(10)
-            make.width.equalTo(80)
+            make.width.equalTo(50)
         }
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(contentView.safeAreaLayoutGuide).inset(10)
             make.leading.equalTo(completeButton.snp.trailing).offset(10)
         }
-        contentLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(5)
-            make.leading.equalTo(completeButton.snp.trailing).offset(10)
-        }
-        dueDateLabel.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(5)
-            make.leading.equalTo(completeButton.snp.trailing).offset(10)
-        }
-        tagLabel.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(5)
-            make.leading.equalTo(dueDateLabel.snp.trailing).offset(5)
-        }
+//        contentLabel.snp.makeConstraints { make in
+//            make.top.equalTo(titleLabel.snp.bottom).offset(5)
+//            make.leading.equalTo(completeButton.snp.trailing).offset(10)
+//        }
+//        dueDateLabel.snp.makeConstraints { make in
+//            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+//            make.leading.equalTo(completeButton.snp.trailing).offset(10)
+//        }
+//        tagLabel.snp.makeConstraints { make in
+//            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+//            make.leading.equalTo(contentLabel.snp.trailing).offset(5)
+//        }
         flagLogoView.snp.makeConstraints { make in
             make.centerY.equalTo(contentView.safeAreaLayoutGuide)
             make.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(30)
@@ -82,8 +83,8 @@ final class ListTableViewCell: BaseTableViewCell {
     }
     func configureCell(data: RealmTable) {
         titleLabel.text = data.memoTitle
-        contentLabel.text = data.memo
-        dueDateLabel.text =  Date.getDateString(date: data.date ?? Date()) 
+//        contentLabel.text = data.memo
+//        dueDateLabel.text =  Date.getDateString(date: data.date ?? Date()) 
         if let tag = data.tag { tagLabel.text = tag }
         if data.isFlag == false {
             flagLogoView.isHidden = true
