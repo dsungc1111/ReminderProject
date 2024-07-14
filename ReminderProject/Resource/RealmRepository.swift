@@ -81,7 +81,6 @@ final class RealmTableRepository {
             list[index].isComplete.toggle()
             self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
         }
-        print(list[index].isComplete)
         let result = Array(self.realm.objects(RealmTable.self).filter("isComplete == true"))
         return result
     }
@@ -138,7 +137,6 @@ final class RealmTableRepository {
     
 
     func filterByMemoContents(memo: String, id: ObjectId) {
-      print("1010")
         try! realm.write {
             self.realm.create(RealmTable.self, value: ["key" :id, "memo" : memo], update: .modified)
         }
@@ -151,7 +149,6 @@ final class RealmTableRepository {
     }
     
     func filterByBothThings(title: String, memo: String, id: ObjectId) {
-        print("010101010101")
         let result = realm.objects(RealmTable.self).filter("key == %@", id)
         try! realm.write {
             result.setValue(title, forKey: "\(MemoContents.memoTitle.rawValue)")

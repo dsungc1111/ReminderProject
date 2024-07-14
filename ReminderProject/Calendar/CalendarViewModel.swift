@@ -13,8 +13,6 @@ final class CalendarViewModel {
     private let repository = RealmTableRepository()
     
     var monthOrWeek: Observable<Bool?> = Observable(true)
-
-    
     var inputDate: Observable<Date> = Observable(Date())
     var outputSelecteDateList: Observable<[RealmTable]?> = Observable(nil)
     

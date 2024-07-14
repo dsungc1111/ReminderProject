@@ -17,7 +17,7 @@ final class AddFolderViewController: BaseViewController {
     }
     let viewModel = AddFolderViewModel()
     var showToast: (() -> Void)?
-    let logoBackView: UIView = {
+    private let logoBackView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemGray6
         view.layer.shadowColor = UIColor.systemBlue.cgColor
@@ -28,14 +28,14 @@ final class AddFolderViewController: BaseViewController {
         view.layer.masksToBounds = false
         return view
     }()
-    let listLogo: UIImageView = {
+    private let listLogo: UIImageView = {
         let logo = UIImageView()
         logo.image = UIImage(systemName: "list.bullet.circle.fill")
         logo.tintColor = .systemBlue
         logo.contentMode = .scaleAspectFit
         return logo
     }()
-    lazy var folderNameTextField = {
+    private lazy var folderNameTextField = {
         let text = UITextField()
         text.textAlignment = .center
         text.placeholder = "목록 이름"
@@ -44,12 +44,20 @@ final class AddFolderViewController: BaseViewController {
         text.addTarget(self, action: #selector(folderNameDidchange(_:)), for: .editingChanged)
         return text
     }()
+    private lazy var colorChangeButton = {
+        let btn = UIButton()
+        btn.setTitle("색 변경", for: .normal)
+        btn.backgroundColor = .lightGray
+        btn.layer.cornerRadius = 10
+        btn.addTarget(self, action: #selector(colorButtonTapped), for: .touchUpInside)
+        return btn
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationbar()
         bindData()
     }
-    func bindData() {
+    private func bindData() {
         viewModel.outputFolderTitle.bind { value in
             if let value = value {
                 self.navigationItem.rightBarButtonItem?.isEnabled = value
@@ -61,6 +69,12 @@ final class AddFolderViewController: BaseViewController {
             self.showToast?()
             self.navigationController?.dismiss(animated: true)
         }
+    }
+    @objc func colorButtonTapped() {
+        let colorPickerVC = UIColorPickerViewController()
+         colorPickerVC.delegate = self
+         present(colorPickerVC, animated: true, completion: nil)
+        print(#function)
     }
     @objc func folderNameDidchange(_ sender: UITextField) {
         guard let text = sender.text else { return }
@@ -86,6 +100,7 @@ final class AddFolderViewController: BaseViewController {
         view.addSubview(logoBackView)
         view.addSubview(listLogo)
         view.addSubview(folderNameTextField)
+        view.addSubview(colorChangeButton)
     }
     override func configureLayout() {
         logoBackView.snp.makeConstraints { make in
@@ -103,5 +118,23 @@ final class AddFolderViewController: BaseViewController {
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(50)
         }
+        colorChangeButton.snp.makeConstraints { make in
+            make.top.equalTo(folderNameTextField.snp.bottom).offset(20)
+            make.centerX.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(40)
+            make.width.equalTo(100)
+        }
+    }
+}
+extension AddFolderViewController: UIColorPickerViewControllerDelegate {
+    func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
+        logoBackView.layer.shadowColor = viewController.selectedColor.cgColor
+        listLogo.tintColor = viewController.selectedColor
+        dismiss(animated: true)
+    }
+    
+    func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
+        logoBackView.layer.shadowColor = viewController.selectedColor.cgColor
+        listLogo.tintColor = viewController.selectedColor
     }
 }

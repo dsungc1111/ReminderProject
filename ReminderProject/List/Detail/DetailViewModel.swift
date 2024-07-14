@@ -29,7 +29,6 @@ class DetailViewModel {
         }
     }
     private func filterText(title: String, content: String) {
-        print(getId)
         if title == "" && content == "" {
             outputMemoTitle.value = ""
             outputMemoContent.value = ""
