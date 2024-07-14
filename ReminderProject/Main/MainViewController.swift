@@ -54,7 +54,6 @@ final class MainViewController: BaseViewController {
     private let date = Date()
     private var listTitle: [Folder] = []
     private var toDoList: [RealmTable] = []
-//    private let containerView = UIView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private lazy var tableView = {
@@ -80,6 +79,7 @@ final class MainViewController: BaseViewController {
         viewModel.setListTitleTrigger.bind { value in
             self.listTitle = value
             self.myListLabel.isHidden = self.listTitle.count != 0 ? false : true
+            self.configureContentView()
         }
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -140,12 +140,13 @@ final class MainViewController: BaseViewController {
     }
     override func configureLayout() {
         scrollView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(tabBarView.snp.top)
         }
         tabBarView.backgroundColor = .systemGray6
         tabBarView.snp.makeConstraints { make in
             make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(80)
+            make.height.equalTo(60)
         }
         addToDoButton.snp.makeConstraints { make in
             make.bottom.equalTo(tabBarView).inset(20)
@@ -176,7 +177,7 @@ final class MainViewController: BaseViewController {
         tableView.snp.makeConstraints { make in
             make.top.equalTo(myListLabel.snp.bottom).offset(10)
             make.horizontalEdges.bottom.equalTo(contentView).inset(10)
-            make.height.equalTo(400)
+            make.height.greaterThanOrEqualTo(50*listTitle.count)
         }
     }
 }
@@ -184,6 +185,7 @@ extension MainViewController:  PassDataDelegate, PassFolderDelegate {
     func passFolderList(_ dataList: [Folder]) {
         listTitle = dataList
         tableView.reloadData()
+        configureContentView()
     }
     func passDataList(_ dataList: [RealmTable]) {
         toDoList = dataList
@@ -220,7 +222,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         cell.numberOfContentsLabel.text = "\(data.content.count)" + "개"
         return cell
     }
-  
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         let vc = ListViewController()
@@ -229,5 +230,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let value = folder.content
         vc.list = Array(value)
         navigationController?.pushViewController(vc, animated: true)
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
     }
 }
