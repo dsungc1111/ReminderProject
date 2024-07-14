@@ -14,7 +14,6 @@ final class SearchViewController: BaseViewController {
         case flag = "깃발"
         case delete = "삭제"
     }
-    
     private lazy var searchBar = {
         let search = UISearchBar()
         search.delegate = self
@@ -94,9 +93,9 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         viewModel.inputCompleteButton.value = [list: sender.tag]
         let image = viewModel.outputCompleteButton.value
         sender.setImage(UIImage(systemName: image), for: .normal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
-            self.viewModel.inputReloadList.value = ()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
+//            self.viewModel.inputReloadList.value = ()
+//        }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80

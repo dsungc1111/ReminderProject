@@ -32,10 +32,8 @@ final class SearchViewModel {
                 self.outputSearchList.value = self.filterSearchText(text: text)
             }
         }
-        inputCompleteButton.bindLater { value in
-            guard let list = self.inputCompleteButton.value?.keys.first else { return }
-            guard let index = self.inputCompleteButton.value?.values.first else { return }
-            self.completeButtonTapped(list: list, index: index)
+        inputCompleteButton.bindLater { _ in
+            self.outputCompleteButton.value = self.completeToDo()
         }
         inputReloadList.bindLater { _ in
             self.fetchList()
@@ -55,11 +53,15 @@ final class SearchViewModel {
         let result = repository.filterBySearchText(text: text)
         return result
     }
-    private func completeButtonTapped(list: [RealmTable], index: Int) {
-        outputSearchList.value = repository.completeButtonTapped(list: list, index: index)
-        
+    private func completeToDo() -> String{
+        var image = ""
+        guard let list = inputCompleteButton.value?.keys.first else { return "" }
+        guard let index = inputCompleteButton.value?.values.first else { return "" }
         let updatedList = repository.completeButtonTapped(list: list, index: index)
-        outputCompleteButton.value = updatedList[index].isComplete ? "circle.fill" : "circle"
+        if updatedList.count != 0 {
+            image = updatedList[index].isComplete == true ? "circle.fill" : "circle"
+        } else { image = "circle" }
+        return image
     }
     private func fetchList() {
         let list = repository.fetchCategory(cases: 2)

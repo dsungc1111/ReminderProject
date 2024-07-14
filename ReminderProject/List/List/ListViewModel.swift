@@ -15,6 +15,7 @@ final class ListViewModel {
     
     var inputSortIndex: Observable<Int> = Observable(0)
     var outputSortList: Observable<[RealmTable]?> = Observable(nil)
+    
     var inputCompleteButton: Observable<[[RealmTable] : Int]?> = Observable(nil)
     var outputCompleteButton: Observable<String?> = Observable(nil)
     
