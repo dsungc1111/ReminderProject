@@ -79,6 +79,13 @@ final class RealmTableRepository {
         let result = Array(self.realm.objects(RealmTable.self).filter("isComplete == true"))
         return result
     }
+    func deleteFolder(list: [Folder], index: Int) -> [Folder] {
+        try! self.realm.write {
+            self.realm.delete(list[index])
+        }
+        let filter = Array(self.realm.objects(Folder.self))
+        return filter
+    }
     func deleteToDo(list: [RealmTable], index: Int) -> [RealmTable] {
         try! self.realm.write {
             self.realm.delete(list[index])
