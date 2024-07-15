@@ -56,7 +56,7 @@ final class AddToDoViewModel: PassDateDelegate {
         outputSelectCategory.value = CategoryToDo.allCases.map { $0.rawValue }
     }
     private func saveData(memotitle: String, memo: String) {
-        let newData = RealmTable(memoTitle: inputMemoTitle.value, date: inputDueDate.value, memo: inputMemoContent.value, tag: inputTagText.value, priority: inputPriority.value ?? "", isFlag: false, complete: false )
+        let newData = RealmTable(memoTitle: inputMemoTitle.value, date: inputDueDate.value, memo: inputMemoContent.value, tag: inputTagText.value, priority: inputPriority.value ?? "", isStar: false, complete: false )
         repository.saveData(text: inputFolder.value ?? "", data: newData)
         outputDataList.value = newData
         passData?.passDataList([newData])

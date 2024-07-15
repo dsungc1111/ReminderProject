@@ -37,7 +37,7 @@ final class ListTableViewCell: BaseTableViewCell {
         label.textColor = .systemBlue
         return label
     }()
-    let flagLogoView = {
+    let starLogoView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.image = UIImage(systemName: ContentLogoImageEnum.star.rawValue)
@@ -51,7 +51,7 @@ final class ListTableViewCell: BaseTableViewCell {
         contentView.addSubview(contentLabel)
         contentView.addSubview(dueDateLabel)
         contentView.addSubview(tagLabel)
-        contentView.addSubview(flagLogoView)
+        contentView.addSubview(starLogoView)
     }
     override func configureLayout() {
         completeButton.snp.makeConstraints { make in
@@ -75,7 +75,7 @@ final class ListTableViewCell: BaseTableViewCell {
             make.top.equalTo(contentLabel.snp.bottom).offset(5)
             make.leading.equalTo(contentLabel.snp.trailing).offset(5)
         }
-        flagLogoView.snp.makeConstraints { make in
+        starLogoView.snp.makeConstraints { make in
             make.centerY.equalTo(contentView.safeAreaLayoutGuide)
             make.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(30)
             make.size.equalTo(30)
@@ -86,10 +86,10 @@ final class ListTableViewCell: BaseTableViewCell {
         contentLabel.text = data.memo
         dueDateLabel.text =  Date.getDateString(date: data.date ?? Date()) 
         if let tag = data.tag { tagLabel.text = tag }
-        if data.isFlag == false {
-            flagLogoView.isHidden = true
+        if data.isStar == false {
+            starLogoView.isHidden = true
         } else {
-            flagLogoView.isHidden = false
+            starLogoView.isHidden = false
         }
         let image = data.isComplete ? "circle.fill" : "circle"
         completeButton.setImage(UIImage(systemName: image), for: .normal)

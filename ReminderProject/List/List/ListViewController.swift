@@ -11,7 +11,7 @@ import SnapKit
 
 final class ListViewController: BaseViewController {
     private enum SwipeButtonTitle: String {
-        case flag = "깃발"
+        case star = "중요"
         case delete = "삭제"
     }
     var list: [RealmTable] = []
@@ -24,44 +24,32 @@ final class ListViewController: BaseViewController {
         view.backgroundColor = .clear
         return view
     }()
-//    private lazy var removeAllButton = {
-//       let btn = UIButton()
-//        btn.setTitle("전체 삭제", for: .normal)
-//        btn.setTitleColor(.systemBlue, for: .normal)
-//        btn.addTarget(self, action: #selector(removeAllButtonTapped), for: .touchUpInside)
-//        return btn
-//    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
         bindData()
     }
     override func viewWillAppear(_ animated: Bool) {
-//        if list.count == 0 {
-//            removeAllButton.isHidden = true
-//        }
         tableView.reloadData()
     }
     private func bindData() {
-        renewValue(list: viewModel.outputDeleteAll)
+        // 정렬버튼
         renewValue(list: viewModel.outputSortList)
+        // isComplete == false
         renewValue(list: viewModel.outputReloadList)
+        // Reamltable 삭제
         renewValue(list: viewModel.outputDeleteInfo)
-        renewValue(list: viewModel.outputFlagList)
+        // 깃발 > 중요
+        renewValue(list: viewModel.outputStarList)
+        renewValue(list: viewModel.outputFilteredReloadList)
     }
     private func renewValue(list: Observable<[RealmTable]?>) {
         list.bindLater { value in
             guard let value = value else { return }
             self.list = value
-//            if self.list.count == 0 {
-//                self.removeAllButton.isHidden = true
-//            }
             self.tableView.reloadData()
         }
     }
-//    @objc func removeAllButtonTapped() {
-//        viewModel.inputDeleteAll.value = ()
-//    }
     private func navigationbarSetting() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
@@ -79,13 +67,7 @@ final class ListViewController: BaseViewController {
         view.addSubview(tableView)
     }
     override func configureLayout() {
-//        removeAllButton.snp.makeConstraints { make in
-//            make.top.equalTo(view.safeAreaLayoutGuide)
-//            make.leading.equalTo(view.safeAreaLayoutGuide).inset(20)
-//            make.height.equalTo(20)
-//        }
         tableView.snp.makeConstraints { make in
-//            make.top.equalTo(removeAllButton.snp.bottom)
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
@@ -107,10 +89,10 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     @objc func completeButtonTapped(sender: UIButton) {
         viewModel.inputCompleteButton.value = [list: sender.tag]
-        guard let image = viewModel.outputCompleteButton.value else { return }
+        let image = viewModel.outputCompleteButton.value
         sender.setImage(UIImage(systemName: image), for: .normal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0 ) {
-            self.viewModel.inputReloadList.value = sender.tag
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.viewModel.inputFilteredReloadList.value = ()
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -137,11 +119,11 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
             success(true)
         }
         delete.backgroundColor = .systemRed
-        let flag = UIContextualAction(style: .normal, title: SwipeButtonTitle.flag.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            self.viewModel.inputFlagList.value = [self.list : indexPath.row]
+        let star = UIContextualAction(style: .normal, title: SwipeButtonTitle.star.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            self.viewModel.inputStarList.value = [self.list : indexPath.row]
             success(true)
         }
-        flag.backgroundColor = .systemYellow
-        return UISwipeActionsConfiguration(actions:[delete, flag])
+        star.backgroundColor = .systemYellow
+        return UISwipeActionsConfiguration(actions:[delete, star])
     }
 }

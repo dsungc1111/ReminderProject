@@ -31,12 +31,12 @@ class RealmTable: Object {
     @Persisted var date: Date?
     @Persisted var tag: String?
     @Persisted var priority: String?
-    @Persisted var isFlag: Bool
+    @Persisted var isStar: Bool
     @Persisted var isComplete: Bool
     
     @Persisted(originProperty: "content") var main: LinkingObjects<Folder>
 
-    convenience init(memoTitle: String, date: Date? = nil, memo: String? = nil, tag : String? , priority: String? = nil, isFlag: Bool, complete: Bool) {
+    convenience init(memoTitle: String, date: Date? = nil, memo: String? = nil, tag : String? , priority: String? = nil, isStar: Bool, complete: Bool) {
         self.init()
         
         self.memoTitle = memoTitle
@@ -44,7 +44,7 @@ class RealmTable: Object {
         self.memo = memo
         self.tag = tag
         self.priority = priority
-        self.isFlag = false
+        self.isStar = false
         self.isComplete = false
     }
     

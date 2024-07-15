@@ -74,7 +74,6 @@ final class AddFolderViewController: BaseViewController {
         let colorPickerVC = UIColorPickerViewController()
          colorPickerVC.delegate = self
          present(colorPickerVC, animated: true, completion: nil)
-        print(#function)
     }
     @objc func folderNameDidchange(_ sender: UITextField) {
         guard let text = sender.text else { return }
@@ -130,7 +129,6 @@ extension AddFolderViewController: UIColorPickerViewControllerDelegate {
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
         logoBackView.layer.shadowColor = viewController.selectedColor.cgColor
         listLogo.tintColor = viewController.selectedColor
-        print("dfdf")
     }
     
 //    func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {

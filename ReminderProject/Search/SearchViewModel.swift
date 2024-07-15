@@ -23,8 +23,8 @@ final class SearchViewModel {
     var inputDeleteInfo: Observable<[[RealmTable] : Int]?> = Observable(nil)
     var outputDeleteInfo: Observable<[RealmTable]> = Observable([])
     
-    var inputFlagList: Observable<[[RealmTable] : Int]?> = Observable(nil)
-    var outputFlagList: Observable<[RealmTable]> = Observable([])
+    var inputStarList: Observable<[[RealmTable] : Int]?> = Observable(nil)
+    var outputStarList: Observable<[RealmTable]> = Observable([])
     
     init() {
         inputSearchText.bind { _ in
@@ -43,10 +43,10 @@ final class SearchViewModel {
             guard let index = value?.values.first else { return }
             self.deleteToDo(list: list, index: index)
         }
-        inputFlagList.bindLater { value in
+        inputStarList.bindLater { value in
             guard let list = value?.keys.first else { return }
             guard let index = value?.values.first else { return }
-            self.changeFlag(list: list, index: index)
+            self.changeStar(list: list, index: index)
         }
     }
     private func filterSearchText(text: String) -> [RealmTable] {
@@ -71,7 +71,7 @@ final class SearchViewModel {
     private func deleteToDo(list: [RealmTable], index: Int) {
         outputDeleteInfo.value = repository.deleteToDo(list: list, index: index)
     }
-    private func changeFlag(list: [RealmTable], index: Int) {
-        outputFlagList.value = repository.changeFlag(list: list, index: index)
+    private func changeStar(list: [RealmTable], index: Int) {
+        outputStarList.value = repository.changeStar(list: list, index: index)
     }
 }

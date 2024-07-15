@@ -44,6 +44,4 @@ class MainViewModel {
     private func deleteFolder(list: [Folder], index: Int) {
         outputDeleteInfo.value = repository.deleteFolder(list: list, index: index)
     }
-   
-    
 }

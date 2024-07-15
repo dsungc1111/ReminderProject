@@ -11,7 +11,7 @@ import SnapKit
 final class SearchViewController: BaseViewController {
 
     private enum SwipeButtonTitle: String {
-        case flag = "깃발"
+        case star = "중요"
         case delete = "삭제"
     }
     private lazy var searchBar = {
@@ -43,7 +43,7 @@ final class SearchViewController: BaseViewController {
     func bindData() {
         renewValue(list: viewModel.outputSearchList)
         renewValue(list: viewModel.outputDeleteInfo)
-        renewValue(list: viewModel.outputFlagList)
+        renewValue(list: viewModel.outputStarList)
     }
     private func renewValue(list: Observable<[RealmTable]>) {
         list.bindLater { value in
@@ -118,11 +118,11 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             success(true)
         }
         delete.backgroundColor = .systemRed
-        let flag = UIContextualAction(style: .normal, title: SwipeButtonTitle.flag.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            self.viewModel.inputFlagList.value = [self.list : indexPath.row]
+        let star = UIContextualAction(style: .normal, title: SwipeButtonTitle.star.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            self.viewModel.inputStarList.value = [self.list : indexPath.row]
             success(true)
         }
-        flag.backgroundColor = .systemYellow
-        return UISwipeActionsConfiguration(actions:[delete, flag])
+        star.backgroundColor = .systemYellow
+        return UISwipeActionsConfiguration(actions:[delete, star])
     }
 }

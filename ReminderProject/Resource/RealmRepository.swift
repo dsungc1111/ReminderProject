@@ -53,7 +53,7 @@ final class RealmTableRepository {
             value = value.sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
             value = value.filter("isComplete == false")
         case 3:
-            value = value.filter("isFlag == true")
+            value = value.filter("isStar == true")
         case 4:
             value = value.filter("isComplete == true")
         default:
@@ -86,22 +86,7 @@ final class RealmTableRepository {
         let result = Array(filter)
         return result
     }
-    func completeButtonTappedInFolder(list: [Folder], index: [Int : Int]) -> [Folder] {
-        guard let section = index.keys.first else { return [] }
-        guard let row = index.values.first else { return [] }
-        let folder = list[section].content[row]
-        try! self.realm.write {
-            folder.isComplete.toggle()
-            self.realm.create(Folder.self, value: [
-                "id" : list[section].id,
-                "content": [
-                    ["key": folder.key, "isComplete": folder.isComplete]
-                ]
-            ], update: .modified)
-        }
-        let result = Array(self.realm.objects(Folder.self).filter("ANY content.isComplete == true"))
-           return result
-    }
+  
     func reloadAfterCompleteFolder() -> [Folder] {
         let result = Array(self.realm.objects(Folder.self).filter("ANY content.isComplete == false"))
         print(result)
@@ -110,7 +95,6 @@ final class RealmTableRepository {
     func completeButtonTapped(list: [RealmTable], index: Int)  -> [RealmTable] {
         try! self.realm.write {
             list[index].isComplete.toggle()
-            print("list", list, "list")
             self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
         }
         let result = Array(self.realm.objects(RealmTable.self))
@@ -131,11 +115,11 @@ final class RealmTableRepository {
         let filter = Array(self.realm.objects(RealmTable.self))
         return filter
     }
-    func changeFlag(list: [RealmTable], index: Int) -> [RealmTable]{
+    func changeStar(list: [RealmTable], index: Int) -> [RealmTable]{
         var array: [RealmTable] = []
         try! self.realm.write {
-            list[index].isFlag.toggle()
-            let filter = self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isFlag" : list[index].isFlag], update: .modified)
+            list[index].isStar.toggle()
+            let filter = self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isStar" : list[index].isStar], update: .modified)
            array = [filter]
         }
         return array
@@ -157,13 +141,13 @@ final class RealmTableRepository {
         var list = fetchRealmTableByComplete()
         switch index {
         case 0:
-            list = list.sorted { $0.memoTitle < $1.memoTitle }
+           list.sort { $0.memoTitle < $1.memoTitle }
         case 1:
-            list = list.sorted { $0.memo ?? "" > $1.memo ?? "" }
+            list.sort { $0.memo ?? "" > $1.memo ?? "" }
         case 2:
-            list = list.sorted {$0.date ?? Date() < $1.date ?? Date()}
+            list.sort {$0.date ?? Date() < $1.date ?? Date()}
         default:
-            list = list.sorted { $0.memoTitle < $1.memoTitle }
+            list.sort { $0.memoTitle < $1.memoTitle }
         }
         return list
     }

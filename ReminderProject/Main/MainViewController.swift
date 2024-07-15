@@ -75,6 +75,7 @@ final class MainViewController: BaseViewController {
         collectionViewSetting()
         configureContentView()
         bindData()
+        RealmTableRepository().detectRealmURL()
     }
     private func bindData() {
         viewModel.setListTitleTrigger.bind { value in
@@ -183,7 +184,7 @@ final class MainViewController: BaseViewController {
         tableView.snp.makeConstraints { make in
             make.top.equalTo(myListLabel.snp.bottom).offset(10)
             make.horizontalEdges.bottom.equalTo(contentView).inset(20)
-            print(listTitle.count, 50*listTitle.count)
+//            print(listTitle.count, 50*listTitle.count)
             make.height.greaterThanOrEqualTo(50*listTitle.count)
         }
     }
@@ -244,6 +245,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             self.viewModel.inputDeleteInfo.value = [self.listTitle : indexPath.row]
+            self.configureContentView() 
             success(true)
         }
         delete.backgroundColor = .systemRed
