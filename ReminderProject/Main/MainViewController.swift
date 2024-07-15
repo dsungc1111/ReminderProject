@@ -18,7 +18,7 @@ final class MainViewController: BaseViewController {
         let sectionSpacing: CGFloat = 10
         let cellSpacing: CGFloat = 10
         let width = UIScreen.main.bounds.width - (sectionSpacing*2 + cellSpacing*2)
-        layout.itemSize = CGSize(width: width/2, height: width/4)
+        layout.itemSize = CGSize(width: width/2, height: width/4 + cellSpacing)
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = cellSpacing
         layout.minimumLineSpacing = cellSpacing
@@ -85,6 +85,7 @@ final class MainViewController: BaseViewController {
         viewModel.outputDeleteInfo.bindLater { value in
             self.listTitle = value
             self.tableView.reloadData()
+            self.configureContentView()
         }
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -171,17 +172,18 @@ final class MainViewController: BaseViewController {
     }
     func configureContentView() {
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(contentView).inset(10)
+            make.top.equalTo(contentView).inset(20)
             make.horizontalEdges.equalTo(contentView)
-            make.height.equalTo(320)
+            make.height.equalTo(360)
         }
         myListLabel.snp.makeConstraints { make in
-            make.top.equalTo(collectionView.snp.bottom)
+            make.top.equalTo(collectionView.snp.bottom).offset(10)
             make.leading.equalTo(contentView).inset(20)
         }
         tableView.snp.makeConstraints { make in
             make.top.equalTo(myListLabel.snp.bottom).offset(10)
-            make.horizontalEdges.bottom.equalTo(contentView).inset(10)
+            make.horizontalEdges.bottom.equalTo(contentView).inset(20)
+            print(listTitle.count, 50*listTitle.count)
             make.height.greaterThanOrEqualTo(50*listTitle.count)
         }
     }
@@ -212,8 +214,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let vc = ListViewController()
         vc.navigationItem.title = ContentNameEnum.allCases[indexPath.row].rawValue
         viewModel.inputPassList.value = indexPath.row
-        vc.toDoList = viewModel.outputPassList.value
-        vc.folderList = viewModel.outputFolderTrigger.value
+        vc.list = viewModel.outputPassList.value
         navigationController?.pushViewController(vc, animated: true)
     }
 }
@@ -234,7 +235,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         vc.navigationItem.title = listTitle[indexPath.row].category
         let folder = listTitle[indexPath.row]
         let value = folder.content
-        vc.toDoList = Array(value)
+        vc.list = Array(value)
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

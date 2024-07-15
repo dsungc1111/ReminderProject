@@ -24,7 +24,7 @@ final class CalendarViewModel {
             self.selectDate(date: date)
         }
     }
-    func selectDate(date: Date) {
+    private func selectDate(date: Date) {
         outputSelecteDateList.value = repository.getToDoTable(date: date)
     }
 }

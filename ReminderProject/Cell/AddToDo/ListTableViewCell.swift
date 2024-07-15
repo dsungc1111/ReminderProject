@@ -12,25 +12,25 @@ import RealmSwift
 final class ListTableViewCell: BaseTableViewCell {
     
      var completeButton = {
-        let btn = UIButton()
-        btn.setImage(UIImage(systemName: "circle"), for: .normal)
-        return btn
-    }()
+         let btn = UIButton()
+         btn.setImage(UIImage(systemName: "circle"), for: .normal)
+         return btn
+     }()
     let titleLabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 15)
         return label
     }()
-//    let contentLabel = {
-//        let label = UILabel()
-//        label.font = .systemFont(ofSize: 13)
-//        return label
-//    }()
-//    let dueDateLabel = {
-//        let label = UILabel()
-//        label.font = .systemFont(ofSize: 13)
-//        return label
-//    }()
+    let contentLabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 13)
+        return label
+    }()
+    let dueDateLabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 13)
+        return label
+    }()
     var tagLabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13)
@@ -40,7 +40,7 @@ final class ListTableViewCell: BaseTableViewCell {
     let flagLogoView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
-        view.image = UIImage(systemName: ContentLogoImageEnum.flag.rawValue)
+        view.image = UIImage(systemName: ContentLogoImageEnum.star.rawValue)
         view.tintColor = .systemYellow
         view.isHidden = true
         return view
@@ -48,8 +48,8 @@ final class ListTableViewCell: BaseTableViewCell {
     override func configureHierarchy() {
         contentView.addSubview(completeButton)
         contentView.addSubview(titleLabel)
-//        contentView.addSubview(contentLabel)
-//        contentView.addSubview(dueDateLabel)
+        contentView.addSubview(contentLabel)
+        contentView.addSubview(dueDateLabel)
         contentView.addSubview(tagLabel)
         contentView.addSubview(flagLogoView)
     }
@@ -63,18 +63,18 @@ final class ListTableViewCell: BaseTableViewCell {
             make.top.equalTo(contentView.safeAreaLayoutGuide).inset(10)
             make.leading.equalTo(completeButton.snp.trailing).offset(10)
         }
-//        contentLabel.snp.makeConstraints { make in
-//            make.top.equalTo(titleLabel.snp.bottom).offset(5)
-//            make.leading.equalTo(completeButton.snp.trailing).offset(10)
-//        }
-//        dueDateLabel.snp.makeConstraints { make in
-//            make.top.equalTo(contentLabel.snp.bottom).offset(5)
-//            make.leading.equalTo(completeButton.snp.trailing).offset(10)
-//        }
-//        tagLabel.snp.makeConstraints { make in
-//            make.top.equalTo(contentLabel.snp.bottom).offset(5)
-//            make.leading.equalTo(contentLabel.snp.trailing).offset(5)
-//        }
+        contentLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(5)
+            make.leading.equalTo(completeButton.snp.trailing).offset(10)
+        }
+        dueDateLabel.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+            make.leading.equalTo(completeButton.snp.trailing).offset(10)
+        }
+        tagLabel.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+            make.leading.equalTo(contentLabel.snp.trailing).offset(5)
+        }
         flagLogoView.snp.makeConstraints { make in
             make.centerY.equalTo(contentView.safeAreaLayoutGuide)
             make.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(30)
@@ -83,8 +83,8 @@ final class ListTableViewCell: BaseTableViewCell {
     }
     func configureCell(data: RealmTable) {
         titleLabel.text = data.memoTitle
-//        contentLabel.text = data.memo
-//        dueDateLabel.text =  Date.getDateString(date: data.date ?? Date()) 
+        contentLabel.text = data.memo
+        dueDateLabel.text =  Date.getDateString(date: data.date ?? Date()) 
         if let tag = data.tag { tagLabel.text = tag }
         if data.isFlag == false {
             flagLogoView.isHidden = true

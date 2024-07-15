@@ -11,14 +11,14 @@ enum ContentNameEnum: String, CaseIterable {
     case today = "오늘"
     case plan = "예정"
     case all = "전체"
-    case flag = "깃발 표시"
+    case star = "중요"
     case complete = "완료됨"
 }
 enum ContentLogoImageEnum: String, CaseIterable {
-    case today = "arrowshape.right.circle"
+    case today = "person.crop.circle"
     case plan = "calendar.circle"
     case all = "tray.circle"
-    case flag = "flag.circle"
+    case star = "star.circle.fill"
     case complete = "checkmark.circle.fill"
 }
 

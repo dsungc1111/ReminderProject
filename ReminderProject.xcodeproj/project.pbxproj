@@ -40,6 +40,7 @@
 		8B696A502C3D79A200D99D4A /* PriorityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B696A4F2C3D79A200D99D4A /* PriorityViewModel.swift */; };
 		8B696A6D2C3E599E00D99D4A /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B696A6C2C3E599E00D99D4A /* MainViewModel.swift */; };
 		8B696A702C3E653A00D99D4A /* TagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B696A6F2C3E653A00D99D4A /* TagViewModel.swift */; };
+		8B76044A2C4515C7000F2DBA /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 8B456F312C33EDB9003CFBD1 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		8B8EACDE2C3E715C00D7990B /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8EACDD2C3E715C00D7990B /* RealmModel.swift */; };
 		8B8EACE02C3E71B700D7990B /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8EACDF2C3E71B700D7990B /* CalendarViewModel.swift */; };
 		8B8EACE22C3E908200D7990B /* AddFolderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8EACE12C3E908200D7990B /* AddFolderViewModel.swift */; };
@@ -57,6 +58,20 @@
 		8BFB5C602C3C279700CE14C5 /* FolderListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB5C5F2C3C279700CE14C5 /* FolderListViewController.swift */; };
 		8BFB5C622C3C27E700CE14C5 /* FolderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFB5C612C3C27E700CE14C5 /* FolderTableViewCell.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8B76044B2C4515C7000F2DBA /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8B76044A2C4515C7000F2DBA /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		8B3DDA642C4233C20010A5FF /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
@@ -369,6 +384,7 @@
 				8B456F0D2C33E8D4003CFBD1 /* Sources */,
 				8B456F0E2C33E8D4003CFBD1 /* Frameworks */,
 				8B456F0F2C33E8D4003CFBD1 /* Resources */,
+				8B76044B2C4515C7000F2DBA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -624,10 +640,12 @@
 		8B456F262C33E8D6003CFBD1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 83K785968Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ReminderProject/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -655,10 +673,12 @@
 		8B456F272C33E8D6003CFBD1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 83K785968Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ReminderProject/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

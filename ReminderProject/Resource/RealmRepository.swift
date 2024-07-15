@@ -81,16 +81,42 @@ final class RealmTableRepository {
         let result = Array(filter)
         return result
     }
+    func completeButtonTappedInFolder(list: [Folder], index: [Int : Int]) -> [Folder] {
+        guard let section = index.keys.first else { return [] }
+        guard let row = index.values.first else { return [] }
+        let folder = list[section].content[row]
+        try! self.realm.write {
+            folder.isComplete.toggle()
+            self.realm.create(Folder.self, value: [
+                "id" : list[section].id,
+                "content": [
+                    ["key": folder.key, "isComplete": folder.isComplete]
+                ]
+            ], update: .modified)
+        }
+        let result = Array(self.realm.objects(Folder.self).filter("ANY content.isComplete == true"))
+           return result
+    }
+    func reloadAfterCompleteFolder() -> [Folder] {
+        let result = Array(self.realm.objects(Folder.self).filter("ANY content.isComplete == false"))
+        print(result)
+           return result
+    }
+    
+    
+    
+    
     func completeButtonTapped(list: [RealmTable], index: Int)  -> [RealmTable] {
         try! self.realm.write {
             list[index].isComplete.toggle()
             self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
         }
-        let result = Array(self.realm.objects(RealmTable.self).filter("isComplete == true"))
+        let result = Array(self.realm.objects(RealmTable.self))
         return result
     }
     func deleteFolder(list: [Folder], index: Int) -> [Folder] {
         try! self.realm.write {
+            self.realm.delete(list[index].content)
             self.realm.delete(list[index])
         }
         let filter = Array(self.realm.objects(Folder.self))
