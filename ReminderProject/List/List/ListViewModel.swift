@@ -43,7 +43,7 @@ final class ListViewModel {
         inputSortIndex.bind { index in
             self.sortFunction(index: index)
         }
-        inputCompleteButton.bindLater { _ in
+        inputCompleteButton.bindLater { value in
             self.outputCompleteButton.value = self.completeToDo()
         }
         inputReloadList.bindLater { value in

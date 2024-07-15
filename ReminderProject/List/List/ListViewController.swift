@@ -107,7 +107,6 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     @objc func completeButtonTapped(sender: UIButton) {
         viewModel.inputCompleteButton.value = [list: sender.tag]
-        print(sender.tag)
         guard let image = viewModel.outputCompleteButton.value else { return }
         sender.setImage(UIImage(systemName: image), for: .normal)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0 ) {

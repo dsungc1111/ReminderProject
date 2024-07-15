@@ -22,6 +22,11 @@ final class RealmTableRepository {
         let value = realm.objects(Folder.self)
         return Array(value)
     }
+    func fetchRealmTableByComplete() -> [RealmTable] {
+        var value = realm.objects(RealmTable.self)
+        value = value.filter("isComplete = false")
+        return Array(value)
+    }
     func fetchFolderInComplete() -> [Folder] {
         var value = realm.objects(Folder.self)
         value = value.filter("isComplete = false")
@@ -102,13 +107,10 @@ final class RealmTableRepository {
         print(result)
            return result
     }
-    
-    
-    
-    
     func completeButtonTapped(list: [RealmTable], index: Int)  -> [RealmTable] {
         try! self.realm.write {
             list[index].isComplete.toggle()
+            print("list", list, "list")
             self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
         }
         let result = Array(self.realm.objects(RealmTable.self))
@@ -152,7 +154,7 @@ final class RealmTableRepository {
         }
     }
     func sortList(index: Int) -> [RealmTable] {
-        var list = fetchRealmTable()
+        var list = fetchRealmTableByComplete()
         switch index {
         case 0:
             list = list.sorted { $0.memoTitle < $1.memoTitle }
