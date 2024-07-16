@@ -52,7 +52,7 @@ final class RealmTableRepository {
             value = value.sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
             value = value.filter("isComplete == false")
         case 3:
-            value = value.filter("isStar == true")
+            value = value.filter("isStar == true && isComplete == false")
         case 4:
             value = value.filter("isComplete == true")
         default:
@@ -139,7 +139,12 @@ final class RealmTableRepository {
             list[index].isStar.toggle()
            self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isStar" : list[index].isStar], update: .modified)
         }
-        array = Array(realm.objects(RealmTable.self))
+        if list[index].isStar {
+            array = Array(realm.objects(RealmTable.self).filter("isComplete == false"))
+        } else {
+            array = Array(realm.objects(RealmTable.self).filter("isComplete == false && isStar == true"))
+        }
+      
         return array
     }
     func saveData(text: String, data: RealmTable) {
