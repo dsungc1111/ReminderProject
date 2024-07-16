@@ -15,12 +15,12 @@ class MainViewModel {
     var inputPassList: Observable<Int> = Observable(0)
     var outputPassList: Observable<[RealmTable]> = Observable([])
     
-    
     var inputDeleteInfo: Observable<[[Folder] : Int]?> = Observable(nil)
     var outputDeleteInfo: Observable<[Folder]> = Observable([])
     
     var inputFolderTrigger: Observable<Void?> = Observable(nil)
     var outputFolderTrigger:Observable<[Folder]> = Observable([])
+    
     init() {
         transform()
     }
@@ -42,6 +42,7 @@ class MainViewModel {
         outputPassList.value = repository.fetchCategory(cases: index)
     }
     private func deleteFolder(list: [Folder], index: Int) {
+        
         outputDeleteInfo.value = repository.deleteFolder(list: list, index: index)
     }
 }

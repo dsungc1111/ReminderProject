@@ -19,7 +19,6 @@ final class SearchViewModel {
     var inputReloadList: Observable<Void?> = Observable(nil)
     var outputReloadList: Observable<[RealmTable]?> = Observable(nil)
     
-    
     var inputDeleteInfo: Observable<[[RealmTable] : Int]?> = Observable(nil)
     var outputDeleteInfo: Observable<[RealmTable]> = Observable([])
     

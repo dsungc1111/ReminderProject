@@ -9,7 +9,6 @@ import Foundation
 
 import RealmSwift
 
-
 final class RealmTableRepository {
     
     private let realm = try! Realm()
@@ -104,7 +103,7 @@ final class RealmTableRepository {
         var filter = realm.objects(RealmTable.self)
         try! realm.write {
             list[index].isComplete.toggle()
-            var value = realm.objects(RealmTable.self)
+            let value = realm.objects(RealmTable.self)
             for i in 0..<value.count {
                 if value[i].key == list[index].key {
                     self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
@@ -138,9 +137,9 @@ final class RealmTableRepository {
         var array: [RealmTable] = []
         try! self.realm.write {
             list[index].isStar.toggle()
-            let filter = self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isStar" : list[index].isStar], update: .modified)
-           array = [filter]
+           self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isStar" : list[index].isStar], update: .modified)
         }
+        array = Array(realm.objects(RealmTable.self))
         return array
     }
     func saveData(text: String, data: RealmTable) {

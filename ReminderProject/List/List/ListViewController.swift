@@ -40,7 +40,7 @@ final class ListViewController: BaseViewController {
         renewValue(list: viewModel.outputDeleteInfo)
         // 깃발 > 중요
         renewValue(list: viewModel.outputStarList)
-//        renewValue(list: viewModel.outputCompleteButton)
+        renewValue(list: viewModel.outputFilteredReloadList)
         viewModel.outputCompleteButton.bindLater { value in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 guard let value = value else { return }
@@ -48,7 +48,6 @@ final class ListViewController: BaseViewController {
                 self.tableView.reloadData()
             }
         }
-        renewValue(list: viewModel.outputFilteredReloadList)
     }
     private func renewValue(list: Observable<[RealmTable]?>) {
         list.bindLater { value in
@@ -70,7 +69,6 @@ final class ListViewController: BaseViewController {
         viewModel.inputSortIndex.value = index
     }
     override func configureHierarchy() {
-        
         view.addSubview(tableView)
     }
     override func configureLayout() {

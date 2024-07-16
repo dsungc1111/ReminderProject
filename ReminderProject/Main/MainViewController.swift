@@ -43,19 +43,6 @@ final class MainViewController: BaseViewController {
         btn.addTarget(self, action: #selector(listAddButtonTapped), for: .touchUpInside)
         return btn
     }()
-    private let myListLabel = {
-        let label = UILabel()
-        label.text = "나의 목록"
-        label.font = .boldSystemFont(ofSize: 20)
-        label.isHidden = true
-        return label
-    }()
-    private var viewModel = MainViewModel()
-    private let date = Date()
-    private var listTitle: [Folder] = []
-    private var toDoList: [RealmTable] = []
-    private let scrollView = UIScrollView()
-    private let contentView = UIView()
     private lazy var tableView = {
         let view = UITableView()
         view.delegate = self
@@ -68,19 +55,32 @@ final class MainViewController: BaseViewController {
         view.rowHeight = UITableView.automaticDimension
         return view
     }()
+    private let myListLabel = {
+        let label = UILabel()
+        label.text = "나의 목록"
+        label.font = .boldSystemFont(ofSize: 20)
+        label.isHidden = true
+        return label
+    }()
+    private let date = Date()
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     private let tabBarView = UIView()
+    private let viewModel = MainViewModel()
+    private var listTitle: [Folder] = []
+    private var toDoList: [RealmTable] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationbarSetting()
         collectionViewSetting()
         configureContentView()
         bindData()
-        RealmTableRepository().detectRealmURL()
-    }
+        }
     private func bindData() {
         viewModel.setListTitleTrigger.bind { value in
             self.listTitle = value
             self.myListLabel.isHidden = self.listTitle.count != 0 ? false : true
+            self.tableView.reloadData()
             self.configureContentView()
         }
         viewModel.outputDeleteInfo.bindLater { value in
@@ -131,7 +131,7 @@ final class MainViewController: BaseViewController {
         collectionView.showsVerticalScrollIndicator = false
     }
     private func navigationbarSetting() {
-        navigationItem.title = "대성's 미리알림"
+        navigationItem.title = "미리알림"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(calendarButtonTapped))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(searchButtonTapped))
     }
@@ -181,10 +181,9 @@ final class MainViewController: BaseViewController {
             make.top.equalTo(collectionView.snp.bottom).offset(10)
             make.leading.equalTo(contentView).inset(20)
         }
-        tableView.snp.makeConstraints { make in
+        tableView.snp.updateConstraints { make in
             make.top.equalTo(myListLabel.snp.bottom).offset(10)
             make.horizontalEdges.bottom.equalTo(contentView).inset(20)
-//            print(listTitle.count, 50*listTitle.count)
             make.height.greaterThanOrEqualTo(50*listTitle.count)
         }
     }
@@ -245,7 +244,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             self.viewModel.inputDeleteInfo.value = [self.listTitle : indexPath.row]
-            self.configureContentView() 
             success(true)
         }
         delete.backgroundColor = .systemRed

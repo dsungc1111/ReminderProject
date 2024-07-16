@@ -11,6 +11,7 @@ import RealmSwift
 
 final class ListTableViewCell: BaseTableViewCell {
     
+    let viewModel = ListViewModel()
      var completeButton = {
          let btn = UIButton()
          btn.setImage(UIImage(systemName: "circle"), for: .normal)

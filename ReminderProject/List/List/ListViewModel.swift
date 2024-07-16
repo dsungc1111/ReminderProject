@@ -39,7 +39,6 @@ final class ListViewModel {
     init() {
         transform()
     }
-    
     private func transform() {
         inputSortIndex.bind { index in
             self.sortFunction(index: index)
