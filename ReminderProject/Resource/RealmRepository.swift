@@ -94,8 +94,14 @@ final class RealmTableRepository {
         return result
     }
     
-    
-    
+    func deleteFolder(list: [Folder], index: Int) -> [Folder] {
+        try! self.realm.write {
+            self.realm.delete(list[index].content)
+            self.realm.delete(list[index])
+        }
+        let filter = Array(self.realm.objects(Folder.self))
+        return filter
+    }
     
     func changeCompleteButton(list : [RealmTable], index:  Int, page: Int) -> [RealmTable] {
         var value = realm.objects(RealmTable.self)
@@ -109,89 +115,22 @@ final class RealmTableRepository {
                 }
             }
         }
-        if list[index].isComplete {
-            switch page {
-            case 0:
-                value = value.filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-            case 1:
-                value = value.filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-            case 2:
-                value = value.sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
-                value = value.filter("isComplete == false")
-            case 3:
-                value = value.filter("isStar == true && isComplete == false")
-            case 4:
-                value = value.filter("isComplete == true")
-            default:
-                return Array(value)
-            }
-        } else {
-            switch page {
-            case 0:
-                value = value.filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-            case 1:
-                value = value.filter("date > %@ && isComplete == true", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-            case 2:
-                value = value.sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
-                value = value.filter("isComplete == false")
-            case 3:
-                value = value.filter("isStar == true && isComplete == false")
-            case 4:
-                value = value.filter("isComplete == true")
-            default:
-                return Array(value)
-            }
-            
-        }
-        return Array(value)
+        return fetchCategory(cases: page)
     }
+ 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    func deleteFolder(list: [Folder], index: Int) -> [Folder] {
-        try! self.realm.write {
-            self.realm.delete(list[index].content)
-            self.realm.delete(list[index])
-        }
-        let filter = Array(self.realm.objects(Folder.self))
-        return filter
-    }
-    func deleteToDo(list: [RealmTable], index: Int) -> [RealmTable] {
+    func deleteToDo(list: [RealmTable], index: Int, page: Int) -> [RealmTable] {
         try! self.realm.write {
             self.realm.delete(list[index])
         }
-        let filter = Array(self.realm.objects(RealmTable.self))
-        return filter
+        return fetchCategory(cases: page)
     }
-    func changeStar(list: [RealmTable], index: Int) -> [RealmTable]{
-        var array: [RealmTable] = []
+    func changeStar(list: [RealmTable], index: Int, page: Int) -> [RealmTable]{
         try! self.realm.write {
             list[index].isStar.toggle()
            self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isStar" : list[index].isStar], update: .modified)
-        }
-        if list[index].isStar {
-            array = Array(realm.objects(RealmTable.self).filter("isComplete == false"))
-        } else {
-            array = Array(realm.objects(RealmTable.self).filter("isComplete == false && isStar == true"))
-        }
-      
-        return array
+        } 
+        return fetchCategory(cases: page)
     }
     func saveData(text: String, data: RealmTable) {
         if let folder = realm.objects(Folder.self).filter("category == %@", text).first {
