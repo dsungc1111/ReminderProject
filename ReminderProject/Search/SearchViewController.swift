@@ -91,11 +91,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     @objc func completeButtonTapped(sender: UIButton) {
         viewModel.inputCompleteButton.value = [list: sender.tag]
-        let image = viewModel.outputCompleteButton.value
+        let image = list[sender.tag].isComplete ? "circle.fill" : "circle"
         sender.setImage(UIImage(systemName: image), for: .normal)
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0 ) {
-//            self.viewModel.inputReloadList.value = ()
-//        }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80

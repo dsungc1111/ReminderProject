@@ -13,6 +13,9 @@ final class RealmTableRepository {
     
     private let realm = try! Realm()
     
+    func detectRealmURL() {
+        print(realm.configuration.fileURL ?? "")
+    }
     func fetchRealmTable() -> [RealmTable] {
         let value = realm.objects(RealmTable.self)
         return Array(value)
@@ -25,20 +28,6 @@ final class RealmTableRepository {
         var value = realm.objects(RealmTable.self)
         value = value.filter("isComplete = false")
         return Array(value)
-    }
-    func fetchFolderInComplete() -> [Folder] {
-        var value = realm.objects(Folder.self)
-        value = value.filter("isComplete = false")
-        return Array(value)
-    }
-    func deleteAll() {
-        let list = realm.objects(RealmTable.self)
-        try! self.realm.write {
-            list.realm?.deleteAll()
-        }
-    }
-    func detectRealmURL() {
-        print(realm.configuration.fileURL ?? "")
     }
     func fetchCategory(cases: Int) -> [RealmTable] {
         let date = Date()
@@ -84,16 +73,6 @@ final class RealmTableRepository {
         let result = Array(filter)
         return result
     }
-  
-    func completeButtonTapped(list: [RealmTable], index: Int)  -> [RealmTable] {
-        try! self.realm.write {
-            list[index].isComplete.toggle()
-            self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
-        }
-        let result = Array(self.realm.objects(RealmTable.self))
-        return result
-    }
-    
     func deleteFolder(list: [Folder], index: Int) -> [Folder] {
         try! self.realm.write {
             self.realm.delete(list[index].content)
@@ -102,13 +81,10 @@ final class RealmTableRepository {
         let filter = Array(self.realm.objects(Folder.self))
         return filter
     }
-    
     func changeCompleteButton(list : [RealmTable], index:  Int, page: Int) -> [RealmTable] {
-        var value = realm.objects(RealmTable.self)
-        let date = Date()
+        let value = realm.objects(RealmTable.self)
         try! realm.write {
             list[index].isComplete.toggle()
-            let value = realm.objects(RealmTable.self)
             for i in 0..<value.count {
                 if value[i].key == list[index].key {
                     self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
