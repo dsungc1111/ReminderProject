@@ -11,16 +11,12 @@ import RealmSwift
 final class ListViewModel {
     
     private let repository = RealmTableRepository()
+    var getPageNumber = 0
+    
     
     var inputSortIndex: Observable<Int> = Observable(0)
     var outputSortList: Observable<[RealmTable]?> = Observable(nil)
     
-//    var inputCompleteButton: Observable<[[RealmTable] : Int]?> = Observable(nil)
-//    var outputCompleteButton: Observable<String> = Observable("")
-//    
-//    var inputReloadList: Observable<Int> = Observable(0)
-//    var outputReloadList: Observable<[RealmTable]?> = Observable(nil)
-//    
     var inputPriority: Observable<RealmTable?> = Observable(nil)
     var outputPriority: Observable<String?> = Observable(nil)
     
@@ -66,21 +62,25 @@ final class ListViewModel {
     }
     
     
-    private func completionButtonTapped() -> [RealmTable] {
-        guard let list = inputCompleteButton.value.keys.first,
-              let index = inputCompleteButton.value.values.first else { return [] }
-        let filteredList = repository.changeCompleteButton(list: list, index: index)
-        return filteredList
-    }
     private func fetchFilteredList() {
         let list = repository.fetchRealmTable().filter { !$0.isComplete }
               outputFilteredReloadList.value = list
     }
+    private func getPriority(list: RealmTable) {
+        outputPriority.value = repository.selectedPrioprity(list: list)
+    }
+    
+    // 카테고리에 따라 예외처리 달라질 놈들
+    // 순서
+    // 1. 완료 2. 삭제 3. 중요 4. sort
     private func sortFunction(index: Int) {
         outputSortList.value = repository.sortList(index: index)
     }
-    private func getPriority(list: RealmTable) {
-        outputPriority.value = repository.selectedPrioprity(list: list)
+    private func completionButtonTapped() -> [RealmTable] {
+        guard let list = inputCompleteButton.value.keys.first,
+              let index = inputCompleteButton.value.values.first else { return [] }
+        let filteredList = repository.changeCompleteButton(list: list, index: index, page: getPageNumber)
+        return filteredList
     }
     private func deleteToDo(list: [RealmTable], index: Int) {
         outputDeleteInfo.value = repository.deleteToDo(list: list, index: index)

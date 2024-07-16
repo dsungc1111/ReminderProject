@@ -63,7 +63,6 @@ final class RealmTableRepository {
     func getToDoTable(date: Date) -> [RealmTable] {
         var value = realm.objects(RealmTable.self)
         value = value.filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
-        
         return Array(value)
     }
     func selectedPrioprity(list: RealmTable) -> String{
@@ -86,11 +85,6 @@ final class RealmTableRepository {
         return result
     }
   
-    func reloadAfterCompleteFolder() -> [Folder] {
-        let result = Array(self.realm.objects(Folder.self).filter("ANY content.isComplete == false"))
-        print(result)
-           return result
-    }
     func completeButtonTapped(list: [RealmTable], index: Int)  -> [RealmTable] {
         try! self.realm.write {
             list[index].isComplete.toggle()
@@ -99,8 +93,13 @@ final class RealmTableRepository {
         let result = Array(self.realm.objects(RealmTable.self))
         return result
     }
-    func changeCompleteButton(list : [RealmTable], index:  Int) -> [RealmTable] {
-        var filter = realm.objects(RealmTable.self)
+    
+    
+    
+    
+    func changeCompleteButton(list : [RealmTable], index:  Int, page: Int) -> [RealmTable] {
+        var value = realm.objects(RealmTable.self)
+        let date = Date()
         try! realm.write {
             list[index].isComplete.toggle()
             let value = realm.objects(RealmTable.self)
@@ -109,15 +108,62 @@ final class RealmTableRepository {
                     self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
                 }
             }
-            print(list[index].isComplete)
-            if list[index].isComplete {
-                filter = self.realm.objects(RealmTable.self).filter("isComplete == false")
-            } else {
-                filter = self.realm.objects(RealmTable.self).filter("isComplete == true")
-            }
         }
-        return Array(filter)
+        if list[index].isComplete {
+            switch page {
+            case 0:
+                value = value.filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+            case 1:
+                value = value.filter("date > %@ && isComplete == false", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+            case 2:
+                value = value.sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+                value = value.filter("isComplete == false")
+            case 3:
+                value = value.filter("isStar == true && isComplete == false")
+            case 4:
+                value = value.filter("isComplete == true")
+            default:
+                return Array(value)
+            }
+        } else {
+            switch page {
+            case 0:
+                value = value.filter("date BETWEEN {%@, %@} && isComplete == false", Calendar.current.startOfDay(for: date), Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+            case 1:
+                value = value.filter("date > %@ && isComplete == true", Date(timeInterval: 86399, since: Calendar.current.startOfDay(for: date)))
+            case 2:
+                value = value.sorted(byKeyPath: MemoContents.memoTitle.rawValue , ascending: true)
+                value = value.filter("isComplete == false")
+            case 3:
+                value = value.filter("isStar == true && isComplete == false")
+            case 4:
+                value = value.filter("isComplete == true")
+            default:
+                return Array(value)
+            }
+            
+        }
+        return Array(value)
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     func deleteFolder(list: [Folder], index: Int) -> [Folder] {
         try! self.realm.write {
             self.realm.delete(list[index].content)

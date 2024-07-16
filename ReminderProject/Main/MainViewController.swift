@@ -212,9 +212,10 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = ListViewController()
-        vc.navigationItem.title = ContentNameEnum.allCases[indexPath.row].rawValue
-        viewModel.inputPassList.value = indexPath.row
+        vc.navigationItem.title = ContentNameEnum.allCases[indexPath.item].rawValue
+        viewModel.inputPassList.value = indexPath.item
         vc.list = viewModel.outputPassList.value
+        vc.viewModel.getPageNumber = indexPath.item
         navigationController?.pushViewController(vc, animated: true)
     }
 }
