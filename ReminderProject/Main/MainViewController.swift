@@ -191,6 +191,7 @@ final class MainViewController: BaseViewController {
 extension MainViewController:  PassDataDelegate, PassFolderDelegate {
     func passFolderList(_ dataList: [Folder]) {
         listTitle = dataList
+        myListLabel.isHidden = self.listTitle.count != 0 ? false : true
         tableView.reloadData()
         configureContentView()
     }

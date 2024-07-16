@@ -62,9 +62,9 @@ final class SearchViewModel {
         let list = repository.fetchCategory(cases: 2)
         outputReloadList.value = list
     }
-    
     private func deleteToDo(list: [RealmTable], index: Int) {
         outputDeleteInfo.value = repository.deleteToDo(list: list, index: index, page: 5)
+        
     }
     private func changeStar(list: [RealmTable], index: Int) {
         outputStarList.value = repository.changeStar(list: list, index: index, page: 5)

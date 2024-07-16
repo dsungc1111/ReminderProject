@@ -93,13 +93,13 @@ final class RealmTableRepository {
         }
         return fetchCategory(cases: page)
     }
- 
-    
     func deleteToDo(list: [RealmTable], index: Int, page: Int) -> [RealmTable] {
+        var filter = list
         try! self.realm.write {
             self.realm.delete(list[index])
         }
-        return fetchCategory(cases: page)
+        filter.remove(at: index)
+        return filter
     }
     func changeStar(list: [RealmTable], index: Int, page: Int) -> [RealmTable]{
         try! self.realm.write {
@@ -135,8 +135,6 @@ final class RealmTableRepository {
         }
         return list
     }
-    
-
     func filterByMemoContents(memo: String, id: ObjectId) {
         try! realm.write {
             self.realm.create(RealmTable.self, value: ["key" :id, "memo" : memo], update: .modified)

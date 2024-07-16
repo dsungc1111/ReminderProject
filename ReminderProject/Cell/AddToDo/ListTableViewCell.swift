@@ -74,7 +74,7 @@ final class ListTableViewCell: BaseTableViewCell {
         }
         tagLabel.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(5)
-            make.leading.equalTo(contentLabel.snp.trailing).offset(5)
+            make.leading.equalTo(dueDateLabel.snp.trailing).offset(5)
         }
         starLogoView.snp.makeConstraints { make in
             make.centerY.equalTo(contentView.safeAreaLayoutGuide)
