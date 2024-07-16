@@ -40,7 +40,14 @@ final class ListViewController: BaseViewController {
         renewValue(list: viewModel.outputDeleteInfo)
         // 깃발 > 중요
         renewValue(list: viewModel.outputStarList)
-        renewValue(list: viewModel.outputCompleteButton)
+//        renewValue(list: viewModel.outputCompleteButton)
+        viewModel.outputCompleteButton.bindLater { value in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                guard let value = value else { return }
+                self.list = value
+                self.tableView.reloadData()
+            }
+        }
         renewValue(list: viewModel.outputFilteredReloadList)
     }
     private func renewValue(list: Observable<[RealmTable]?>) {
@@ -89,11 +96,8 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     @objc func completeButtonTapped(sender: UIButton) {
         viewModel.inputCompleteButton.value = [list: sender.tag]
-//        let image = viewModel.outputCompleteButton.value
-//        sender.setImage(UIImage(systemName: image), for: .normal)
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-//            self.viewModel.inputFilteredReloadList.value = ()
-//        }
+        let image = list[sender.tag].isComplete ? "circle.fill" : "circle"
+        sender.setImage(UIImage(systemName: image), for: .normal)
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80

@@ -100,6 +100,25 @@ final class RealmTableRepository {
         let result = Array(self.realm.objects(RealmTable.self))
         return result
     }
+    func changeCompleteButton(list : [RealmTable], index:  Int) -> [RealmTable] {
+        var filter = realm.objects(RealmTable.self)
+        try! realm.write {
+            list[index].isComplete.toggle()
+            var value = realm.objects(RealmTable.self)
+            for i in 0..<value.count {
+                if value[i].key == list[index].key {
+                    self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
+                }
+            }
+            print(list[index].isComplete)
+            if list[index].isComplete {
+                filter = self.realm.objects(RealmTable.self).filter("isComplete == false")
+            } else {
+                filter = self.realm.objects(RealmTable.self).filter("isComplete == true")
+            }
+        }
+        return Array(filter)
+    }
     func deleteFolder(list: [Folder], index: Int) -> [Folder] {
         try! self.realm.write {
             self.realm.delete(list[index].content)

@@ -47,9 +47,6 @@ final class ListViewModel {
         inputCompleteButton.bindLater { value in
             self.outputCompleteButton.value = self.completionButtonTapped()
         }
-//        inputReloadList.bindLater { value in
-//            self.fetchList(index: value)
-//        }
         inputPriority.bindLater { value in
             guard let value = value else { return }
             self.getPriority(list: value)
@@ -69,66 +66,17 @@ final class ListViewModel {
               }
     }
     
-    let realm = try! Realm()
+    
     private func completionButtonTapped() -> [RealmTable] {
         guard let list = inputCompleteButton.value.keys.first,
               let index = inputCompleteButton.value.values.first else { return [] }
-        var aa = realm.objects(RealmTable.self)
-        try! realm.write {
-            list[index].isComplete.toggle()
-            var value = realm.objects(RealmTable.self)
-            for i in 0..<value.count {
-                if value[i].key == list[index].key {
-                    self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isComplete" : list[index].isComplete], update: .modified)
-                }
-            }
-            if list[index].isComplete {
-                aa = self.realm.objects(RealmTable.self).filter("isComplete == false")
-            } else {
-                aa = self.realm.objects(RealmTable.self).filter("isComplete == true")
-            }
-        }
-        return Array(aa)
+        let filteredList = repository.changeCompleteButton(list: list, index: index)
+        return filteredList
     }
-    
-    
-    
     private func fetchFilteredList() {
         let list = repository.fetchRealmTable().filter { !$0.isComplete }
               outputFilteredReloadList.value = list
     }
-//    private func completeToDo() -> String {
-//        var image = ""
-//        guard let list = inputCompleteButton.value?.keys.first,
-//              let index = inputCompleteButton.value?.values.first
-//        else { return "" }
-//     
-//        let updateList = repository.completeButtonTapped(list: list, index: index)
-//        for i in 0..<updateList.count {
-//            if list[index].key == updateList[i].key {
-//                image = updateList[i].isComplete ? "circle.fill" : "circle"
-//            } else {
-//                image = "circle"
-//            }
-//        }
-//        return image
-//    }
-//    private func fetchList(index: Int) {
-//        let list = repository.fetchRealmTable().filter { !$0.isComplete }
-//           outputReloadList.value = list
-//    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     private func sortFunction(index: Int) {
         outputSortList.value = repository.sortList(index: index)
     }
