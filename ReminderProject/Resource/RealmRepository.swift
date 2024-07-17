@@ -93,7 +93,7 @@ final class RealmTableRepository {
         }
         return fetchCategory(cases: page)
     }
-    func deleteToDo(list: [RealmTable], index: Int, page: Int) -> [RealmTable] {
+    func deleteToDo(list: [RealmTable], index: Int) -> [RealmTable] {
         var filter = list
         try! self.realm.write {
             self.realm.delete(list[index])
@@ -102,11 +102,17 @@ final class RealmTableRepository {
         return filter
     }
     func changeStar(list: [RealmTable], index: Int, page: Int) -> [RealmTable]{
+        var filter = list
         try! self.realm.write {
             list[index].isStar.toggle()
            self.realm.create(RealmTable.self, value: ["key" : list[index].key, "isStar" : list[index].isStar], update: .modified)
         } 
-        return fetchCategory(cases: page)
+        if page == 3 {
+            filter = fetchCategory(cases: page)
+        } else {
+            filter = list
+        }
+        return filter
     }
     func saveData(text: String, data: RealmTable) {
         if let folder = realm.objects(Folder.self).filter("category == %@", text).first {

@@ -83,7 +83,7 @@ final class ListViewModel {
         return filteredList
     }
     private func deleteToDo(list: [RealmTable], index: Int) {
-        outputDeleteInfo.value = repository.deleteToDo(list: list, index: index, page: getPageNumber)
+        outputDeleteInfo.value = repository.deleteToDo(list: list, index: index)
     }
     private func changeStar(list: [RealmTable], index: Int) {
         outputStarList.value = repository.changeStar(list: list, index: index, page: getPageNumber)
