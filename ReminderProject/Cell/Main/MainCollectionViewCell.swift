@@ -11,6 +11,7 @@ import SnapKit
 final class MainCollectionViewCell: UICollectionViewCell {
     
     let repository = RealmTableRepository()
+    private let viewModel = MainViewModel()
     let contentLogo = {
         let logo = UIImageView()
         logo.backgroundColor = .black
@@ -29,6 +30,7 @@ final class MainCollectionViewCell: UICollectionViewCell {
         label.font = .boldSystemFont(ofSize: 30)
         return label
     }()
+    
     var listTitle: [Folder] = []
     private var list: [RealmTable] = []
     

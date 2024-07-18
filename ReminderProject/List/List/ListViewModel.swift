@@ -13,7 +13,6 @@ final class ListViewModel {
     private let repository = RealmTableRepository()
     var getPageNumber = 0
     
-    
     var inputSortIndex: Observable<Int> = Observable(0)
     var outputSortList: Observable<[RealmTable]?> = Observable(nil)
     
@@ -60,8 +59,6 @@ final class ListViewModel {
                   self.fetchFilteredList()
               }
     }
-    
-    
     private func fetchFilteredList() {
         let list = repository.fetchRealmTable().filter { !$0.isComplete }
               outputFilteredReloadList.value = list
@@ -69,7 +66,6 @@ final class ListViewModel {
     private func getPriority(list: RealmTable) {
         outputPriority.value = repository.selectedPrioprity(list: list)
     }
-    
     // 카테고리에 따라 예외처리 달라질 놈들
     // 순서
     // 1. 완료 2. 삭제 3. 중요 4. sort

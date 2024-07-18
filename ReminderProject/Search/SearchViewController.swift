@@ -40,7 +40,7 @@ final class SearchViewController: BaseViewController {
         navigationItem.largeTitleDisplayMode = .always
         bindData()
     }
-    func bindData() {
+    override func bindData() {
         renewValue(list: viewModel.outputSearchList)
         renewValue(list: viewModel.outputDeleteInfo)
         renewValue(list: viewModel.outputStarList)

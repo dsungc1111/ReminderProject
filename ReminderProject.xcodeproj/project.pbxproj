@@ -228,7 +228,6 @@
 			children = (
 				8B696A6B2C3E586100D99D4A /* Main */,
 				8B456F462C34193D003CFBD1 /* AddToDo */,
-				8BFB5C5C2C3C0DF100CE14C5 /* AddFolder */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -313,6 +312,7 @@
 			isa = PBXGroup;
 			children = (
 				8B456F4C2C34C56C003CFBD1 /* MainCollectionViewCell.swift */,
+				8BFB5C5D2C3C0E0300CE14C5 /* AddFolderTableViewCell.swift */,
 				8BFB5C612C3C27E700CE14C5 /* FolderTableViewCell.swift */,
 			);
 			path = Main;
@@ -364,14 +364,6 @@
 				8B8EACDF2C3E71B700D7990B /* CalendarViewModel.swift */,
 			);
 			path = Calendar;
-			sourceTree = "<group>";
-		};
-		8BFB5C5C2C3C0DF100CE14C5 /* AddFolder */ = {
-			isa = PBXGroup;
-			children = (
-				8BFB5C5D2C3C0E0300CE14C5 /* AddFolderTableViewCell.swift */,
-			);
-			path = AddFolder;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

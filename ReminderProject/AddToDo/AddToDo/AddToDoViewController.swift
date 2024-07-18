@@ -18,6 +18,7 @@ final class AddToDoViewController: BaseViewController {
         case save = "저장"
     }
     let viewModel = AddToDoViewModel()
+    
     private lazy var tableView = {
         let view = UITableView()
         view.delegate = self
@@ -37,13 +38,14 @@ final class AddToDoViewController: BaseViewController {
     }()
     private var listTitle: [Folder] = []
     private var toDolist: [RealmTable] = []
+    
     var showToast: (() -> Void)?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureNavigationbar()
-        bindData()
+        
     }
-    func bindData() {
+    override func bindData() {
         viewModel.outputMemoTitle.bindLater { _ in
             self.navigationItem.rightBarButtonItem?.isEnabled = true
             self.navigationItem.rightBarButtonItem?.tintColor = .black
@@ -58,16 +60,7 @@ final class AddToDoViewController: BaseViewController {
             }
         }
     }
-    @objc func cancelButtonTapped() {
-        navigationController?.dismiss(animated: true)
-    }
-    @objc func saveButtonTapped() {
-        view.makeToast("저장완료!", duration: 2.0, position: .center)
-        viewModel.inputSaveButton.value = ()
-        showToast?()
-        navigationController?.dismiss(animated: true)
-    }
-    private func configureNavigationbar() {
+    override func configureNavigationbar() {
         navigationItem.title = NavigationBarTitle.title.rawValue
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: NavigationBarTitle.cancel.rawValue, style: .plain, target: self, action: #selector(cancelButtonTapped))
         navigationItem.leftBarButtonItem?.tintColor = .black
@@ -92,7 +85,19 @@ final class AddToDoViewController: BaseViewController {
             make.trailing.equalTo(view.safeAreaLayoutGuide).inset(60)
         }
     }
+    
+    @objc func saveButtonTapped() {
+        view.makeToast("저장완료!", duration: 2.0, position: .center)
+        viewModel.inputSaveButton.value = ()
+        showToast?()
+        navigationController?.dismiss(animated: true)
+    }
+    @objc func cancelButtonTapped() {
+        navigationController?.dismiss(animated: true)
+    }
 }
+
+
 extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2

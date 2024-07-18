@@ -15,11 +15,15 @@ class BaseViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         configureView()
-        
+        configureNavigationbar()
+        bindData()
+        setCollectionView()
     }
-    
+    func bindData() {}
+    func configureNavigationbar() {}
     func configureHierarchy() {}
     func configureLayout() {}
     func configureView() {}
-
+    func setCollectionView() {}
+    
 }

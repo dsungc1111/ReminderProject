@@ -57,7 +57,7 @@ final class AddFolderViewController: BaseViewController {
         configureNavigationbar()
         bindData()
     }
-    private func bindData() {
+    override func bindData() {
         viewModel.outputFolderTitle.bind { value in
             if let value = value {
                 self.navigationItem.rightBarButtonItem?.isEnabled = value
@@ -86,7 +86,7 @@ final class AddFolderViewController: BaseViewController {
         guard let folderTitle = folderNameTextField.text else { return}
         viewModel.inputSaveFolder.value = folderTitle
     }
-    private func configureNavigationbar() {
+    override func configureNavigationbar() {
         navigationItem.title = NavigationBarTitle.title.rawValue
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: NavigationBarTitle.cancel.rawValue, style: .plain, target: self, action: #selector(cancelButtonTapped))
         navigationItem.leftBarButtonItem?.tintColor = .black

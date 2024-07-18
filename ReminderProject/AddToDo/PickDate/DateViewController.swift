@@ -25,7 +25,7 @@ final class DateViewController: BaseViewController {
         addActions()
         bindData()
     }
-    func bindData() {
+    override func bindData() {
         viewModel.outputPickDate.bind { _ in
             self.showDateLabel.text = self.viewModel.outputPickDate.value
         }

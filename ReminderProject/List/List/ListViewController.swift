@@ -32,7 +32,7 @@ final class ListViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         tableView.reloadData()
     }
-    private func bindData() {
+    override func bindData() {
         // 정렬버튼
         renewValue(list: viewModel.outputSortList)
         // isComplete == false

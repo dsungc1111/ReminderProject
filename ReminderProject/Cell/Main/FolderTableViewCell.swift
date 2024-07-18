@@ -40,5 +40,4 @@ class FolderTableViewCell: BaseTableViewCell {
             make.leading.equalTo(contentLogo.snp.trailing).offset(10)
         }
     }
-
 }

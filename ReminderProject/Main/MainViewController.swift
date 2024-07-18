@@ -66,17 +66,25 @@ final class MainViewController: BaseViewController {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let tabBarView = UIView()
+    
     private let viewModel = MainViewModel()
     private var listTitle: [Folder] = []
     private var toDoList: [RealmTable] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationbarSetting()
-        collectionViewSetting()
         configureContentView()
-        bindData()
-        }
-    private func bindData() {
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.largeTitleDisplayMode = .always
+        collectionView.reloadData()
+    }
+    override func viewDidLayoutSubviews() {
+        navigationController?.navigationBar.layer.addBorder([.bottom], color: .systemGray4, width: 1)
+    }
+    
+    override func bindData() {
         viewModel.setListTitleTrigger.bind { value in
             self.listTitle = value
             self.myListLabel.isHidden = self.listTitle.count != 0 ? false : true
@@ -89,48 +97,15 @@ final class MainViewController: BaseViewController {
             self.configureContentView()
         }
     }
-    override func viewWillAppear(_ animated: Bool) {
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationItem.largeTitleDisplayMode = .always
-        collectionView.reloadData()
-    }
-    override func viewDidLayoutSubviews() {
-        navigationController?.navigationBar.layer.addBorder([.bottom], color: .systemGray4, width: 1)
-    }
-    @objc func searchButtonTapped() {
-        let vc = SearchViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    @objc func calendarButtonTapped() {
-        let vc = CalendarViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    @objc func listAddButtonTapped() {
-        let vc = AddFolderViewController()
-        vc.showToast = {
-            self.view.makeToast("저장완료!")
-        }
-        vc.viewModel.passFolder = self
-        let nav = UINavigationController(rootViewController: vc)
-        navigationController?.present(nav, animated: true)
-    }
-    @objc func addToDoButtonTapped() {
-        let vc = AddToDoViewController()
-        vc.showToast = {
-            self.view.makeToast("저장완료!")
-        }
-        vc.viewModel.passData = self
-        let nav = UINavigationController(rootViewController: vc)
-        navigationController?.present(nav, animated: true)
-    }
-    private func collectionViewSetting() {
+    
+    override func setCollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.id)
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
     }
-    private func navigationbarSetting() {
+    override func configureNavigationbar() {
         navigationItem.title = "미리알림"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(calendarButtonTapped))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(searchButtonTapped))
@@ -171,6 +146,7 @@ final class MainViewController: BaseViewController {
             make.verticalEdges.equalTo(scrollView)
         }
     }
+    
     func configureContentView() {
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(contentView).inset(20)
@@ -186,6 +162,33 @@ final class MainViewController: BaseViewController {
             make.horizontalEdges.bottom.equalTo(contentView).inset(20)
             make.height.greaterThanOrEqualTo(50*listTitle.count)
         }
+    }
+    
+    @objc func searchButtonTapped() {
+        let vc = SearchViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    @objc func calendarButtonTapped() {
+        let vc = CalendarViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    @objc func listAddButtonTapped() {
+        let vc = AddFolderViewController()
+        vc.showToast = {
+            self.view.makeToast("저장완료!")
+        }
+        vc.viewModel.passFolder = self
+        let nav = UINavigationController(rootViewController: vc)
+        navigationController?.present(nav, animated: true)
+    }
+    @objc func addToDoButtonTapped() {
+        let vc = AddToDoViewController()
+        vc.showToast = {
+            self.view.makeToast("저장완료!")
+        }
+        vc.viewModel.passData = self
+        let nav = UINavigationController(rootViewController: vc)
+        navigationController?.present(nav, animated: true)
     }
 }
 extension MainViewController:  PassDataDelegate, PassFolderDelegate {
@@ -226,9 +229,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: AddFolderTableViewCell.id, for: indexPath) as? AddFolderTableViewCell else { return AddFolderTableViewCell() }
-        let data = listTitle[indexPath.row]
-        cell.contentName.text = data.category
-        cell.numberOfContentsLabel.text = "\(data.content.count)" + "개"
+        cell.configureCell(data: listTitle[indexPath.row])
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

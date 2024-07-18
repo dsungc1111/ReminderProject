@@ -42,7 +42,7 @@ final class CalendarViewController: BaseViewController {
         calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
         bindData()
     }
-    private func bindData() {
+    override func bindData() {
         viewModel.monthOrWeek.bind { _ in
             if let calendar = self.viewModel.monthOrWeek.value {
                 self.calendarView.scope = calendar ? .month : .week

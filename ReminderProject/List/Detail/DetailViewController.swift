@@ -48,10 +48,13 @@ final class DetailViewController: BaseViewController {
         navigationButtonSetting()
         bindData()
     }
-    private func bindData() {
+    override func bindData() {
         viewModel.outputEditButton.bindLater { _ in
             self.memoTitleLabel.text = self.viewModel.outputMemoTitle.value
             self.memoLabel.text = self.viewModel.outputMemoContent.value
+            
+            
+            
         }
     }
     private func navigationButtonSetting() {
@@ -59,8 +62,12 @@ final class DetailViewController: BaseViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "수정", style: .plain, target: self, action: #selector(editButtonTapped))
+//        navigationItem.rightBarButtonItem?.isEnabled = false
     }
     @objc func editButtonTapped() {
+        let title = editMemoTitleTextField.text
+        let content = editMemoTitleTextField.text
+        
         if editMemoTitleTextField.text == "" {
             viewModel.inputMemoTitle.value = memoTitleLabel.text ?? ""
         } else {
@@ -71,6 +78,7 @@ final class DetailViewController: BaseViewController {
         } else {
             viewModel.inputMemoContent.value = editMemoTextField.text ?? ""
         }
+        
         viewModel.inputEditButton.value = ()
     }
     override func viewDidLayoutSubviews() {

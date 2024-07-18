@@ -33,7 +33,7 @@ final class PriorityViewController: BaseViewController {
         addActions()
         bindData()
     }
-    func bindData() {
+    override func bindData() {
         viewModel.outputPriority.bind { value in
             self.showPriority.text = value
         }

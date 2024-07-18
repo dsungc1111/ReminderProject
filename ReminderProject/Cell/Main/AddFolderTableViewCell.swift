@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 
-class AddFolderTableViewCell: BaseTableViewCell {
+final class AddFolderTableViewCell: BaseTableViewCell {
 
     let contentLogo = {
         let logo = UIImageView()
@@ -63,5 +63,9 @@ class AddFolderTableViewCell: BaseTableViewCell {
             make.trailing.equalTo(enterButton.snp.leading).offset(-5)
             make.centerY.equalTo(contentView.safeAreaLayoutGuide)
         }
+    }
+    func configureCell(data: Folder) {
+        contentName.text = data.category
+        numberOfContentsLabel.text = "\(data.content.count)" + "개"
     }
 }
