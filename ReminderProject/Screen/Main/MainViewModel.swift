@@ -42,7 +42,6 @@ class MainViewModel {
         outputPassList.value = repository.fetchCategory(cases: index)
     }
     private func deleteFolder(list: [Folder], index: Int) {
-        
         outputDeleteInfo.value = repository.deleteFolder(list: list, index: index)
     }
 }

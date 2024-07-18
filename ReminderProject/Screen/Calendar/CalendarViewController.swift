@@ -40,7 +40,6 @@ final class CalendarViewController: BaseViewController {
         let date = Date()
         calendarView.select(date)
         calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
-        
     }
     override func bindData() {
         viewModel.monthOrWeek.bind { _ in
@@ -57,17 +56,34 @@ final class CalendarViewController: BaseViewController {
         view.addSubview(searchTableView)
     }
     override func configureLayout() {
-        calendarView.snp.makeConstraints { make in
+        calendarView.snp.updateConstraints { make in
             make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(300)
+            make.height.equalTo(viewModel.monthOrWeek.value ?? false ?  300 : 120)
         }
         searchTableView.snp.makeConstraints { make in
             make.top.equalTo(calendarView.snp.bottom)
             make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
         }
     }
-    @objc func panGestureHandler() {
-        viewModel.monthOrWeek.value?.toggle()
+    @objc func panGestureHandler(gesture: UIPanGestureRecognizer) {
+        
+        if gesture.state == .began {
+            print("시작")
+        } else if gesture.state == .changed {
+            print("changed")
+        } else if gesture.state == .ended {
+            viewModel.monthOrWeek.value?.toggle()
+            print("ended")
+            configureLayout()
+        }
+        
+//        if gesture.direction == .up {
+//            viewModel.monthOrWeek.value = true
+//         }
+//         else if gesture.direction == .down {
+//             calendar.scope = .month
+//         }
+        
     }
 }
 extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {

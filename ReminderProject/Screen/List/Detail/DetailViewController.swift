@@ -118,7 +118,7 @@ final class DetailViewController: BaseViewController {
         } else {
             viewModel.inputMemoContent.value = editMemoTextField.text ?? ""
         }
-        
+    
         viewModel.inputEditButton.value = ()
     }
     

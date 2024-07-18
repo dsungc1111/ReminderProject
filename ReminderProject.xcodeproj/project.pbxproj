@@ -193,19 +193,13 @@
 		8B456F132C33E8D4003CFBD1 /* ReminderProject */ = {
 			isa = PBXGroup;
 			children = (
-				8B696A682C3E55DB00D99D4A /* Main */,
-				8B696A692C3E563400D99D4A /* AddToDo */,
-				8B696A6A2C3E564B00D99D4A /* AddFolder */,
-				8BFB5C592C3BEE1200CE14C5 /* Calendar */,
-				8BFB5C432C38F28C00CE14C5 /* Search */,
-				8B456F5E2C3617D6003CFBD1 /* List */,
+				8B6CEE962C49591900C0E466 /* App */,
+				8B6CEE952C4958F200C0E466 /* Screen */,
 				8B456F392C33F989003CFBD1 /* Cell */,
 				8BA3BF992C36DFD500229026 /* Resource */,
 				8BA3BF8F2C3622F400229026 /* Extension */,
 				8B456F3E2C33FA18003CFBD1 /* Protocol */,
 				8B456F292C33EBA3003CFBD1 /* Base */,
-				8B456F142C33E8D4003CFBD1 /* AppDelegate.swift */,
-				8B456F162C33E8D4003CFBD1 /* SceneDelegate.swift */,
 				8B456F1D2C33E8D6003CFBD1 /* Assets.xcassets */,
 				8B456F1F2C33E8D6003CFBD1 /* LaunchScreen.storyboard */,
 				8B456F222C33E8D6003CFBD1 /* Info.plist */,
@@ -325,6 +319,28 @@
 				8B696A6F2C3E653A00D99D4A /* TagViewModel.swift */,
 			);
 			path = SetTag;
+			sourceTree = "<group>";
+		};
+		8B6CEE952C4958F200C0E466 /* Screen */ = {
+			isa = PBXGroup;
+			children = (
+				8B696A682C3E55DB00D99D4A /* Main */,
+				8B696A692C3E563400D99D4A /* AddToDo */,
+				8B696A6A2C3E564B00D99D4A /* AddFolder */,
+				8BFB5C592C3BEE1200CE14C5 /* Calendar */,
+				8BFB5C432C38F28C00CE14C5 /* Search */,
+				8B456F5E2C3617D6003CFBD1 /* List */,
+			);
+			path = Screen;
+			sourceTree = "<group>";
+		};
+		8B6CEE962C49591900C0E466 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8B456F142C33E8D4003CFBD1 /* AppDelegate.swift */,
+				8B456F162C33E8D4003CFBD1 /* SceneDelegate.swift */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 		8BA3BF8F2C3622F400229026 /* Extension */ = {
