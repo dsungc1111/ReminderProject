@@ -272,8 +272,8 @@
 		8B696A4E2C3D798D00D99D4A /* Priority */ = {
 			isa = PBXGroup;
 			children = (
-				8B696A4F2C3D79A200D99D4A /* PriorityViewModel.swift */,
 				8B456F562C3529FF003CFBD1 /* PriorityViewController.swift */,
+				8B696A4F2C3D79A200D99D4A /* PriorityViewModel.swift */,
 			);
 			path = Priority;
 			sourceTree = "<group>";

@@ -35,10 +35,7 @@ final class SearchViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "검색"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = .always
-        bindData()
+    
     }
     override func bindData() {
         renewValue(list: viewModel.outputSearchList)
@@ -51,6 +48,13 @@ final class SearchViewController: BaseViewController {
             self.tableView.reloadData()
         }
     }
+    
+    override func configureNavigationbar() {
+        navigationItem.title = "검색"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+    }
+    
     override func configureHierarchy() {
         view.addSubview(searchBar)
         view.addSubview(tableView)

@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class AddToDoViewModel: PassDateDelegate {
+final class AddToDoViewModel {
     private enum CategoryToDo: String, CaseIterable {
         case dueDate = "마감일"
         case tag = "태그"
@@ -20,7 +20,7 @@ final class AddToDoViewModel: PassDateDelegate {
     var inputMemoTitle: Observable<String> = Observable("")
     var outputMemoTitle: Observable<Void?> = Observable(nil)
     var inputMemoContent: Observable<String> = Observable("")
-    // 위 둘로 인한 output은 없고 저장했다가 나중에 쓸거임
+    
     var inputCategoryTrigger: Observable<Void?> = Observable(nil)
     var inputSaveButton: Observable<Void?> = Observable(nil)
     
@@ -30,7 +30,7 @@ final class AddToDoViewModel: PassDateDelegate {
     var inputPriority: Observable<String?> = Observable(nil)
     var inputFolder: Observable<String?> = Observable(nil)
     lazy var getDataList: Observable<[String]> = Observable([inputTagText.value, inputPriority.value ?? "", "", inputFolder.value ?? ""])
-
+    
     var getData: Observable<Void?> = Observable(nil)
     
     var outputDataList: Observable< RealmTable?> = Observable(nil)
@@ -52,6 +52,9 @@ final class AddToDoViewModel: PassDateDelegate {
             self.saveData(memotitle: self.inputMemoTitle.value, memo: self.inputMemoContent.value)
         }
     }
+    
+}
+extension AddToDoViewModel {
     private func getCategory(){
         outputSelectCategory.value = CategoryToDo.allCases.map { $0.rawValue }
     }
@@ -61,6 +64,8 @@ final class AddToDoViewModel: PassDateDelegate {
         outputDataList.value = newData
         passData?.passDataList([newData])
     }
+}
+extension AddToDoViewModel: PassDateDelegate {
     func passDateValue(_ date: Date) {
         inputDueDate.value = date
         getData.value = ()

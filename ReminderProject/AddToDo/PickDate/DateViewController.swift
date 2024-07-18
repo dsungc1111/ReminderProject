@@ -10,37 +10,31 @@ import UIKit
 
 final class DateViewController: BaseViewController {
     
-    private let datePicker = UIDatePicker()
+    let viewModel = DateViewModel()
+    
+    private let datePicker = {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .date
+        picker.preferredDatePickerStyle = .inline
+        return picker
+    }()
     private let showDateLabel = {
         let label = UILabel()
         label.backgroundColor = .systemGray
         label.textAlignment = .center
         return label
     }()
-    let viewModel = DateViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        datePicker.datePickerMode = .date
-        datePicker.preferredDatePickerStyle = .inline
-        addActions()
-        bindData()
+        
     }
     override func bindData() {
         viewModel.outputPickDate.bind { _ in
             self.showDateLabel.text = self.viewModel.outputPickDate.value
         }
     }
-    func addActions() {
-        datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
-    }
-    @objc func dateChange(_ sender: UIDatePicker) {
-        viewModel.inputPickDate.value = sender.date
-    }
-    @objc func completebuttonTapped() {
-        viewModel.inputCompletionButtonTapped.value = ()
-        self.navigationController?.popViewController(animated: true)
-    }
+    
     override func configureHierarchy() {
         view.addSubview(datePicker)
         view.addSubview(showDateLabel)
@@ -56,4 +50,17 @@ final class DateViewController: BaseViewController {
             make.height.equalTo(70)
         }
     }
+    override func addActions() {
+        datePicker.addTarget(self, action: #selector(dateChange), for: .valueChanged)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
+    }
+    
+    @objc func dateChange(_ sender: UIDatePicker) {
+        viewModel.inputPickDate.value = sender.date
+    }
+    @objc func completebuttonTapped() {
+        viewModel.inputCompletionButtonTapped.value = ()
+        self.navigationController?.popViewController(animated: true)
+    }
+    
 }

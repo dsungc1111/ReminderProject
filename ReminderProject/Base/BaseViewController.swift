@@ -18,6 +18,7 @@ class BaseViewController: UIViewController {
         configureNavigationbar()
         bindData()
         setCollectionView()
+        addActions()
     }
     func bindData() {}
     func configureNavigationbar() {}
@@ -25,5 +26,6 @@ class BaseViewController: UIViewController {
     func configureLayout() {}
     func configureView() {}
     func setCollectionView() {}
+    func addActions() {}
     
 }

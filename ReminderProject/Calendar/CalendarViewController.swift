@@ -40,7 +40,7 @@ final class CalendarViewController: BaseViewController {
         let date = Date()
         calendarView.select(date)
         calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
-        bindData()
+        
     }
     override func bindData() {
         viewModel.monthOrWeek.bind { _ in
@@ -51,9 +51,6 @@ final class CalendarViewController: BaseViewController {
         viewModel.outputSelecteDateList.bind { _ in
             self.searchTableView.reloadData()
         }
-    }
-    @objc func panGestureHandler() {
-        viewModel.monthOrWeek.value?.toggle()
     }
     override func configureHierarchy() {
         view.addSubview(calendarView)
@@ -68,6 +65,9 @@ final class CalendarViewController: BaseViewController {
             make.top.equalTo(calendarView.snp.bottom)
             make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
         }
+    }
+    @objc func panGestureHandler() {
+        viewModel.monthOrWeek.value?.toggle()
     }
 }
 extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {

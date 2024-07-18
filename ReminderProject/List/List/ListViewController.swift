@@ -26,21 +26,18 @@ final class ListViewController: BaseViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationbarSetting()
-        bindData()
+        
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         tableView.reloadData()
     }
     override func bindData() {
-        // 정렬버튼
         renewValue(list: viewModel.outputSortList)
-        // isComplete == false
-        // Reamltable 삭제
         renewValue(list: viewModel.outputDeleteInfo)
-        // 깃발 > 중요
         renewValue(list: viewModel.outputStarList)
         renewValue(list: viewModel.outputFilteredReloadList)
+        
         viewModel.outputCompleteButton.bindLater { value in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 guard let value = value else { return }
@@ -56,7 +53,8 @@ final class ListViewController: BaseViewController {
             self.tableView.reloadData()
         }
     }
-    private func navigationbarSetting() {
+    
+    override func configureNavigationbar() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: SortButtonImages.ellipsis.rawValue), style: .plain, target: self, action: nil)
@@ -64,9 +62,6 @@ final class ListViewController: BaseViewController {
         let memoContent = UIAction(title: SortButtonTitle.sortByContent.rawValue, image: UIImage(systemName: SortButtonImages.note.rawValue), handler: { _ in self.sortButtonTapped(index: 1) })
         let memoDate = UIAction(title: SortButtonTitle.sortByTime.rawValue, image: UIImage(systemName: SortButtonImages.calender.rawValue), handler: { _ in self.sortButtonTapped(index: 2) })
         navigationItem.rightBarButtonItem?.menu = UIMenu(title: SortButtonTitle.sortButton.rawValue, options: .displayInline, children: [memoTitle, memoContent, memoDate])
-    }
-    private func sortButtonTapped(index: Int) {
-        viewModel.inputSortIndex.value = index
     }
     override func configureHierarchy() {
         view.addSubview(tableView)
@@ -76,6 +71,11 @@ final class ListViewController: BaseViewController {
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
+  
+    private func sortButtonTapped(index: Int) {
+        viewModel.inputSortIndex.value = index
+    }
+   
 }
 extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

@@ -54,8 +54,7 @@ final class AddFolderViewController: BaseViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureNavigationbar()
-        bindData()
+        
     }
     override func bindData() {
         viewModel.outputFolderTitle.bind { value in
@@ -70,22 +69,7 @@ final class AddFolderViewController: BaseViewController {
             self.navigationController?.dismiss(animated: true)
         }
     }
-    @objc func colorButtonTapped() {
-        let colorPickerVC = UIColorPickerViewController()
-         colorPickerVC.delegate = self
-         present(colorPickerVC, animated: true, completion: nil)
-    }
-    @objc func folderNameDidchange(_ sender: UITextField) {
-        guard let text = sender.text else { return }
-        viewModel.inputFolderTitle.value = text
-    }
-    @objc func cancelButtonTapped() {
-        navigationController?.dismiss(animated: true)
-    }
-    @objc func saveButtonTapped() {
-        guard let folderTitle = folderNameTextField.text else { return}
-        viewModel.inputSaveFolder.value = folderTitle
-    }
+
     override func configureNavigationbar() {
         navigationItem.title = NavigationBarTitle.title.rawValue
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: NavigationBarTitle.cancel.rawValue, style: .plain, target: self, action: #selector(cancelButtonTapped))
@@ -95,6 +79,7 @@ final class AddFolderViewController: BaseViewController {
         navigationItem.rightBarButtonItem?.isEnabled = false
         navigationItem.backButtonTitle = NavigationBarTitle.cancel.rawValue
     }
+    
     override func configureHierarchy() {
         view.addSubview(logoBackView)
         view.addSubview(listLogo)
@@ -123,6 +108,22 @@ final class AddFolderViewController: BaseViewController {
             make.height.equalTo(40)
             make.width.equalTo(100)
         }
+    }
+    @objc func colorButtonTapped() {
+        let colorPickerVC = UIColorPickerViewController()
+         colorPickerVC.delegate = self
+         present(colorPickerVC, animated: true, completion: nil)
+    }
+    @objc func folderNameDidchange(_ sender: UITextField) {
+        guard let text = sender.text else { return }
+        viewModel.inputFolderTitle.value = text
+    }
+    @objc func cancelButtonTapped() {
+        navigationController?.dismiss(animated: true)
+    }
+    @objc func saveButtonTapped() {
+        guard let folderTitle = folderNameTextField.text else { return}
+        viewModel.inputSaveFolder.value = folderTitle
     }
 }
 extension AddFolderViewController: UIColorPickerViewControllerDelegate {

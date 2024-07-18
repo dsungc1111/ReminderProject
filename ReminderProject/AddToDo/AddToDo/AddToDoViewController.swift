@@ -17,7 +17,6 @@ final class AddToDoViewController: BaseViewController {
         case cancel = "취소"
         case save = "저장"
     }
-    let viewModel = AddToDoViewModel()
     
     private lazy var tableView = {
         let view = UITableView()
@@ -30,20 +29,23 @@ final class AddToDoViewController: BaseViewController {
         view.showsVerticalScrollIndicator = false
         return view
     }()
+    
     private let loadedImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
         return view
     }()
+    
     private var listTitle: [Folder] = []
     private var toDolist: [RealmTable] = []
     
     var showToast: (() -> Void)?
     
+    let viewModel = AddToDoViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     override func bindData() {
         viewModel.outputMemoTitle.bindLater { _ in
@@ -97,7 +99,6 @@ final class AddToDoViewController: BaseViewController {
     }
 }
 
-
 extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -132,19 +133,14 @@ extension AddToDoViewController: UITableViewDelegate, UITableViewDataSource {
             return
         }
         viewModel.inputMemoTitle.value = text
-      
     }
     @objc func memoFieldChange(_ textField: UITextField) {
         guard let text = textField.text, !text.isEmpty else { return }
         viewModel.inputMemoContent.value = text
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return 200
-        }
-        else {
-            return 80
-        }
+        if indexPath.section == 0 { return 200 }
+        else { return 80 }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
@@ -192,7 +188,6 @@ extension AddToDoViewController: PHPickerViewControllerDelegate {
                     self.loadedImageView.image = image as? UIImage
                 }
             }
-            
         }
         dismiss(animated: true)
     }

@@ -23,7 +23,6 @@ final class FolderListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        bindData()
     }
     override func bindData() {
         viewModel.outputListTitle.bind { value in

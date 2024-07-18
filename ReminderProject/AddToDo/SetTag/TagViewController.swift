@@ -10,6 +10,8 @@ import SnapKit
 
 final class TagViewController: BaseViewController {
 
+    let viewModel = TagViewModel()
+    
     private let tagTextField = {
         let tag = UITextField()
         tag.backgroundColor = .white
@@ -22,15 +24,8 @@ final class TagViewController: BaseViewController {
         return tag
     }()
     
-    let viewModel = TagViewModel()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
-    }
-    @objc func completebuttonTapped() {
-        viewModel.inputTagText.value = tagTextField.text
-        navigationController?.popViewController(animated: true)
     }
     override func configureHierarchy() {
         view.addSubview(tagTextField)
@@ -41,5 +36,13 @@ final class TagViewController: BaseViewController {
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(50)
         }
+    }
+    override func addActions() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
+    }
+    
+    @objc func completebuttonTapped() {
+        viewModel.inputTagText.value = tagTextField.text
+        navigationController?.popViewController(animated: true)
     }
 }

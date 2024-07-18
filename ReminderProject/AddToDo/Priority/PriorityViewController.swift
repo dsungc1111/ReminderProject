@@ -30,25 +30,14 @@ final class PriorityViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addActions()
-        bindData()
+        
     }
     override func bindData() {
         viewModel.outputPriority.bind { value in
             self.showPriority.text = value
         }
     }
-    private func addActions() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
-        segmentControl.addTarget(self, action: #selector(segmentValueChanged), for: .valueChanged)
-    }
-    @objc func segmentValueChanged(_ sender:UISegmentedControl) {
-        viewModel.inputPriority.value = segmentControl.selectedSegmentIndex
-    }
-    @objc func completebuttonTapped() {
-        viewModel.completionButtonTapped.value = ()
-        navigationController?.popViewController(animated: true)
-    }
+  
     override func configureHierarchy() {
         view.addSubview(segmentControl)
         view.addSubview(showPriority)
@@ -64,5 +53,18 @@ final class PriorityViewController: BaseViewController {
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(50)
         }
+    }
+    
+    override func addActions() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "확인", style: .plain, target: self, action: #selector(completebuttonTapped))
+        segmentControl.addTarget(self, action: #selector(segmentValueChanged), for: .valueChanged)
+    }
+    
+    @objc func segmentValueChanged(_ sender:UISegmentedControl) {
+        viewModel.inputPriority.value = segmentControl.selectedSegmentIndex
+    }
+    @objc func completebuttonTapped() {
+        viewModel.completionButtonTapped.value = ()
+        navigationController?.popViewController(animated: true)
     }
 }

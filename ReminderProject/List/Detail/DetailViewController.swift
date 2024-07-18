@@ -45,46 +45,28 @@ final class DetailViewController: BaseViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationButtonSetting()
-        bindData()
-    }
-    override func bindData() {
-        viewModel.outputEditButton.bindLater { _ in
-            self.memoTitleLabel.text = self.viewModel.outputMemoTitle.value
-            self.memoLabel.text = self.viewModel.outputMemoContent.value
-            
-            
-            
-        }
-    }
-    private func navigationButtonSetting() {
-        navigationItem.title = "상세화면"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = .always
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "수정", style: .plain, target: self, action: #selector(editButtonTapped))
-//        navigationItem.rightBarButtonItem?.isEnabled = false
-    }
-    @objc func editButtonTapped() {
-        let title = editMemoTitleTextField.text
-        let content = editMemoTitleTextField.text
         
-        if editMemoTitleTextField.text == "" {
-            viewModel.inputMemoTitle.value = memoTitleLabel.text ?? ""
-        } else {
-            viewModel.inputMemoTitle.value = editMemoTitleTextField.text ?? ""
-        }
-        if editMemoTextField.text == "" {
-            viewModel.inputMemoContent.value = memoLabel.text ?? ""
-        } else {
-            viewModel.inputMemoContent.value = editMemoTextField.text ?? ""
-        }
-        
-        viewModel.inputEditButton.value = ()
     }
     override func viewDidLayoutSubviews() {
         editMemoTitleTextField.layer.addBorder([.bottom], color: .darkGray, width: 1)
         editMemoTextField.layer.addBorder([.bottom], color: .darkGray, width: 1)
     }
+    
+    override func bindData() {
+        viewModel.outputEditButton.bindLater { _ in
+            self.memoTitleLabel.text = self.viewModel.outputMemoTitle.value
+            self.memoLabel.text = self.viewModel.outputMemoContent.value
+        }
+    }
+    
+    override func configureNavigationbar() {
+        navigationItem.title = "상세화면"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "수정", style: .plain, target: self, action: #selector(editButtonTapped))
+        //        navigationItem.rightBarButtonItem?.isEnabled = false
+    }
+    
     override func configureHierarchy() {
         view.addSubview(memoTitleLabel)
         view.addSubview(memoLabel)
@@ -121,5 +103,24 @@ final class DetailViewController: BaseViewController {
             make.height.equalTo(50)
         }
     }
+    
+    @objc func editButtonTapped() {
+        //        let title = editMemoTitleTextField.text
+        //        let content = editMemoTitleTextField.text
+        //
+        if editMemoTitleTextField.text == "" {
+            viewModel.inputMemoTitle.value = memoTitleLabel.text ?? ""
+        } else {
+            viewModel.inputMemoTitle.value = editMemoTitleTextField.text ?? ""
+        }
+        if editMemoTextField.text == "" {
+            viewModel.inputMemoContent.value = memoLabel.text ?? ""
+        } else {
+            viewModel.inputMemoContent.value = editMemoTextField.text ?? ""
+        }
+        
+        viewModel.inputEditButton.value = ()
+    }
+    
 }
 
