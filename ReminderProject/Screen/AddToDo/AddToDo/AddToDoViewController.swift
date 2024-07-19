@@ -11,9 +11,7 @@ import PhotosUI
 import Toast
 
 final class AddToDoViewController: BaseViewController {
-    deinit {
-        print("addtodo VC deinit")
-    }
+  
     private enum NavigationBarTitle: String {
         case title = "새로운 미리 알림"
         case cancel = "취소"

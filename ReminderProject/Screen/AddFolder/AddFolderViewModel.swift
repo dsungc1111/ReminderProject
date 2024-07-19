@@ -16,6 +16,9 @@ final class AddFolderViewModel {
     
     var inputSaveFolder: Observable<String> = Observable("")
     var outputSaveFolder:  Observable<Void?> = Observable(nil)
+    var inputFileColor: Observable<String> = Observable("")
+    var outputFileColor: Observable<String> = Observable("")
+    
     
     init() {
         transform()
@@ -25,7 +28,7 @@ final class AddFolderViewModel {
             self?.checkTitle(text: value)
         }
         inputSaveFolder.bindLater { [weak self] title in
-            self?.getNewFoler(title: title)
+            self?.getNewFoler(title: title, color: self?.inputFileColor.value ?? "")
         }
     }
     private func checkTitle(text: String?)  {
@@ -36,8 +39,8 @@ final class AddFolderViewModel {
             outputFolderTitle.value = true
         }
     }
-    private func getNewFoler(title: String) {
-        repository.createFolder(title: title)
+    private func getNewFoler(title: String, color: String) {
+        repository.createFolder(title: title, color: color)
         let list = repository.fetchFolder()
         passFolder?.passFolderList(list)
         outputSaveFolder.value = ()

@@ -14,7 +14,7 @@ final class AddFolderTableViewCell: BaseTableViewCell {
     let contentLogo = {
         let logo = UIImageView()
         logo.contentMode = .center
-        logo.tintColor = .systemBlue
+//        logo.tintColor = .systemBlue
         logo.image = UIImage(systemName: "list.bullet.circle.fill")
         logo.contentMode = .scaleAspectFill
         return logo
@@ -67,5 +67,6 @@ final class AddFolderTableViewCell: BaseTableViewCell {
     func configureCell(data: Folder) {
         contentName.text = data.category
         numberOfContentsLabel.text = "\(data.content.count)" + "개"
+        contentLogo.tintColor = UIColor(hexCode: data.color ?? "#007AFF")
     }
 }

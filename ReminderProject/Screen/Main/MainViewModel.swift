@@ -23,7 +23,6 @@ class MainViewModel {
     
     init() {
         transform()
-        print("init")
     }
     private func transform() {
         setListTitleTrigger.value = repository.fetchFolder()

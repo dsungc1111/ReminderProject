@@ -9,9 +9,7 @@ import Foundation
 import RealmSwift
 
 class DetailViewModel {
-    deinit {
-        print("d")
-    }
+   
     private let repository = RealmTableRepository()
     var getId = ObjectId()
     var inputMemoTitle: Observable<String> = Observable("")

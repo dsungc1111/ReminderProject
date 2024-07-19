@@ -37,8 +37,4 @@ class FolderViewModel {
         passFolder?.passList(list.category)
     }
     
-    
-    
-    
-    
 }

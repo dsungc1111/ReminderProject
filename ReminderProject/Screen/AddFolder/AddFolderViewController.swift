@@ -10,14 +10,13 @@ import SnapKit
 import Toast
 
 final class AddFolderViewController: BaseViewController {
-    deinit {
-        print("deinit")
-    }
+ 
     private enum NavigationBarTitle: String {
         case title = "새로운 목록"
         case cancel = "취소"
         case save = "저장"
     }
+    var setFileColor: UIColor?
     let viewModel = AddFolderViewModel()
     var showToast: (() -> Void)?
     private let logoBackView: UIView = {
@@ -55,10 +54,12 @@ final class AddFolderViewController: BaseViewController {
         btn.addTarget(self, action: #selector(colorButtonTapped), for: .touchUpInside)
         return btn
     }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+       
     }
+   
     override func bindData() {
         viewModel.outputFolderTitle.bind { [weak self] value in
             if let value = value {
@@ -133,6 +134,8 @@ extension AddFolderViewController: UIColorPickerViewControllerDelegate {
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
         logoBackView.layer.shadowColor = viewController.selectedColor.cgColor
         listLogo.tintColor = viewController.selectedColor
+        viewModel.inputFileColor.value = viewController.selectedColor.toHex()
+        print(viewModel.inputFileColor.value)
     }
     
 //    func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
@@ -141,3 +144,5 @@ extension AddFolderViewController: UIColorPickerViewControllerDelegate {
 //        print(type(of: viewController.selectedColor))
 //    }
 }
+
+

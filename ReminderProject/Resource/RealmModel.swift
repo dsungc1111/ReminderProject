@@ -12,13 +12,13 @@ class Folder: Object {
     @Persisted(primaryKey: true) var id: ObjectId
     @Persisted var category: String
     @Persisted var content: List<RealmTable>
-//    @Persisted var color: String
+    @Persisted var color: String?
     
-    convenience init(category: String, content: List<RealmTable>) {
+    convenience init(category: String, content: List<RealmTable>, color: String? = nil) {
         self.init()
         self.category = category
         self.content = content
-//        self.color = color
+        self.color = color
     }
 }
 

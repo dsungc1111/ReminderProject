@@ -121,8 +121,8 @@ final class RealmTableRepository {
             }
         }
     }
-    func createFolder(title: String) {
-        let newFolder = Folder(category: title, content: List<RealmTable>())
+    func createFolder(title: String, color: String) {
+        let newFolder = Folder(category: title, content: List<RealmTable>(), color: color)
         try! realm.write {
             realm.add(newFolder)
         }
@@ -158,6 +158,13 @@ final class RealmTableRepository {
         try! realm.write {
             result.setValue(title, forKey: "\(MemoContents.memoTitle.rawValue)")
             result.setValue(memo, forKey: "\(MemoContents.memo.rawValue)")
+        }
+    }
+    
+    func saveFileColor(color: String, id: ObjectId) {
+        let result = realm.objects(Folder.self).filter("key == %@", id)
+        try! realm.write {
+            result.setValue(color, forKey: "color")
         }
     }
     

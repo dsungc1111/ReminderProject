@@ -10,9 +10,7 @@ import SnapKit
 
 
 final class DetailViewController: BaseViewController {
-    deinit {
-        print("d")
-    }
+ 
     var viewModel = DetailViewModel()
     let memoTitleLabel = {
         let label = UILabel()
