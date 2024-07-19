@@ -23,8 +23,6 @@ final class CalendarViewController: BaseViewController {
         calendar.appearance.headerMinimumDissolvedAlpha = 0.0
         calendar.appearance.headerDateFormat = "YYYY년 MM월"
         calendar.swipeToChooseGesture.isEnabled = true
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureHandler))
-        calendar.addGestureRecognizer(panGestureRecognizer)
         return calendar
     }()
     private lazy var searchTableView = {
@@ -33,13 +31,13 @@ final class CalendarViewController: BaseViewController {
         tableView.dataSource = self
         tableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
         tableView.backgroundColor = .clear
+        tableView.isScrollEnabled = false
         return tableView
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        let date = Date()
-        calendarView.select(date)
-        calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
+    
+      
     }
     override func bindData() {
         viewModel.monthOrWeek.bind { _ in
@@ -65,6 +63,15 @@ final class CalendarViewController: BaseViewController {
             make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
         }
     }
+    override func addActions() {
+        let date = Date()
+        calendarView.select(date)
+        calendarView.delegate?.calendar?(calendarView, didSelect: date, at: .current)
+        
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureHandler))
+        view.addGestureRecognizer(panGestureRecognizer)
+    }
+    
     @objc func panGestureHandler(gesture: UIPanGestureRecognizer) {
         
         if gesture.state == .began {
@@ -76,15 +83,8 @@ final class CalendarViewController: BaseViewController {
             print("ended")
             configureLayout()
         }
-        
-//        if gesture.direction == .up {
-//            viewModel.monthOrWeek.value = true
-//         }
-//         else if gesture.direction == .down {
-//             calendar.scope = .month
-//         }
-        
     }
+ 
 }
 extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
