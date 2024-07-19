@@ -9,7 +9,7 @@ import Foundation
 
 class FolderViewModel {
     var passFolder: PassDateDelegate?
-    
+   
     private let repository = RealmTableRepository()
     
     var inputListTrigger: Observable<Void?> = Observable(nil)
@@ -23,13 +23,13 @@ class FolderViewModel {
         transform()
     }
     private func transform() {
-        inputListTrigger.bind { _ in
-            self.outputListTitle.value = self.repository.fetchFolder()
+        inputListTrigger.bind { [weak self] _ in
+            self?.outputListTitle.value = self?.repository.fetchFolder() ?? []
         }
         
-        inputSelectedFolder.bind { value in
+        inputSelectedFolder.bind { [weak self] value in
             if let value = value {
-                self.passFolderData(list: value)
+                self?.passFolderData(list: value)
             }
         }
     }

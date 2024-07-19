@@ -9,7 +9,7 @@
 import UIKit
 
 final class DateViewController: BaseViewController {
-    
+   
     let viewModel = DateViewModel()
     
     private let datePicker = {
@@ -30,8 +30,8 @@ final class DateViewController: BaseViewController {
         
     }
     override func bindData() {
-        viewModel.outputPickDate.bind { _ in
-            self.showDateLabel.text = self.viewModel.outputPickDate.value
+        viewModel.outputPickDate.bind { [weak self] _ in
+            self?.showDateLabel.text = self?.viewModel.outputPickDate.value
         }
     }
     

@@ -35,28 +35,28 @@ final class ListViewModel {
         transform()
     }
     private func transform() {
-        inputSortIndex.bind { index in
-            self.sortFunction(index: index)
+        inputSortIndex.bind { [weak self] index in
+            self?.sortFunction(index: index)
         }
-        inputCompleteButton.bindLater { value in
-            self.outputCompleteButton.value = self.completionButtonTapped()
+        inputCompleteButton.bindLater { [weak self] value in
+            self?.outputCompleteButton.value = self?.completionButtonTapped()
         }
-        inputPriority.bindLater { value in
+        inputPriority.bindLater { [weak self] value in
             guard let value = value else { return }
-            self.getPriority(list: value)
+            self?.getPriority(list: value)
         }
-        inputDeleteInfo.bindLater { value in
+        inputDeleteInfo.bindLater { [weak self] value in
             guard let list = value?.keys.first else { return }
             guard let index = value?.values.first else { return }
-            self.deleteToDo(list: list, index: index)
+            self?.deleteToDo(list: list, index: index)
         }
-        inputStarList.bindLater { value in
+        inputStarList.bindLater { [weak self] value in
             guard let list = value?.keys.first else { return }
             guard let index = value?.values.first else { return }
-            self.changeStar(list: list, index: index)
+            self?.changeStar(list: list, index: index)
         }
-        inputFilteredReloadList.bindLater { _ in
-                  self.fetchFilteredList()
+        inputFilteredReloadList.bindLater { [weak self] _ in
+            self?.fetchFilteredList()
               }
     }
     private func fetchFilteredList() {
@@ -83,6 +83,6 @@ final class ListViewModel {
     }
     private func changeStar(list: [RealmTable], index: Int) {
         outputStarList.value = repository.changeStar(list: list, index: index, page: getPageNumber)
-    }
-    
+    }    
 }
+ 

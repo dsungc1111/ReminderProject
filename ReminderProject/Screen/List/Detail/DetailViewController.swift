@@ -10,7 +10,9 @@ import SnapKit
 
 
 final class DetailViewController: BaseViewController {
-    
+    deinit {
+        print("d")
+    }
     var viewModel = DetailViewModel()
     let memoTitleLabel = {
         let label = UILabel()
@@ -53,9 +55,9 @@ final class DetailViewController: BaseViewController {
     }
     
     override func bindData() {
-        viewModel.outputEditButton.bindLater { _ in
-            self.memoTitleLabel.text = self.viewModel.outputMemoTitle.value
-            self.memoLabel.text = self.viewModel.outputMemoContent.value
+        viewModel.outputEditButton.bindLater { [weak self] _ in
+            self?.memoTitleLabel.text = self?.viewModel.outputMemoTitle.value
+            self?.memoLabel.text = self?.viewModel.outputMemoContent.value
         }
     }
     

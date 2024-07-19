@@ -23,19 +23,20 @@ class MainViewModel {
     
     init() {
         transform()
+        print("init")
     }
     private func transform() {
         setListTitleTrigger.value = repository.fetchFolder()
-        inputPassList.bindLater { index in
-            self.fetchCategory(index: index)
+        inputPassList.bindLater { [weak self] index in
+            self?.fetchCategory(index: index)
         }
-        inputDeleteInfo.bindLater { value in
+        inputDeleteInfo.bindLater { [weak self] value in
             guard let list = value?.keys.first else { return }
             guard let index = value?.values.first else { return }
-            self.deleteFolder(list: list, index: index)
+            self?.deleteFolder(list: list, index: index)
         }
-        inputFolderTrigger.bind { _ in
-            self.outputFolderTrigger.value = self.repository.fetchFolder()
+        inputFolderTrigger.bind { [weak self] _ in
+            self?.outputFolderTrigger.value = self?.repository.fetchFolder() ?? []
         }
     }
     private func fetchCategory(index: Int) {
@@ -43,5 +44,8 @@ class MainViewModel {
     }
     private func deleteFolder(list: [Folder], index: Int) {
         outputDeleteInfo.value = repository.deleteFolder(list: list, index: index)
+    }
+    deinit {
+        print("viewmodel deinit")
     }
 }

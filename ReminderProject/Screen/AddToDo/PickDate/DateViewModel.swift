@@ -8,6 +8,7 @@
 import Foundation
 
 final class DateViewModel {
+    
     var passDate: PassDateDelegate?
     
     var inputPickDate: Observable<Date?> = Observable(Date())
@@ -20,13 +21,13 @@ final class DateViewModel {
         transform()
     }
     private func transform() {
-        inputPickDate.bind { _ in
-            if let date = self.inputPickDate.value {
-                self.outputPickDate.value = Date.getDateString(date: date)
+        inputPickDate.bind { [weak self] _ in
+            if let date = self?.inputPickDate.value {
+                self?.outputPickDate.value = Date.getDateString(date: date)
             }
         }
-        inputCompletionButtonTapped.bind { _ in
-            self.passDateInfo()
+        inputCompletionButtonTapped.bind { [weak self] _ in
+            self?.passDateInfo()
         }
     }
     private func passDateInfo() {

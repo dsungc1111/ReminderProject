@@ -10,6 +10,7 @@ import SnapKit
 
 
 final class ListViewController: BaseViewController {
+ 
     private enum SwipeButtonTitle: String {
         case star = "중요"
         case delete = "삭제"
@@ -27,7 +28,6 @@ final class ListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
     }
     override func viewWillAppear(_ animated: Bool) {
         tableView.reloadData()
@@ -38,19 +38,19 @@ final class ListViewController: BaseViewController {
         renewValue(list: viewModel.outputStarList)
         renewValue(list: viewModel.outputFilteredReloadList)
         
-        viewModel.outputCompleteButton.bindLater { value in
+        viewModel.outputCompleteButton.bindLater { [weak self] value in
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 guard let value = value else { return }
-                self.list = value
-                self.tableView.reloadData()
+                self?.list = value
+                self?.tableView.reloadData()
             }
         }
     }
     private func renewValue(list: Observable<[RealmTable]?>) {
-        list.bindLater { value in
+        list.bindLater { [weak self] value in
             guard let value = value else { return }
-            self.list = value
-            self.tableView.reloadData()
+            self?.list = value
+            self?.tableView.reloadData()
         }
     }
     
@@ -58,9 +58,9 @@ final class ListViewController: BaseViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: SortButtonImages.ellipsis.rawValue), style: .plain, target: self, action: nil)
-        let memoTitle = UIAction(title: SortButtonTitle.sortByTitle.rawValue, image: UIImage(systemName: SortButtonImages.lineweight.rawValue), handler: { _ in self.sortButtonTapped(index: 0) })
-        let memoContent = UIAction(title: SortButtonTitle.sortByContent.rawValue, image: UIImage(systemName: SortButtonImages.note.rawValue), handler: { _ in self.sortButtonTapped(index: 1) })
-        let memoDate = UIAction(title: SortButtonTitle.sortByTime.rawValue, image: UIImage(systemName: SortButtonImages.calender.rawValue), handler: { _ in self.sortButtonTapped(index: 2) })
+        let memoTitle = UIAction(title: SortButtonTitle.sortByTitle.rawValue, image: UIImage(systemName: SortButtonImages.lineweight.rawValue), handler: { [weak self] _ in self?.sortButtonTapped(index: 0) })
+        let memoContent = UIAction(title: SortButtonTitle.sortByContent.rawValue, image: UIImage(systemName: SortButtonImages.note.rawValue), handler: { [weak self] _ in self?.sortButtonTapped(index: 1) })
+        let memoDate = UIAction(title: SortButtonTitle.sortByTime.rawValue, image: UIImage(systemName: SortButtonImages.calender.rawValue), handler: { [weak self] _ in self?.sortButtonTapped(index: 2) })
         navigationItem.rightBarButtonItem?.menu = UIMenu(title: SortButtonTitle.sortButton.rawValue, options: .displayInline, children: [memoTitle, memoContent, memoDate])
     }
     override func configureHierarchy() {
@@ -116,13 +116,13 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .normal, title: SwipeButtonTitle.delete.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            self.viewModel.inputDeleteInfo.value = [self.list : indexPath.row]
+        let delete = UIContextualAction(style: .normal, title: SwipeButtonTitle.delete.rawValue) {[weak self] (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            self?.viewModel.inputDeleteInfo.value = [self?.list ?? [] : indexPath.row]
             success(true)
         }
         delete.backgroundColor = .systemRed
-        let star = UIContextualAction(style: .normal, title: SwipeButtonTitle.star.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            self.viewModel.inputStarList.value = [self.list : indexPath.row]
+        let star = UIContextualAction(style: .normal, title: SwipeButtonTitle.star.rawValue) { [weak self] (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            self?.viewModel.inputStarList.value = [self?.list ?? [] : indexPath.row]
             success(true)
         }
         star.backgroundColor = .systemYellow

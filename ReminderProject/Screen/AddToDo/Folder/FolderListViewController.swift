@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 final class FolderListViewController: BaseViewController {
-
+ 
     private var listTitle: [Folder] = []
     let viewModel = FolderViewModel()
     lazy var tableView = {
@@ -25,11 +25,11 @@ final class FolderListViewController: BaseViewController {
 
     }
     override func bindData() {
-        viewModel.outputListTitle.bind { value in
-            self.listTitle = value
+        viewModel.outputListTitle.bind { [weak self] value in
+            self?.listTitle = value
         }
-        viewModel.outputSelectedFolder.bindLater { _ in
-            self.navigationController?.popViewController(animated: true)
+        viewModel.outputSelectedFolder.bindLater { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
         }
     }
     override func configureHierarchy() {

@@ -8,7 +8,6 @@
 import Foundation
 
 final class AddFolderViewModel {
-    
     private let repository = RealmTableRepository()
     var passFolder: PassFolderDelegate?
     
@@ -22,11 +21,11 @@ final class AddFolderViewModel {
         transform()
     }
     private func transform() {
-        inputFolderTitle.bind { value in
-            self.checkTitle(text: value)
+        inputFolderTitle.bind { [weak self] value in
+            self?.checkTitle(text: value)
         }
-        inputSaveFolder.bindLater { title in
-            self.getNewFoler(title: title)
+        inputSaveFolder.bindLater { [weak self] title in
+            self?.getNewFoler(title: title)
         }
     }
     private func checkTitle(text: String?)  {

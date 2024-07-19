@@ -10,12 +10,12 @@ import FSCalendar
 import SnapKit
 
 final class CalendarViewController: BaseViewController {
-    
+  
     private var chooseMonthOrWeek = true
     
     private let viewModel = CalendarViewModel()
     
-    private lazy var calendarView = {
+    private lazy var calendarView = { 
         let calendar = FSCalendar()
         calendar.delegate = self
         calendar.dataSource = self
@@ -25,6 +25,7 @@ final class CalendarViewController: BaseViewController {
         calendar.swipeToChooseGesture.isEnabled = true
         return calendar
     }()
+    
     private lazy var searchTableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -37,16 +38,15 @@ final class CalendarViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     
-      
     }
     override func bindData() {
-        viewModel.monthOrWeek.bind { _ in
-            if let calendar = self.viewModel.monthOrWeek.value {
-                self.calendarView.scope = calendar ? .month : .week
+        viewModel.monthOrWeek.bind { [weak self] _ in
+            if let calendar = self?.viewModel.monthOrWeek.value {
+                self?.calendarView.scope = calendar ? .month : .week
             }
         }
-        viewModel.outputSelecteDateList.bind { _ in
-            self.searchTableView.reloadData()
+        viewModel.outputSelecteDateList.bind { [weak self] _ in
+            self?.searchTableView.reloadData()
         }
     }
     override func configureHierarchy() {
@@ -74,13 +74,8 @@ final class CalendarViewController: BaseViewController {
     
     @objc func panGestureHandler(gesture: UIPanGestureRecognizer) {
         
-        if gesture.state == .began {
-            print("시작")
-        } else if gesture.state == .changed {
-            print("changed")
-        } else if gesture.state == .ended {
+     if gesture.state == .ended {
             viewModel.monthOrWeek.value?.toggle()
-            print("ended")
             configureLayout()
         }
     }

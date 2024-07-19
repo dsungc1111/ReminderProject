@@ -11,7 +11,9 @@ import PhotosUI
 import Toast
 
 final class AddToDoViewController: BaseViewController {
- 
+    deinit {
+        print("addtodo VC deinit")
+    }
     private enum NavigationBarTitle: String {
         case title = "새로운 미리 알림"
         case cancel = "취소"
@@ -48,17 +50,17 @@ final class AddToDoViewController: BaseViewController {
         super.viewDidLoad()
     }
     override func bindData() {
-        viewModel.outputMemoTitle.bindLater { _ in
-            self.navigationItem.rightBarButtonItem?.isEnabled = true
-            self.navigationItem.rightBarButtonItem?.tintColor = .black
+        viewModel.outputMemoTitle.bindLater { [weak self] _ in
+            self?.navigationItem.rightBarButtonItem?.isEnabled = true
+            self?.navigationItem.rightBarButtonItem?.tintColor = .black
         }
-        viewModel.getData.bind { _ in
-            self.tableView.reloadData()
+        viewModel.getData.bind { [weak self] _ in
+            self?.tableView.reloadData()
         }
-        viewModel.outputDataList.bind { _ in
-            if let image = self.loadedImageView.image,
-               let filename = self.viewModel.outputDataList.value?.key {
-                self.saveImageToDocument(image: image, filename: "\(filename)")
+        viewModel.outputDataList.bind { [weak self] _ in
+            if let image = self?.loadedImageView.image,
+               let filename = self?.viewModel.outputDataList.value?.key {
+                self?.saveImageToDocument(image: image, filename: "\(filename)")
             }
         }
     }
@@ -183,9 +185,9 @@ extension AddToDoViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         if let itemProvider = results.first?.itemProvider,
            itemProvider.canLoadObject(ofClass: UIImage.self) {
-            itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
                 DispatchQueue.main.async {
-                    self.loadedImageView.image = image as? UIImage
+                    self?.loadedImageView.image = image as? UIImage
                 }
             }
         }

@@ -10,7 +10,7 @@ import SnapKit
 
 
 final class PriorityViewController: BaseViewController {
-
+    
     private let segmentControl: UISegmentedControl = {
         let segment = UISegmentedControl()
         segment.insertSegment(withTitle: "높음", at: 0, animated: true)
@@ -33,8 +33,8 @@ final class PriorityViewController: BaseViewController {
         
     }
     override func bindData() {
-        viewModel.outputPriority.bind { value in
-            self.showPriority.text = value
+        viewModel.outputPriority.bind { [weak self] value in
+            self?.showPriority.text = value
         }
     }
   

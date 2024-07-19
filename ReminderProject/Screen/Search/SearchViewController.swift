@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 final class SearchViewController: BaseViewController {
-
+ 
     private enum SwipeButtonTitle: String {
         case star = "중요"
         case delete = "삭제"
@@ -43,9 +43,9 @@ final class SearchViewController: BaseViewController {
         renewValue(list: viewModel.outputStarList)
     }
     private func renewValue(list: Observable<[RealmTable]>) {
-        list.bindLater { value in
-            self.list = value
-            self.tableView.reloadData()
+        list.bindLater { [weak self] value in
+            self?.list = value
+            self?.tableView.reloadData()
         }
     }
     
@@ -114,13 +114,13 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .normal, title: SwipeButtonTitle.delete.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            self.viewModel.inputDeleteInfo.value = [self.list : indexPath.row]
+        let delete = UIContextualAction(style: .normal, title: SwipeButtonTitle.delete.rawValue) { [weak self] (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            self?.viewModel.inputDeleteInfo.value = [self?.list ?? [] : indexPath.row]
             success(true)
         }
         delete.backgroundColor = .systemRed
-        let star = UIContextualAction(style: .normal, title: SwipeButtonTitle.star.rawValue) { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            self.viewModel.inputStarList.value = [self.list : indexPath.row]
+        let star = UIContextualAction(style: .normal, title: SwipeButtonTitle.star.rawValue) { [weak self] (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            self?.viewModel.inputStarList.value = [self?.list ?? []: indexPath.row]
             success(true)
         }
         star.backgroundColor = .systemYellow

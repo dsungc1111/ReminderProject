@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 final class TagViewController: BaseViewController {
-
+  
     let viewModel = TagViewModel()
     
     private let tagTextField = {

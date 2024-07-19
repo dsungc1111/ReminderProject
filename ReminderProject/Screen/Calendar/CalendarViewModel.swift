@@ -20,8 +20,8 @@ final class CalendarViewModel {
         transform()
     }
     private func transform() {
-        inputDate.bind { date in
-            self.selectDate(date: date)
+        inputDate.bind { [weak self] date in
+            self?.selectDate(date: date)
         }
     }
     private func selectDate(date: Date) {

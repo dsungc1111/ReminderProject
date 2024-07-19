@@ -8,7 +8,7 @@
 import Foundation
 
 final class SearchViewModel {
-    
+  
     private let repository = RealmTableRepository()
     
     var inputSearchText: Observable<String?> = Observable(nil)
@@ -26,26 +26,26 @@ final class SearchViewModel {
     var outputStarList: Observable<[RealmTable]> = Observable([])
     
     init() {
-        inputSearchText.bind { _ in
-            if let text = self.inputSearchText.value {
-                self.outputSearchList.value = self.filterSearchText(text: text)
+        inputSearchText.bind { [weak self] _ in
+            if let text = self?.inputSearchText.value {
+                self?.outputSearchList.value = self?.filterSearchText(text: text) ?? []
             }
         }
-        inputCompleteButton.bindLater { value in
-            self.outputCompleteButton.value = self.completionButtonTapped()
+        inputCompleteButton.bindLater { [weak self] value in
+            self?.outputCompleteButton.value = self?.completionButtonTapped()
         }
-        inputReloadList.bindLater { _ in
-            self.fetchList()
+        inputReloadList.bindLater { [weak self] _ in
+            self?.fetchList()
         }
-        inputDeleteInfo.bindLater { value in
+        inputDeleteInfo.bindLater { [weak self] value in
             guard let list = value?.keys.first else { return }
             guard let index = value?.values.first else { return }
-            self.deleteToDo(list: list, index: index)
+            self?.deleteToDo(list: list, index: index)
         }
-        inputStarList.bindLater { value in
+        inputStarList.bindLater { [weak self] value in
             guard let list = value?.keys.first else { return }
             guard let index = value?.values.first else { return }
-            self.changeStar(list: list, index: index)
+            self?.changeStar(list: list, index: index)
         }
     }
     private func filterSearchText(text: String) -> [RealmTable] {

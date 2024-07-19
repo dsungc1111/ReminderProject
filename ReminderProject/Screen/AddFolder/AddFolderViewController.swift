@@ -10,6 +10,9 @@ import SnapKit
 import Toast
 
 final class AddFolderViewController: BaseViewController {
+    deinit {
+        print("deinit")
+    }
     private enum NavigationBarTitle: String {
         case title = "새로운 목록"
         case cancel = "취소"
@@ -57,16 +60,16 @@ final class AddFolderViewController: BaseViewController {
         
     }
     override func bindData() {
-        viewModel.outputFolderTitle.bind { value in
+        viewModel.outputFolderTitle.bind { [weak self] value in
             if let value = value {
-                self.navigationItem.rightBarButtonItem?.isEnabled = value
-                self.navigationItem.rightBarButtonItem?.tintColor = .black
+                self?.navigationItem.rightBarButtonItem?.isEnabled = value
+                self?.navigationItem.rightBarButtonItem?.tintColor = .black
             }
         }
-        viewModel.outputSaveFolder.bindLater { _ in
-            self.view.makeToast("저장완료!", duration: 2.0, position: .center)
-            self.showToast?()
-            self.navigationController?.dismiss(animated: true)
+        viewModel.outputSaveFolder.bindLater { [weak self] _ in
+            self?.view.makeToast("저장완료!", duration: 2.0, position: .center)
+            self?.showToast?()
+            self?.navigationController?.dismiss(animated: true)
         }
     }
 
@@ -111,8 +114,8 @@ final class AddFolderViewController: BaseViewController {
     }
     @objc func colorButtonTapped() {
         let colorPickerVC = UIColorPickerViewController()
-         colorPickerVC.delegate = self
-         present(colorPickerVC, animated: true, completion: nil)
+        colorPickerVC.delegate = self
+        present(colorPickerVC, animated: true, completion: nil)
     }
     @objc func folderNameDidchange(_ sender: UITextField) {
         guard let text = sender.text else { return }

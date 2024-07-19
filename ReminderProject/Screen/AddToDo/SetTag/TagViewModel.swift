@@ -14,8 +14,8 @@ final class TagViewModel {
     var inputTagText: Observable<String?> = Observable("")
     
     init() {
-        inputTagText.bind { _ in
-            self.passTagData()
+        inputTagText.bind { [weak self] _ in
+            self?.passTagData()
         }
     }
     private func passTagData() {

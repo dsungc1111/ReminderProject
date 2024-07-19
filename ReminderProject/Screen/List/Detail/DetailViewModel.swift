@@ -9,6 +9,9 @@ import Foundation
 import RealmSwift
 
 class DetailViewModel {
+    deinit {
+        print("d")
+    }
     private let repository = RealmTableRepository()
     var getId = ObjectId()
     var inputMemoTitle: Observable<String> = Observable("")
@@ -22,10 +25,10 @@ class DetailViewModel {
         transform()
     }
     private func transform() {
-        inputEditButton.bindLater { _ in
-            let title = self.inputMemoTitle.value
-            let content = self.inputMemoContent.value
-            self.filterText(title: title, content: content)
+        inputEditButton.bindLater { [weak self] _ in
+            let title = self?.inputMemoTitle.value
+            let content = self?.inputMemoContent.value
+            self?.filterText(title: title ?? "", content: content ?? "")
         }
     }
     private func filterText(title: String, content: String) {

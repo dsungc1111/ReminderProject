@@ -8,6 +8,7 @@
 import Foundation
 
 final class AddToDoViewModel {
+  
     private enum CategoryToDo: String, CaseIterable {
         case dueDate = "마감일"
         case tag = "태그"
@@ -42,14 +43,14 @@ final class AddToDoViewModel {
         transform()
     }
     private func transform() {
-        inputCategoryTrigger.bind { _ in
-            self.getCategory()
+        inputCategoryTrigger.bind { [weak self]  _ in
+            self?.getCategory()
         }
-        inputMemoTitle.bindLater { _ in
-            self.outputMemoTitle.value = ()
+        inputMemoTitle.bindLater { [weak self] _ in
+            self?.outputMemoTitle.value = ()
         }
-        inputSaveButton.bindLater { _ in
-            self.saveData(memotitle: self.inputMemoTitle.value, memo: self.inputMemoContent.value)
+        inputSaveButton.bindLater { [weak self] _ in
+            self?.saveData(memotitle: self?.inputMemoTitle.value ?? "", memo: self?.inputMemoContent.value ?? "")
         }
     }
     

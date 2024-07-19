@@ -9,6 +9,7 @@ import Foundation
 
 
 class PriorityViewModel {
+   
     var passPriority: PassDateDelegate?
     
     var inputPriority: Observable<Int?> = Observable(nil)
@@ -17,13 +18,13 @@ class PriorityViewModel {
     var completionButtonTapped: Observable<Void?> = Observable(nil)
     
     init() {
-        inputPriority.bind { value in
+        inputPriority.bind { [weak self] value in
             if let value = value {
-                self.inputPriority(index: value)
+                self?.inputPriority(index: value)
             }
         }
-        completionButtonTapped.bind { _ in
-            self.passPriorityData()
+        completionButtonTapped.bind { [weak self] _ in
+            self?.passPriorityData()
         }
     }
     private func inputPriority(index: Int) {

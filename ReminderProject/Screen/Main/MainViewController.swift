@@ -12,6 +12,11 @@ import Toast
 
 final class MainViewController: BaseViewController {
    
+    
+    deinit {
+        print("========MainViewController Deinit============")
+    }
+    
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
     private static func collectionViewLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewFlowLayout()
@@ -25,22 +30,22 @@ final class MainViewController: BaseViewController {
         layout.sectionInset = UIEdgeInsets(top: sectionSpacing, left: sectionSpacing, bottom: sectionSpacing, right: sectionSpacing)
         return layout
     }
-    private lazy var addToDoButton = {
+    private lazy var addToDoButton = { [weak self] in
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
         btn.contentMode = .scaleAspectFill
         btn.setTitle(" 새로운 일 추가", for: .normal)
         btn.setTitleColor(.systemBlue, for: .normal)
         btn.titleLabel?.font = .boldSystemFont(ofSize: 18)
-        btn.addTarget(self, action: #selector(addToDoButtonTapped), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(self?.addToDoButtonTapped), for: .touchUpInside)
         return btn
     }()
-    private lazy var listAddButton = {
+    private lazy var listAddButton = { [weak self] in
         let btn = UIButton()
         btn.setTitle("목록추가", for: .normal)
         btn.setTitleColor(.systemBlue, for: .normal)
         btn.titleLabel?.font = .systemFont(ofSize: 16)
-        btn.addTarget(self, action: #selector(listAddButtonTapped), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(self?.listAddButtonTapped), for: .touchUpInside)
         return btn
     }()
     private lazy var tableView = {
@@ -83,18 +88,21 @@ final class MainViewController: BaseViewController {
     override func viewDidLayoutSubviews() {
         navigationController?.navigationBar.layer.addBorder([.bottom], color: .systemGray4, width: 1)
     }
+    override func viewDidAppear(_ animated: Bool) {
+        navigationController?.popViewController(animated: true)
+    }
     
     override func bindData() {
-        viewModel.setListTitleTrigger.bind { value in
-            self.listTitle = value
-            self.myListLabel.isHidden = self.listTitle.count != 0 ? false : true
-            self.tableView.reloadData()
-            self.configureContentView()
+        viewModel.setListTitleTrigger.bind { [weak self] value in
+            self?.listTitle = value
+            self?.myListLabel.isHidden = self?.listTitle.count != 0 ? false : true
+            self?.tableView.reloadData()
+            self?.configureContentView()
         }
-        viewModel.outputDeleteInfo.bindLater { value in
-            self.listTitle = value
-            self.tableView.reloadData()
-            self.configureContentView()
+        viewModel.outputDeleteInfo.bindLater { [weak self] value in
+            self?.listTitle = value
+            self?.tableView.reloadData()
+            self?.configureContentView()
         }
     }
     
@@ -174,8 +182,8 @@ final class MainViewController: BaseViewController {
     }
     @objc func listAddButtonTapped() {
         let vc = AddFolderViewController()
-        vc.showToast = {
-            self.view.makeToast("저장완료!")
+        vc.showToast = { [weak self] in
+            self?.view.makeToast("저장완료!")
         }
         vc.viewModel.passFolder = self
         let nav = UINavigationController(rootViewController: vc)
@@ -183,8 +191,8 @@ final class MainViewController: BaseViewController {
     }
     @objc func addToDoButtonTapped() {
         let vc = AddToDoViewController()
-        vc.showToast = {
-            self.view.makeToast("저장완료!")
+        vc.showToast = { [weak self] in
+            self?.view.makeToast("저장완료!")
         }
         vc.viewModel.passData = self
         let nav = UINavigationController(rootViewController: vc)
@@ -192,7 +200,7 @@ final class MainViewController: BaseViewController {
     }
 }
 extension MainViewController:  PassDataDelegate, PassFolderDelegate {
-    func passFolderList(_ dataList: [Folder]) {
+    func passFolderList(_ dataList: [Folder]) { 
         listTitle = dataList
         myListLabel.isHidden = self.listTitle.count != 0 ? false : true
         tableView.reloadData()
@@ -245,11 +253,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return 50
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            self.viewModel.inputDeleteInfo.value = [self.listTitle : indexPath.row]
+        let delete = UIContextualAction(style: .normal, title: "삭제") { [weak self] (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            self?.viewModel.inputDeleteInfo.value = [self?.listTitle ?? [] : indexPath.row]
             success(true)
         }
-        delete.backgroundColor = .systemRed
+        delete.backgroundColor = UIColor.systemRed
         return UISwipeActionsConfiguration(actions:[delete])
     }
 }
