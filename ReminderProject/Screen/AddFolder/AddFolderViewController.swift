@@ -135,7 +135,6 @@ extension AddFolderViewController: UIColorPickerViewControllerDelegate {
         logoBackView.layer.shadowColor = viewController.selectedColor.cgColor
         listLogo.tintColor = viewController.selectedColor
         viewModel.inputFileColor.value = viewController.selectedColor.toHex()
-        print(viewModel.inputFileColor.value)
     }
     
 //    func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {

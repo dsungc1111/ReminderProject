@@ -79,6 +79,7 @@ final class MainViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureContentView()
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -97,16 +98,17 @@ final class MainViewController: BaseViewController {
             self?.listTitle = value
             self?.myListLabel.isHidden = self?.listTitle.count != 0 ? false : true
             self?.tableView.reloadData()
-            self?.configureContentView()
+
         }
         viewModel.outputDeleteInfo.bindLater { [weak self] value in
             self?.listTitle = value
             self?.tableView.reloadData()
-            self?.configureContentView()
+            self?.updateTableViewHeight()
         }
     }
     
     override func setCollectionView() {
+        print(#function)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.id)
@@ -165,10 +167,10 @@ final class MainViewController: BaseViewController {
             make.top.equalTo(collectionView.snp.bottom).offset(10)
             make.leading.equalTo(contentView).inset(20)
         }
-        tableView.snp.updateConstraints { make in
+        tableView.snp.makeConstraints { make in
             make.top.equalTo(myListLabel.snp.bottom).offset(10)
             make.horizontalEdges.bottom.equalTo(contentView).inset(20)
-            make.height.greaterThanOrEqualTo(50*listTitle.count)
+            make.height.equalTo(50*listTitle.count)
         }
     }
     
@@ -198,13 +200,18 @@ final class MainViewController: BaseViewController {
         let nav = UINavigationController(rootViewController: vc)
         navigationController?.present(nav, animated: true)
     }
+    func updateTableViewHeight() {
+        tableView.snp.updateConstraints { make in
+            make.height.equalTo(50 * listTitle.count)
+        }
+    }
 }
 extension MainViewController:  PassDataDelegate, PassFolderDelegate {
     func passFolderList(_ dataList: [Folder]) { 
         listTitle = dataList
         myListLabel.isHidden = self.listTitle.count != 0 ? false : true
         tableView.reloadData()
-        configureContentView()
+        updateTableViewHeight()
     }
     func passDataList(_ dataList: [RealmTable]) {
         toDoList = dataList

@@ -28,9 +28,7 @@ final class AddFolderViewModel {
             self?.checkTitle(text: value)
         }
         inputSaveFolder.bindLater { [weak self] title in
-            print("1")
             self?.getNewFoler(title: title, color: self?.inputFileColor.value ?? "#007AFF")
-            print("@")
         }
     }
     private func checkTitle(text: String?)  {

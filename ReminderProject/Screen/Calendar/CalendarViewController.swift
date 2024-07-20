@@ -23,6 +23,7 @@ final class CalendarViewController: BaseViewController {
         calendar.appearance.headerMinimumDissolvedAlpha = 0.0
         calendar.appearance.headerDateFormat = "YYYY년 MM월"
         calendar.swipeToChooseGesture.isEnabled = true
+        calendar.appearance.eventDefaultColor = UIColor.red
         return calendar
     }()
     
@@ -35,9 +36,11 @@ final class CalendarViewController: BaseViewController {
         tableView.isScrollEnabled = false
         return tableView
     }()
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+
     }
     override func bindData() {
         viewModel.monthOrWeek.bind { [weak self] _ in
@@ -85,11 +88,18 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         viewModel.inputDate.value = date
     }
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+        
+      
+        return viewModel.outputDates.value?.contains(where: { Calendar.current.isDate($0, inSameDayAs: date) }) ?? false ? 1 : 0
+    }
 }
+
 extension CalendarViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.outputSelecteDateList.value?.count ?? 0
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return ListTableViewCell() }
         let data = viewModel.outputSelecteDateList.value?[indexPath.row]
